@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "nurse-ellie",
+    "slug": "nurse-ellie",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/android/drawable-mdpi/logo.png",
+    "splash": {
+      "image": "./assets/android/drawable-hdpi/entry-logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#42C86A"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
