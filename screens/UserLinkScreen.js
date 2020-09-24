@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, Button, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Button, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import * as Animatable from 'react-native-animatable'
 import Background from '../components/background';
 import NurseEllieConnectLogo from '../assets/images/ellie-connect-logo.svg';
@@ -9,6 +9,41 @@ import FamilyFriendBtn from '../assets/images/familyfriend-unselected-icon.svg';
 import FamilyFriendBtnSelected from '../assets/images/familyfriend-selected-icon.svg';
 
 const UserLinkScreen = ({ navigation }) => {
+
+    const [connectButtonHP, setConnectButtonHP] = useState({
+        HPIcon: <HP_Btn style={styles.HPBtn} />,
+        button: styles.connectButton,
+        text: styles.connectButtonText,
+    });
+
+    const [connectButtonFamilyFriend, setConnectButtonFamilyFriend] = useState({
+        FamilyFriendIcon: <FamilyFriendBtn style={styles.FamilyFriendBtn} />,
+        button: styles.connectButton,
+        text: styles.connectButtonText,
+    });
+
+    const buttonSelect = (type) => {
+
+        if (type === 'hp') {
+            setConnectButtonHP((state) => ({
+                HPIcon: <HP_BtnSelected style={styles.HPBtn} />,
+                button: styles.selectedConnectButton,
+                text: styles.selectedConnectButtonText,
+            }));
+        } else if (type === 'ff') {
+            setConnectButtonFamilyFriend((state) => ({
+                FamilyFriendIcon: <FamilyFriendBtnSelected style={styles.FamilyFriendBtn} />,
+                button: styles.selectedConnectButton,
+                text: styles.selectedConnectButtonText,
+            }));
+
+        }
+    };
+
+    const buttonDeselect = () => {
+
+    };
+
     return (
         <>
             <Background />
@@ -30,45 +65,21 @@ const UserLinkScreen = ({ navigation }) => {
                     </Text>
                 </View>
                 <View>
-                    <Text style={{ fontSize: 20, color: 'grey' }}>
+                    <Text style={styles.connectText}>
                         Connect to:
                     </Text>
-                    <TouchableOpacity style={styles.connectButton}>
-                        <View style={{
-                            flexDirection: 'row',
-                            marginLeft: 35
-                        }}>
-                            <HP_Btn style={{
-                                height: 35,
-                                resizeMode: 'contain',
-                                marginRight: 30
-                            }} />
-                            {/* <Image source={HP_Btn} style={{
-                                height: 35,
-                                resizeMode: 'contain',
-                                marginRight: 30
-                            }} /> */}
-                            <Text style={styles.connectButtonText}>
+                    <TouchableOpacity onPressIn={() => buttonSelect('hp')} style={connectButtonHP.button}>
+                        <View style={styles.buttonFormat}>
+                            {connectButtonHP.HPIcon}
+                            <Text style={connectButtonHP.text}>
                                 Health Professional
                             </Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.connectButton}>
-                        <View style={{
-                            flexDirection: 'row',
-                            marginLeft: 35,
-                        }}>
-                            <FamilyFriendBtn style={{
-                                height: 24,
-                                resizeMode: 'contain',
-                                marginRight: 30
-                            }} />
-                            {/*   <Image source={FamilyFriendBtn} style={{
-                                height: 24,
-                                resizeMode: 'contain',
-                                marginRight: 30
-                            }} /> */}
-                            <Text style={styles.connectButtonText}>
+                    <TouchableOpacity onPressIn={() => buttonSelect('ff')} style={connectButtonFamilyFriend.button}>
+                        <View style={styles.buttonFormat}>
+                            {connectButtonFamilyFriend.FamilyFriendIcon}
+                            <Text style={connectButtonFamilyFriend.text}>
                                 Family Member / Friend
                             </Text>
                         </View>
@@ -84,6 +95,32 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
+    buttonFormat: {
+        flexDirection: 'row',
+        marginLeft: 35
+    },
+    connectText: {
+        fontSize: 20,
+        color: 'grey'
+    },
+    HPBtn: {
+        height: 35,
+        resizeMode: 'contain',
+        marginRight: 30
+    },
+    FamilyFriendBtn: {
+        height: 24,
+        resizeMode: 'contain',
+        marginRight: 30
+    },
+    selectedConnectButton: {
+        backgroundColor: '#42C86A',
+        borderRadius: 20,
+        elevation: 6,
+        marginTop: 15,
+        height: 70,
+        justifyContent: 'center'
+    },
     connectButton: {
         backgroundColor: '#fff',
         borderRadius: 20,
@@ -91,6 +128,13 @@ const styles = StyleSheet.create({
         marginTop: 15,
         height: 70,
         justifyContent: 'center'
+    },
+    selectedConnectButtonText: {
+        color: 'white',
+        fontFamily: 'roboto-medium',
+        fontSize: 17,
+        alignSelf: 'center',
+        marginLeft: 0
     },
     connectButtonText: {
         color: 'grey',
