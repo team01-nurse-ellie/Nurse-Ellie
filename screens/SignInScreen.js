@@ -10,18 +10,15 @@ const SignInScreen = ({navigation}) => {
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
             <Background/>
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
-                <Text style={styles.headerFont}>
-                    <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} />
-                    {"  "}Sign-In 
-                </Text>
+                <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} />
+                <Text style={styles.headerFont}> Sign-In </Text>
                 <View style={styles.whitePadding}/>
-                <Text> Email Address </Text>
-                <TextInput placeholder="Email Address" placeholderTextColor="#666666" autoCapitalize="none"/> 
-                <Text> Password </Text>
+                <TextInput style={styles.textInput} placeholder="Email Address" autoCapitalize="none"/> 
                 <TextInput style={styles.textInput} placeholder="Password" />
                 <TouchableOpacity style={styles.button} >
                     <Image source={require('../assets/android/drawable-mdpi/g-login-arrow.png')} />
                 </TouchableOpacity>
+                <View style={styles.whitePadding}/>
                 <Text style={styles.descriptionFont}> Already have an account? </Text>
                 <TouchableOpacity onPress={()=>navigation.push('SignUpScreen')}> 
                     <Text style={styles.clickableFont}> SIGN UP </Text>
@@ -44,8 +41,10 @@ const styles = StyleSheet.create({
         height: screenHeight/8
     },
     textInput: {
-        borderBottomColor: 'black', 
-        borderBottomWidth: 1
+        borderBottomColor: 'rgba(112, 112, 112, 0.7)', 
+        borderBottomWidth: 1.5,
+        fontSize: 16, 
+        paddingTop: 8
     },
     heading: {
         flex: 1, 
@@ -58,17 +57,19 @@ const styles = StyleSheet.create({
         fontFamily: 'roboto-regular',
         fontSize: 32,
         fontWeight: "100", 
+        left: screenWidth/3.5, 
+        top: screenHeight * 0.07,
         paddingBottom: 30
     },
     headerImage: {
-        flex: 1, 
-        height: 80,
-        resizeMode: 'contain',
-        paddingBottom: 100
+        position: 'absolute', 
+        left: screenWidth/20, 
+        top: screenHeight * 0.07
     },
     descriptionFont: {
         fontFamily: 'roboto-regular', 
-        fontSize: 12
+        fontSize: 12, 
+        color: 'rgba(0, 0, 0, 0.38)'
     },
     clickableFont: {
         fontFamily: 'roboto-medium',
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: screenWidth,
         height: screenHeight * 0.85,
-        bottom: 0
+        top: screenHeight * 0.15
     }
 })
 
