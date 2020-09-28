@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
-import { firebase } from '../components/Firebase/config'
+import { firebase } from '../components/Firebase/config';
 
 import Background from '../components/background';
 
@@ -26,7 +26,7 @@ const SignInScreen = ({navigation}) => {
                             return;
                         }
                         const user = firestoreDocument.data()
-                        navigation.navigate('Confirm')
+                        navigation.navigate('HomeScreen')
                     })
                     .catch(error => {
                         alert(error)
@@ -64,7 +64,6 @@ const SignInScreen = ({navigation}) => {
 
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
-
 
 const styles = StyleSheet.create({
     background: {
