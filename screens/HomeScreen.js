@@ -1,13 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import { View, Text, KeyboardAvoidingView, TouchableOpacity, Button, Dimensions, StyleSheet } from 'react-native';
 
-import Background from '../components/background';
-
-import MenuIcon from '../assets/images/menu-icon.svg';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer } from '@react-navigation/native';
 
 import * as Animatable from 'react-native-animatable';
 
-const HomeScreen = () => {
+import Background from '../components/background';
+import MenuIcon from '../assets/images/menu-icon.svg';
+
+const HomeScreen = ({ navigation }) => {
     const [greeting, setGreeting] = useState('');
     useEffect(()=> {
         var hours = new Date().getHours();

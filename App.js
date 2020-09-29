@@ -5,6 +5,8 @@ import * as Font from 'expo-font';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
 import { AppLoading } from 'expo';
 
 import { firebase } from "./components/Firebase/config.js";
@@ -13,13 +15,24 @@ import SplashScreen from './screens/SplashScreen';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import HomeScreen from './screens/HomeScreen';
+import SettingsScreen from './screens/SettingsScreen';
 
 const RootStack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const getFonts = () => Font.loadAsync({
   'roboto-regular': require('./assets/fonts/Roboto-Regular.ttf'), 
   'roboto-medium': require('./assets/fonts/Roboto-Medium.ttf')
 });
+
+function DrawerRoutes(){
+  return (
+    <Drawer.Navigator drawerPosition='right' initialRouteName="Home">
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Settings" component={SettingsScreen} />
+    </Drawer.Navigator>
+  )
+}
 
 function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -40,7 +53,7 @@ function App() {
         <RootStack.Navigator headerMode='none'>
           { isSignedIn ? (
             <>
-            <RootStack.Screen name="HomeScreen" component={HomeScreen} />
+            <RootStack.Screen name="HomeScreen" component={DrawerRoutes} />
             </>
           ) : (
             <>
