@@ -15,7 +15,6 @@ import SplashScreen from './screens/SplashScreen';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import HomeScreen from './screens/HomeScreen';
-import MedicationsScreen from './screens/MedicationsScreen';
 import SettingsScreen from './screens/SettingsScreen';
 
 const RootStack = createStackNavigator();
