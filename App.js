@@ -16,6 +16,7 @@ import UserLinkScreen from './screens/UserLinkScreen';
 
 // Components
 import MenuBtn from './components/menu-btn';
+import QRScreen from './screens/QRScreen';
 
 const RootStack = createStackNavigator();
 
@@ -49,6 +50,7 @@ function App({ navigation }) {
               headerRight: () => <MenuBtn />
             }}
           />
+          <RootStack.Screen name="qr" component={QRScreen} />
         </RootStack.Navigator>
       </NavigationContainer>
     );
