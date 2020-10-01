@@ -25,7 +25,7 @@ const HomeScreen = ({ navigation }) => {
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
             <Background />
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
             </TouchableOpacity>
             <Text style={styles.time}> {greeting} </Text>
