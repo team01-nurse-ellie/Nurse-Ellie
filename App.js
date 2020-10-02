@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-gesture-handler';
+
 import React, {useState, useEffect} from 'react';
+
 import * as Font from 'expo-font';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'
@@ -11,6 +13,9 @@ import { AppLoading } from 'expo';
 
 import { firebase } from "./components/Firebase/config.js";
 
+import DrawerContent from "./components/DrawerContent";
+
+// Screens
 import SplashScreen from './screens/SplashScreen';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
@@ -25,10 +30,12 @@ const getFonts = () => Font.loadAsync({
   'roboto-medium': require('./assets/fonts/Roboto-Medium.ttf')
 });
 
+function App({ navigation }) {
 function DrawerRoutes(){
   return (
-    <Drawer.Navigator drawerPosition='right' initialRouteName="Home">
+    <Drawer.Navigator drawerPosition='right' drawerContent={props=> <DrawerContent {..props}/>}>
       <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Medication" component={MedicationScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
     </Drawer.Navigator>
   )
