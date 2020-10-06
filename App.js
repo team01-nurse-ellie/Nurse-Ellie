@@ -50,7 +50,12 @@ function App({ navigation }) {
               headerRight: () => <MenuBtn />
             }}
           />
-          <RootStack.Screen name="qr" component={QRScreen} />
+          <RootStack.Screen name="QRScreen" component={QRScreen} options={{
+            headerStyle: {
+              backgroundColor: '#42C86A'
+            },
+            title: "Scan"
+          }} />
         </RootStack.Navigator>
       </NavigationContainer>
     );

@@ -3,16 +3,24 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import QRScanner from '../components/QRScanner/qr-scanner';
 import * as Animatable from 'react-native-animatable';
 
-const QRScreen = () => {
+const QRScreen = ({ navigation }) => {
+
+    const [showQR, setShowQR] = useState(false);
+    useEffect(() => {
+
+        setTimeout(t => {
+            setShowQR(true);
+        });
+        // adds a slight delay to allow camera to load up without delaying initial screen load up when navigating to QR screen.
+    }, []);
 
     return (
         <>
-            <Animatable.View
-                delay={10}
-                style={{ flex: 4 }}
-                animation="fadeInUpBig">
-                <QRScanner style={{}} />
-            </Animatable.View>
+            <View style={{ flex: 1, backgroundColor: 'black', zIndex: -99 }}>
+                {showQR &&
+                    <QRScanner {...navigation} style={{}} />
+                }
+            </View>
 
         </>
     )

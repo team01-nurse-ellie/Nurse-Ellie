@@ -11,7 +11,7 @@ const SplashScreen = ({ navigation }) => {
             <View style={styles.logoCircle}>
                 <NurseEllieLogo style={styles.logo} />
             </View>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('qr')}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('QRScreen')}>
                 <Image style={{ height: screenHeight * 0.09 }} source={require('../assets/android/drawable-mdpi/g-entry-arrow.png')} />
             </TouchableOpacity>
         </View>
