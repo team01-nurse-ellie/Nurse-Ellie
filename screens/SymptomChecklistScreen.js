@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Image, StyleSheet, Button, Dimensions, To
 import * as Animatable from 'react-native-animatable'
 import Background from '../components/background';
 import ClipboardIcon from '../assets/images/clipboard-icon.svg';
+import DissatisfiedIcon from '../assets/images/scale-dissatisfied-icon.svg';
 import HP_Btn from '../assets/images/nurse-unselected-icon.svg';
 import HP_BtnSelected from '../assets/images/nurse-selected-icon.svg';
 import FamilyFriendBtn from '../assets/images/familyfriend-unselected-icon.svg';
@@ -12,8 +13,8 @@ const SymptomChecklistScreen = ({ navigation }) => {
 
     const [connectButtonHP, setConnectButtonHP] = useState({
         HPIcon: <HP_Btn style={styles.HPBtn} />,
-        button: styles.connectButton,
-        text: styles.connectButtonText,
+      //  button: styles.connectButton,
+       // text: styles.connectButtonText,
     });
 
     const [connectButtonFamilyFriend, setConnectButtonFamilyFriend] = useState({
@@ -52,9 +53,28 @@ const SymptomChecklistScreen = ({ navigation }) => {
                     <Text style={styles.headerFont}>
                         {`Symptom Checklist`}
                     </Text>
-                    <ClipboardIcon height={50} style={styles.headerImage} />
+                    <ClipboardIcon style={styles.headerImage} />
                     
                 </View>
+
+                <View>
+                    <Text style={styles.simpleText}>
+                        { `How are you feeling?` }
+                    </Text>
+
+                    <View>
+
+                        <ClipboardIcon/>
+                        <DissatisfiedIcon/>
+
+
+                    </View>
+
+                    <Text style={styles.simpleText}>
+                        { `   Terrible                      Better` }
+                    </Text>
+                </View>
+
                 <View style={styles.UserLinkScreenDescription}>
                     <Text style={styles.descriptionText}>
                         {`Connecting to a `}
@@ -95,6 +115,38 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
+
+    drawer: {
+        flex: 4,
+        // backgroundColor: 'gray',
+        backgroundColor: '#fff',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        paddingVertical: 50,
+        paddingHorizontal: 30,
+        position: 'absolute',
+        width: screenWidth,
+        height: screenHeight * 0.85,
+        bottom: 0,
+        justifyContent: 'space-between'
+    },
+
+    headerImage: {
+        flex: 1,
+        left: 30,
+        width:null,
+        height: null,
+        resizeMode: 'contain'
+    },
+
+    simpleText: {
+        fontFamily: 'roboto-medium',
+        fontSize: 14,
+        lineHeight: 23,
+        color: 'grey'
+    },
+
+    ///////////////////
     buttonFormat: {
         flexDirection: 'row',
         marginLeft: 35
@@ -183,12 +235,7 @@ const styles = StyleSheet.create({
         fontSize: 32,
         fontWeight: "100",
     },
-    headerImage: {
-        flex: 1,
-        right: 10,
-        // height: 100,
-        // resizeMode: 'contain',
-    },
+
     UserLinkScreenDescriptionFont: {
         fontFamily: 'roboto-regular',
         fontSize: 12
@@ -200,21 +247,8 @@ const styles = StyleSheet.create({
     button: {
         paddingRight: 30,
         marginTop: 30
-    },
-    drawer: {
-        flex: 4,
-        // backgroundColor: 'gray',
-        backgroundColor: '#fff',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        paddingVertical: 50,
-        paddingHorizontal: 30,
-        position: 'absolute',
-        width: screenWidth,
-        height: screenHeight * 0.85,
-        bottom: 0,
-        justifyContent: 'space-between'
     }
+
 });
 
 export default SymptomChecklistScreen;
