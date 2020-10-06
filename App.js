@@ -12,7 +12,7 @@ import SplashScreen from './screens/SplashScreen';
 import HomeScreen from './screens/HomeScreen';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
-import UserLinkScreen from './screens/UserLinkScreen';
+import SymptomChecklistScreen from './screens/SymptomChecklistScreen';
 
 // Components
 import MenuBtn from './components/menu-btn';
@@ -41,7 +41,7 @@ function App({ navigation }) {
             headerShown: false
           }} />
           <RootStack.Screen name="Home" component={HomeScreen} />
-          <RootStack.Screen name="UserLinkScreen" component={UserLinkScreen}
+          <RootStack.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen}
             options={{
               headerTransparent: true,
               headerLeft: null,

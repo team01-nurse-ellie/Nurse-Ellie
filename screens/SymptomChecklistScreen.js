@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, Button, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import * as Animatable from 'react-native-animatable'
 import Background from '../components/background';
-import NurseEllieConnectLogo from '../assets/images/ellie-connect-logo.svg';
+import ClipboardIcon from '../assets/images/clipboard-icon.svg';
 import HP_Btn from '../assets/images/nurse-unselected-icon.svg';
 import HP_BtnSelected from '../assets/images/nurse-selected-icon.svg';
 import FamilyFriendBtn from '../assets/images/familyfriend-unselected-icon.svg';
 import FamilyFriendBtnSelected from '../assets/images/familyfriend-selected-icon.svg';
 
-const UserLinkScreen = ({ navigation }) => {
+const SymptomChecklistScreen = ({ navigation }) => {
 
     const [connectButtonHP, setConnectButtonHP] = useState({
         HPIcon: <HP_Btn style={styles.HPBtn} />,
@@ -50,10 +50,10 @@ const UserLinkScreen = ({ navigation }) => {
             <Animatable.View style={styles.drawer} animation="fadeInUpBig">
                 <View style={styles.screenHeader}>
                     <Text style={styles.headerFont}>
-                        {`Stay\nConnected`}
+                        {`Symptom Checklist`}
                     </Text>
-                    <NurseEllieConnectLogo height={75} style={styles.headerImage} />
-                    {/* <Image style={styles.headerImage} source={NurseEllieConnectLogo} /> */}
+                    <ClipboardIcon height={50} style={styles.headerImage} />
+                    
                 </View>
                 <View style={styles.UserLinkScreenDescription}>
                     <Text style={styles.descriptionText}>
@@ -217,4 +217,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default UserLinkScreen;
+export default SymptomChecklistScreen;
