@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, KeyboardAvoidingView, TouchableOpacity, Button, Dimensions, StyleSheet } from 'react-native';
+import { View, Text, KeyboardAvoidingView, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
+import Unorderedlist from 'react-native-unordered-list';
 
 import Background from '../components/background';
 import MenuIcon from '../assets/images/menu-icon.svg';
@@ -18,18 +19,42 @@ const MedicationScreen = ({navigation}) => {
                 <MenuIcon/>
             </TouchableOpacity>
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
-            <View>
+            <View style={styles.rowContainer}>
+                <TouchableOpacity onPress={()=> navigation.goBack()}>
+                    <ReturnIcon/>
+                </TouchableOpacity>
                 <Text style={styles.headerFont}>
-                    <TouchableOpacity style={styles.button}><ReturnIcon/></TouchableOpacity>Monopril<TouchableOpacity style={styles.editButton}><EditIcon/></TouchableOpacity>
+                    Monopril
                 </Text>
-                
+                <TouchableOpacity>
+                    <EditIcon/>
+                </TouchableOpacity>
             </View>
-            
-            <MedicationIcon/>
-            <Text> 10:00AM </Text>
+            <View style={{alignItems: 'center', paddingVertical: 15}}>
+                <MedicationIcon/>
+            </View>
+            <View style={{alignItems: 'center'}}>
+                <Text style={styles.timeFont}> 10:00AM </Text>
+            </View>
             <Text style={styles.subheadingFont}>Prescription</Text>
+                <Unorderedlist bulletUnicode={0x2023}> 
+                    <Text>40 mg (1 pill) daily</Text>
+                </Unorderedlist>
+                <Unorderedlist bulletUnicode={0x2023}> 
+                    <Text>can be taken with or without food</Text>
+                </Unorderedlist>
+            <View style={{paddingVertical:10}}/>
             <Text style={styles.subheadingFont}>Information</Text>
+            <Text> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.  </Text>
+            <View style={{paddingVertical:10}}/>
             <Text style={styles.subheadingFont}>Possible Side Effects</Text>
+                <Unorderedlist><Text>dry cough</Text></Unorderedlist>
+                <Unorderedlist><Text>vomiting</Text></Unorderedlist>
+                <Unorderedlist><Text>tired feeling</Text></Unorderedlist>
+                <Unorderedlist><Text>runny or stuffy nose</Text></Unorderedlist>
+                <Unorderedlist><Text>headache</Text></Unorderedlist>
+                <Unorderedlist><Text>nausea</Text></Unorderedlist>
+            <View style={{paddingVertical:10}}/>
             <Text style={styles.descriptionFont}>Not feeling well after taking this medication?</Text>
             <Text style={styles.descriptionFont}>Report it to your Health Professional</Text>
             <TouchableOpacity>
@@ -48,6 +73,11 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#42C86A',
     }, 
+    rowContainer: {
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        paddingVertical: 7
+    },
     heading: {
         flex: 1, 
         justifyContent: 'flex-end',
@@ -59,17 +89,24 @@ const styles = StyleSheet.create({
         fontFamily: 'roboto-regular',
         fontSize: 26,
         fontWeight: "100", 
-        width: screenWidth
+        position: 'absolute', 
+        paddingHorizontal: 20,
+        paddingVertical: 0
     },
     subheadingFont: {
         fontFamily: 'roboto-regular', 
         fontSize: 24, 
         color: 'rgba(0, 0, 0, 0.85)'
     },
+    timeFont: {
+        fontFamily: 'roboto-regular', 
+        fontSize: 18, 
+        color: 'rgba(0, 0, 0, 0.85)'
+    },
     descriptionFont: {
         fontFamily: 'roboto-regular', 
         fontSize: 12, 
-        color: 'rgba(0, 0, 0, 0.38)'
+        color: 'rgba(0, 0, 0, 0.38)', 
     },
     clickableFont: {
         fontFamily: 'roboto-medium',
@@ -79,16 +116,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 30,
         top: 40 
-    },
-    button: { 
-        height: 15, 
-        width: 15
-    }, 
-    editButton: {
-        height: 15, 
-        width: 15, 
-        position: 'absolute',
-        right: 10
     },
     drawer: {
         flex: 4,
