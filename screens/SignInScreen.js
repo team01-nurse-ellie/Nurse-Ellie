@@ -57,6 +57,9 @@ const SignInScreen = ({navigation}) => {
                 <TouchableOpacity onPress={()=>navigation.push('SignUpScreen')}> 
                     <Text style={styles.clickableFont}> SIGN UP </Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={()=>navigation.push('MedicationAddScreen')}> 
+                    <Text style={styles.clickableFont}> Add Medication </Text>
+                </TouchableOpacity>
             </Animatable.View>
         </KeyboardAvoidingView>
     )

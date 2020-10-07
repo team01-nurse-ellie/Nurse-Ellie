@@ -1,39 +1,47 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config';
 
 import Background from '../components/background';
+import {getRxnowApproximateNames,getRxnowAllByConcepts,getRxNowDrugsByTtyName,getRxNowTermInfoByRxcui} from '../utils/medication';
 
 const MedicationAddScreen = ({navigation}) => {
     const [searchTerm, setSearchTerm] = useState('') 
     const [rxcui, setRxcui] = useState('')
-    
-    const onLoginPress = () => {
 
+    useEffect(() => {
+        load()
+    }, [])
+
+    const onLoginPress = () => {
     }
 
+    async function load() {
+        try {
+            //const rxStuff = await getRxnowAllByConcepts(['IN','BN','MIN']);
+            await getRxNowDrugsByTtyName('molindone');
+            await getRxNowTermInfoByRxcui('866516');
+        } catch (error) { console.log(error)}
+        // get IN, BN, MIN from api
+
+        // assign to hook
+        // create list of o
+        
+    }
     
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
             <Background/>
-            <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
-                <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} />
-                <Text style={styles.headerFont}> Sign-In </Text>
+            <Animatable.View style={styles.drawer} animation="fadeInUpBig">
+                <View style={styles.heading}>
+                    <Image source={require('../assets/android/drawable-mdpi/return-icon.png')} />
+                    <Text style={styles.headerFont}> Add Medication </Text>
+                </View> 
+                <TextInput style={styles.textInput} placeholder="Ingredient or Brand" autoCapitalize="none" onChangeText={(text) => setSearchTerm(text)}
+                    value={searchTerm} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
                 <View style={styles.whitePadding}/>
-                <TextInput style={styles.textInput} placeholder="Email Address" autoCapitalize="none"  onChangeText={(text) => setEmail(text)}
-                    value={email} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>  
-                <TextInput style={styles.textInput} placeholder="Password" secureTextEntry onChangeText={(text) => setPassword(text)}
-                    value={password} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <TouchableOpacity style={styles.button} onPress={()=>onLoginPress()}>
-                    <Image source={require('../assets/android/drawable-mdpi/g-login-arrow.png')} />
-                </TouchableOpacity>
-                <View style={styles.whitePadding}/>
-                <Text style={styles.descriptionFont}> Don't have an account yet? </Text>
-                <TouchableOpacity onPress={()=>navigation.push('SignUpScreen')}> 
-                    <Text style={styles.clickableFont}> SIGN UP </Text>
-                </TouchableOpacity>
             </Animatable.View>
         </KeyboardAvoidingView>
     )
@@ -54,27 +62,17 @@ const styles = StyleSheet.create({
         borderBottomColor: 'rgba(112, 112, 112, 0.7)', 
         borderBottomWidth: 1.5,
         fontSize: 16, 
-        paddingTop: 8
+        paddingTop: 10
     },
     heading: {
-        flex: 1, 
-        justifyContent: 'flex-end',
-        position: 'absolute', 
-        paddingHorizontal: 20, 
-        paddingBottom: 5
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingBottom: 10
     },
     headerFont: {
         fontFamily: 'roboto-regular',
         fontSize: 32,
         fontWeight: "100", 
-        left: screenWidth/3.5, 
-        top: screenHeight * 0.07,
-        paddingBottom: 30
-    },
-    headerImage: {
-        position: 'absolute', 
-        left: screenWidth/20, 
-        top: screenHeight * 0.07
     },
     descriptionFont: {
         fontFamily: 'roboto-regular', 
@@ -85,16 +83,12 @@ const styles = StyleSheet.create({
         fontFamily: 'roboto-medium',
         fontSize: 14, 
     },
-    button: { 
-        paddingRight: 30,
-        marginTop: 30
-    }, 
     drawer: {
         flex: 4,
         backgroundColor: '#fff', 
         borderTopLeftRadius: 30, 
         borderTopRightRadius: 30, 
-        paddingVertical: 50, 
+        paddingVertical: 20, 
         paddingHorizontal: 30, 
         position: 'absolute',
         width: screenWidth,

@@ -13,6 +13,7 @@ import SplashScreen from './screens/SplashScreen';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import HomeScreen from './screens/HomeScreen';
+import MedicationAddScreen from './screens/MedicationAddScreen';
 
 const RootStack = createStackNavigator();
 
@@ -47,6 +48,7 @@ function App() {
             <RootStack.Screen name="SplashScreen" component={SplashScreen} />
             <RootStack.Screen name="SignInScreen" component={SignInScreen} />
             <RootStack.Screen name="SignUpScreen" component={SignUpScreen} />
+            <RootStack.Screen name="MedicationAddScreen" component={MedicationAddScreen} />
             </>
           ) }
         </RootStack.Navigator>
