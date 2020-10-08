@@ -13,6 +13,8 @@ const QRScanner = (navigation) => {
     const [scanned, setScanned] = useState(false);
     const [flashOn, setFlash] = useState(false);
 
+    const [showQR, setShowQR] = useState(false);
+
     useEffect(() => {
 
         (async () => {
@@ -20,6 +22,16 @@ const QRScanner = (navigation) => {
             (status == 'granted') ? setHasPermission(true) : setHasPermission(false);
             console.log(status)
         })();
+
+        setTimeout(t => {
+            setShowQR(true);
+        }, 200);
+        // adds a slight delay to allow camera to load up without delaying initial screen load up when navigating to QR screen.
+
+        // if (hasPermission == true) {
+        // } else {
+        //     alert("Camera needs permissions");
+        // }
 
     }, []);
 
@@ -47,24 +59,28 @@ const QRScanner = (navigation) => {
         <>
             {/* !scanned && */}
             {
-                <View style={{ flex: 1, zIndex: 100 }}>
-                    <Camera
-                        ratio="16:9"
-                        flashMode={flashOn ? 'torch' : "off"}
-                        barCodeScannerSettings={{
-                            barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
-                        }}
-                        onBarCodeScanned={scanned ? undefined : handlQRCodeScanned}
-                        style={[StyleSheet.absoluteFillObject, {
-                            // flex: 1,  
-                            // alignItems: 'center',
-                            zIndex: 99,
-                            // ...StyleSheet.absoluteFillObject, 
-                            // width: Dimensions.get('screen').width, 
-                            // height: Dimensions.get('screen').height,
-                        }]}>
+                <View style={{ flex: 1, backgroundColor: 'black' }}>
+                    {
+                        showQR &&
+                        <Camera
+                            ratio="16:9"
+                            flashMode={flashOn ? 'torch' : "off"}
+                            barCodeScannerSettings={{
+                                barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
+                            }}
+                            onBarCodeScanned={scanned ? undefined : handlQRCodeScanned}
+                            style={[StyleSheet.absoluteFillObject, {
+                                // flex: 1,  
+                                // alignItems: 'center',
+                                // zIndex: 99, 
+                                // ...StyleSheet.absoluteFillObject, 
+                                // width: Dimensions.get('screen').width, 
+                                // height: Dimensions.get('screen').height,
+                            }]}>
 
-                    </Camera>
+                        </Camera>
+                    }
+
                     <View style={{
                         // position: 'absolute',
                         alignItems: 'flex-end',

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Image, StyleSheet, Button, Dimensions, To
 import * as Animatable from 'react-native-animatable'
 import Background from '../components/background';
 import NurseEllieConnectLogo from '../assets/images/ellie-connect-logo.svg';
+import NurseEllieLogo from '../assets/android/drawable-hdpi/entry-logo.png';
 import HP_Btn from '../assets/images/nurse-unselected-icon.svg';
 import HP_BtnSelected from '../assets/images/nurse-selected-icon.svg';
 import FamilyFriendBtn from '../assets/images/familyfriend-unselected-icon.svg';
@@ -10,6 +11,7 @@ import FamilyFriendBtnSelected from '../assets/images/familyfriend-selected-icon
 import Modal from 'react-native-modal';
 import CloseBtn from '../assets/images/close-button.svg';
 import QRScanner from '../components/QRScanner/qr-scanner';
+import QRCode from 'react-native-qrcode-svg';
 
 const UserLinkScreen = ({ navigation }) => {
 
@@ -37,6 +39,81 @@ const UserLinkScreen = ({ navigation }) => {
         text: styles.selectedConnectButtonText,
     }
 
+    const [connectButtonHP, setConnectButtonHP] = useState(unselectedHP);
+
+    const [connectButtonFamilyFriend, setConnectButtonFamilyFriend] = useState(unselectedFF);
+
+    const buttonSelect = (type) => {
+
+        if (type === 'hp') {
+            setConnectButtonHP((state) => (selectedHP));
+        } else if (type === 'ff') {
+            setConnectButtonFamilyFriend((state) => (selectedFF));
+        }
+
+        openModal();
+    };
+
+    const [isModalVisible, setModalVisible] = useState(false);
+
+    const [methodsShown, setMethodsShown] = useState(false);
+
+    const buttonDeselect = () => {
+        setConnectButtonHP(unselectedHP);
+        setConnectButtonFamilyFriend(unselectedFF);
+    };
+
+    const closeModal = () => {
+        buttonDeselect();
+        setModalVisible(false);
+        setMethodsShown(false);
+    };
+
+    const openModal = () => {
+        handleModalContent("METHODS");
+        setModalVisible(true);
+        setMethodsShown(true);
+    };
+
+    const handleModalContent = (type) => {
+        console.log("handled")
+        if (type === "METHODS") {
+            // modalContent = methodsModal;
+            setModalContent(methodsModal)
+        } else if (type === "PROVIDE") {
+            setModalContent(provideCodeModal);
+        } else if (type === "INPUT") {
+            setModalContent(inputCodeModal);
+        }
+    };
+
+    const useQR = () => {
+        console.log("go to qr screen")
+        closeModal();
+        setTimeout(t => {
+            navigation.navigate('QRScreen');
+        });
+    };
+
+    const refreshCode = () => {
+        console.log(NurseEllieLogo);
+    }
+
+    const modalGoBack = () => {
+        console.log("modalGoBack()")
+
+        if (methodsPressed) {
+            handleModalContent("METHODS");
+            setMethodsPressed(false);
+            // setMethodsShown(false);  
+        } else {
+            closeModal();
+            console.log(methodsPressed);
+        }
+    };
+
+    const [methodsPressed, setMethodsPressed] = useState(false);
+
     const methodsModal = (
         <View>
             <View style={{ marginBottom: 15 }}>
@@ -45,27 +122,72 @@ const UserLinkScreen = ({ navigation }) => {
             </View>
             <View>
                 {/* buttons */}
-                <TouchableOpacity style={styles.methodBtn}>
+                <TouchableOpacity onPress={() => {
+                    setMethodsPressed(true);
+                    handleModalContent("PROVIDE");
+                }
+                } style={styles.methodBtn}>
                     <View style={{}}>
                         <Text style={styles.methodBtnText}>
                             Provide Code
                 </Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.methodBtn}>
+                <TouchableOpacity onPress={useQR} style={styles.methodBtn}>
                     <View style={{}}>
                         <Text style={styles.methodBtnText}>
                             Scan QR Code
                 </Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => { }} style={styles.methodBtn}>
+                <TouchableOpacity onPress={() => {
+                    setMethodsPressed(true);
+                    handleModalContent("INPUT")
+                }} style={styles.methodBtn}>
                     <View style={{}}>
                         <Text style={styles.methodBtnText}>
                             Input Code
                 </Text>
                     </View>
                 </TouchableOpacity>
+            </View>
+        </View>
+    );
+
+    const provideCodeModal = (
+        <View>
+            <View style={{ alignItems: 'center' }}>
+                <Text style={{ fontSize: 25, fontFamily: 'roboto-regular', marginBottom: "5%" }}>
+                    Connect Code
+                </Text>
+                <QRCode
+                    logo={NurseEllieLogo}
+                    logoSize={65}
+                    logoBackgroundColor='transparent'
+                    size={210}
+                    value="https://www.google.ca"
+                />
+                <Text style={{ fontSize: 25, fontFamily: 'roboto-regular', marginTop: "5%" }}>
+                    3FNENIVX
+                 </Text>
+                <TouchableOpacity onPress={refreshCode} style={styles.refreshCodeBtn}>
+                    <View style={{}}>
+                        <Text style={styles.methodBtnText}>
+                            Refresh
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+
+    const QRModal = (
+        <View>
+            <View style={{ alignItems: 'center' }}>
+                <Text style={{ fontSize: 25, fontFamily: 'roboto-regular', }}>
+                    Scan Code
+                </Text>
+                <QRScanner />
             </View>
         </View>
     );
@@ -90,47 +212,7 @@ const UserLinkScreen = ({ navigation }) => {
         </View>
     );
 
-    const QRModal = (
-        <View>
-            <View style={{ alignItems: 'center' }}>
-                <Text style={{ fontSize: 25, fontFamily: 'roboto-regular', }}>
-                    Scan Code
-                </Text>
-                <QRScanner />
-            </View>
-        </View>
-    );
-
-    const [connectButtonHP, setConnectButtonHP] = useState(unselectedHP);
-
-    const [connectButtonFamilyFriend, setConnectButtonFamilyFriend] = useState(unselectedFF);
-
-    const buttonSelect = (type) => {
-
-        if (type === 'hp') {
-            setConnectButtonHP((state) => (selectedHP));
-        } else if (type === 'ff') {
-            setConnectButtonFamilyFriend((state) => (selectedFF));
-        }
-
-        openModal();
-    };
-
-    const [isModalVisible, setModalVisible] = useState(false);
-
-    const buttonDeselect = () => {
-        setConnectButtonHP(unselectedHP);
-        setConnectButtonFamilyFriend(unselectedFF);
-    };
-
-    const closeModal = () => {
-        buttonDeselect();
-        setModalVisible(false);
-    };
-
-    const openModal = () => {
-        setModalVisible(true);
-    };
+    const [modalContent, setModalContent] = useState(methodsModal);
 
     return (
         <>
@@ -180,6 +262,7 @@ const UserLinkScreen = ({ navigation }) => {
                         isVisible={isModalVisible}
                         onBackButtonPress={closeModal}
                         onBackdropPress={closeModal}
+                        onBackButtonPress={modalGoBack}
                     >
                         <View style={{ backgroundColor: 'white', padding: 25, paddingBottom: 55, borderRadius: 25 }}>
                             <View style={{ alignItems: 'flex-end' }}>
@@ -189,7 +272,7 @@ const UserLinkScreen = ({ navigation }) => {
                                 </TouchableOpacity>
                             </View>
                             {/* Modal content */}
-                            {QRModal}
+                            {modalContent}
                         </View>
                     </Modal>
                 </Animatable.View>
@@ -202,6 +285,13 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
+    refreshCodeBtn: {
+        backgroundColor: '#42C86A',
+        elevation: 3,
+        borderRadius: 5,
+        marginTop: 15,
+        width: "90%"
+    },
     methodBtn: {
         backgroundColor: '#42C86A',
         elevation: 3,
