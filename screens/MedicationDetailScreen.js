@@ -5,13 +5,15 @@ import * as Animatable from 'react-native-animatable';
 import Unorderedlist from 'react-native-unordered-list';
 
 import Background from '../components/background';
+import MedIconIndex from '../components/MedicationImages';
 import MenuIcon from '../assets/images/menu-icon.svg';
 import EditIcon from '../assets/images/edit-icon.svg';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 import EntryIcon from '../assets/images/entry-triangle-icon.svg';
 import MedicationIcon from '../assets/images/pink-medication-icon.svg';
 
-const MedicationScreen = ({navigation}) => {
+const MedicationDetailScreen = ({route, navigation}) => {
+    const { item } = route.params;
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
             <Background />
@@ -24,14 +26,14 @@ const MedicationScreen = ({navigation}) => {
                     <ReturnIcon/>
                 </TouchableOpacity>
                 <Text style={styles.headerFont}>
-                    Monopril
+                    {item.medicationName}
                 </Text>
                 <TouchableOpacity>
                     <EditIcon/>
                 </TouchableOpacity>
             </View>
             <View style={{alignItems: 'center', paddingVertical: 15}}>
-                <MedicationIcon/>
+                {MedIconIndex.index[item.key]}
             </View>
             <View style={{alignItems: 'center'}}>
                 <Text style={styles.timeFont}> 10:00AM </Text>
@@ -131,4 +133,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default MedicationScreen;
+export default MedicationDetailScreen;

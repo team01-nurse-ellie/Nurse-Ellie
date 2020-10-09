@@ -20,7 +20,8 @@ import SplashScreen from './screens/SplashScreen';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import HomeScreen from './screens/HomeScreen';
-import MedicationScreen from './screens/MedicationScreen';
+import MedicationListScreen from './screens/MedicationListScreen';
+import MedicationDetailScreen from './screens/MedicationDetailScreen';
 import SettingsScreen from './screens/SettingsScreen';
 
 const RootStack = createStackNavigator();
@@ -35,7 +36,8 @@ function DrawerRoutes(){
   return (
     <Drawer.Navigator drawerPosition='right' drawerContent={props=> <DrawerContent {...props}/>}>
       <Drawer.Screen name="Home" component={HomeScreen} />
-      <Drawer.Screen name="Medication" component={MedicationScreen} />
+      <Drawer.Screen name="Medications" component={MedicationListScreen} />
+      <Drawer.Screen name="Medication" component={MedicationDetailScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
     </Drawer.Navigator>
   )
