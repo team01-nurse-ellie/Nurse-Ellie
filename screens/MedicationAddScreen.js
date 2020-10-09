@@ -3,6 +3,7 @@ import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, Image, B
 
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config';
+import Autocomplete from 'react-native-autocomplete-input';
 
 import Background from '../components/background';
 import {getRxnowApproximateNames,getRxnowAllByConcepts,getRxNowDrugsByTtyName,getRxNowTermInfoByRxcui} from '../utils/medication';
