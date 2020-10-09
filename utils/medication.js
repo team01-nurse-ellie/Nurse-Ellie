@@ -24,9 +24,9 @@ export async function getRxnowAllByConcepts(termTypes) {
         const body = await response.json();
         // get json array from response
         const allConcepts = await body.minConceptGroup.minConcept;
-        // minConcept: {name,rxcui,tty}
+        // {name,rxcui,tty}
         //console.log(allConcepts)
-        return body
+        return await allConcepts;
 
     } catch  (response) { // error message, reject()?
         //reject()
@@ -50,7 +50,7 @@ export async function getRxNowDrugsByTtyName(name) {
         const scd = await body.drugGroup.conceptGroup[3].conceptProperties;
         const sbd = await body.drugGroup.conceptGroup[2].conceptProperties;
         const scdSbd = await scd.concat(sbd);
-        //console.log(scd);
+        console.log(scd);
         //console.log(sbd==undefined);
         console.log(scdSbd);
         // body drugGroup.conceptgroup -> [array of tty objects]:
@@ -79,7 +79,7 @@ export async function getRxNowTermInfoByRxcui(rxcui) {
         // displayName will be BN + (form) if brand, else IN + (form)
         // fulll genericName is never empty wethere SCD|SBD
         // fullName will + [brandname] if brand
-        console.log(rxcuiInfo);
+        //console.log(rxcuiInfo);
 
         return body
         // return object only with relevant info

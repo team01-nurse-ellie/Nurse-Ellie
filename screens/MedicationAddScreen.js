@@ -8,9 +8,36 @@ import Autocomplete from 'react-native-autocomplete-input';
 import Background from '../components/background';
 import {getRxnowApproximateNames,getRxnowAllByConcepts,getRxNowDrugsByTtyName,getRxNowTermInfoByRxcui} from '../utils/medication';
 
+
 const MedicationAddScreen = ({navigation}) => {
     const [searchTerm, setSearchTerm] = useState('') 
-    const [rxcui, setRxcui] = useState('')
+    // master rxcui API query result list
+    const [rxcui, setRxcui] = useState([])
+    // filtered rxcui API query result list
+    const [filterRxcui, setFilterRxcui] = useState([])
+
+    // returns filtered sub-set of master rxnow query
+    const findTerm = (term) =>{
+        if (term.length < 1) {
+            return [];
+        }
+        const searchTerm = term.trim();
+        console.log(searchTerm);
+        const regex = new RegExp(searchTerm,'i');
+        console.log('before');
+        console.log(rxcui[0]);
+        const filter = rxcui.filter(ingredientBrand=>ingredientBrand.name.search(regex) >= 0)
+        console.log(filter);
+        return filter;
+    }
+
+
+    // createa  function that takes a single object as argument
+    const renderItem = ({item}) => (
+        <TouchableOpacity>
+            <Text style={styles.descriptionFont}>{item.name}</Text>
+        </TouchableOpacity>
+    );
 
     useEffect(() => {
         load()
@@ -19,11 +46,21 @@ const MedicationAddScreen = ({navigation}) => {
     const onLoginPress = () => {
     }
 
+
+
+
+
     async function load() {
         try {
-            //const rxStuff = await getRxnowAllByConcepts(['IN','BN','MIN']);
-            await getRxNowDrugsByTtyName('molindone');
-            await getRxNowTermInfoByRxcui('866516');
+            const rxStuff = await getRxnowAllByConcepts(['IN','BN','MIN']);
+            //const temp = await getRxNowDrugsByTtyName('molindone');
+            //await getRxNowTermInfoByRxcui('866516');
+            //await console.log(temp);
+            console.log('hello');
+            //const blahbah = await fetch('http://dummy.restapiexample.com/api/v1/employees');
+            //const monkey = await blahbah.json();
+            await setRxcui(rxStuff);
+            await console.log(rxcui);
         } catch (error) { console.log(error)}
         // get IN, BN, MIN from api
 
@@ -39,10 +76,20 @@ const MedicationAddScreen = ({navigation}) => {
                 <View style={styles.heading}>
                     <Image source={require('../assets/android/drawable-mdpi/return-icon.png')} />
                     <Text style={styles.headerFont}> Add Medication </Text>
-                </View> 
-                <TextInput style={styles.textInput} placeholder="Ingredient or Brand" autoCapitalize="none" onChangeText={(text) => setSearchTerm(text)}
-                    value={searchTerm} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <View style={styles.whitePadding}/>
+                </View>
+                <Autocomplete
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    inputContainerStyle={styles.searchResults}
+                    listContainerStyle={styles.searchResults2}
+                    listStyle={styles.searchResults2}
+                    data={filterRxcui}
+                    defaultValue={searchTerm}
+                    onChangeText={(text) => setFilterRxcui(findTerm(text))}
+                    placeholder="Enter Ingredient or Brand"
+                    renderItem={renderItem}
+                />
+                <View style={styles.medicationDisplay}></View>
             </Animatable.View>
         </KeyboardAvoidingView>
     )
@@ -76,16 +123,17 @@ const styles = StyleSheet.create({
         fontWeight: "100", 
     },
     descriptionFont: {
+        flex:1,
         fontFamily: 'roboto-regular', 
-        fontSize: 12, 
-        color: 'rgba(0, 0, 0, 0.38)'
+        fontSize: 14, 
+        color: 'rgba(0, 0, 0, 0.38)',
+        margin:2.5,
     },
     clickableFont: {
         fontFamily: 'roboto-medium',
         fontSize: 14, 
     },
     drawer: {
-        flex: 4,
         backgroundColor: '#fff', 
         borderTopLeftRadius: 30, 
         borderTopRightRadius: 30, 
@@ -95,6 +143,16 @@ const styles = StyleSheet.create({
         width: screenWidth,
         height: screenHeight * 0.85,
         top: screenHeight * 0.15
+    },
+    searchResults: {
+        width:'100%',
+        alignContent:'flex-end'
+    },
+    searchResults2: {
+        width:'100%',
+        alignContent:'flex-end'
+    },
+    medicationDisplay: {
     }
 })
 
