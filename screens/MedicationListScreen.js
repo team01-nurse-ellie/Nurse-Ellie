@@ -53,7 +53,7 @@ const MedicationsScreen = ({navigation}) => {
                         </MedicationCard>
                     </TouchableOpacity>
                 )}/>
-                <Button title="ADD NEW MEDICATION" color='#42C86A' onPress={()=>Alert.alert('add a new medication...')}/>
+                <Button title="ADD NEW MEDICATION" color='#42C86A' onPress={()=>navigation.navigate('AddMedication')}/>
             </Animatable.View>
         </KeyboardAvoidingView>
     )

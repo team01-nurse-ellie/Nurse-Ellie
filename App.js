@@ -21,6 +21,7 @@ import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import HomeScreen from './screens/HomeScreen';
 import MedicationListScreen from './screens/MedicationListScreen';
+import AddMedicationScreen from './screens/AddMedicationScreen';
 import MedicationDetailScreen from './screens/MedicationDetailScreen';
 import SettingsScreen from './screens/SettingsScreen';
 
@@ -37,6 +38,7 @@ function DrawerRoutes(){
     <Drawer.Navigator drawerPosition='right' drawerContent={props=> <DrawerContent {...props}/>}>
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Medications" component={MedicationListScreen} />
+      <Drawer.Screen name="AddMedication" component={AddMedicationScreen} />
       <Drawer.Screen name="Medication" component={MedicationDetailScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
     </Drawer.Navigator>
