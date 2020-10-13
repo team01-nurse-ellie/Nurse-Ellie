@@ -1,15 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-gesture-handler';
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
+
 import * as Font from 'expo-font';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
 import { AppLoading } from 'expo';
+
+import { firebase } from "./components/Firebase/config.js";
+import { patient_styles } from './general-stylesheet';
+import DrawerContent from "./components/DrawerContent";
 
 // Screens
 import SplashScreen from './screens/SplashScreen';
-import HomeScreen from './screens/HomeScreen';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import UserLinkScreen from './screens/UserLinkScreen';
@@ -17,45 +24,63 @@ import UserLinkScreen from './screens/UserLinkScreen';
 // Components
 import MenuBtn from './components/menu-btn';
 import QRScreen from './screens/QRScreen';
+import HomeScreen from './screens/HomeScreen';
+import MedicationListScreen from './screens/MedicationListScreen';
+import AddMedicationScreen from './screens/AddMedicationScreen';
+import MedicationDetailScreen from './screens/MedicationDetailScreen';
+import SettingsScreen from './screens/SettingsScreen';
 
 const RootStack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const getFonts = () => Font.loadAsync({
   'roboto-regular': require('./assets/fonts/Roboto-Regular.ttf'),
   'roboto-medium': require('./assets/fonts/Roboto-Medium.ttf')
 });
 
-function App({ navigation }) {
+function DrawerRoutes() {
+  return (
+    <Drawer.Navigator drawerPosition='right' drawerContent={props => <DrawerContent {...props} />}>
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Medications" component={MedicationListScreen} />
+      <Drawer.Screen name="AddMedication" component={AddMedicationScreen} />
+      <Drawer.Screen name="Medication" component={MedicationDetailScreen} />
+      <Drawer.Screen name="Settings" component={SettingsScreen} />
+      <Drawer.Screen name="UserLinkScreen" component={UserLinkScreen} />
+    </Drawer.Navigator>
+  )
+}
+
+function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      setIsSignedIn(Boolean(user));
+    });
+    return () => {
+      unsubscribe();
+    }
+  }, []);
 
   if (fontsLoaded) {
     return (
       <NavigationContainer>
         <RootStack.Navigator>
-          <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{
-            headerShown: false
-          }} />
-          <RootStack.Screen name="SignInScreen" component={SignInScreen} options={{
-            headerShown: false
-          }} />
-          <RootStack.Screen name="SignUpScreen" component={SignUpScreen} options={{
-            headerShown: false
-          }} />
-          <RootStack.Screen name="Home" component={HomeScreen} />
-          <RootStack.Screen name="UserLinkScreen" component={UserLinkScreen}
-            options={{
-              headerTransparent: true,
-              headerLeft: null,
-              headerTitle: null,
-              headerRight: () => <MenuBtn />
-            }}
-          />
-          <RootStack.Screen name="QRScreen" component={QRScreen} options={{
-            headerStyle: {
-              backgroundColor: '#42C86A'
-            },
-            title: "Scan"
-          }} />
+          {isSignedIn ? (
+            <>
+              <RootStack.Screen name="HomeScreen" component={DrawerRoutes} options={{ headerShown: false }} />
+              <RootStack.Screen name="QRScreen" component={QRScreen} options={{ headerStyle: { backgroundColor: patient_styles.background.backgroundColor }, title: "Scan" }} />
+            </>
+          ) : (
+              <>
+                <RootStack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
+                <RootStack.Screen name="SignInScreen" component={SignInScreen} options={{ headerShown: false }} />
+                <RootStack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
+              </>
+            )
+          }
         </RootStack.Navigator>
       </NavigationContainer>
     );

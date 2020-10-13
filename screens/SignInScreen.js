@@ -1,11 +1,43 @@
-import React from 'react';
-import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
+import { firebase } from '../components/Firebase/config';
 
 import Background from '../components/background';
 
 const SignInScreen = ({navigation}) => {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    
+    const onLoginPress = () => {
+        firebase
+            .auth()
+            .signInWithEmailAndPassword(email, password)
+            .then((response) => {
+                const uid = response.user.uid
+                const usersRef = firebase.firestore().collection('users')
+                usersRef
+                    .doc(uid)
+                    .get()
+                    .then(firestoreDocument => {
+                        if (!firestoreDocument.exists) {
+                            alert("User does not exist anymore.")
+                            return;
+                        }
+                        const user = firestoreDocument.data()
+                        navigation.navigate('HomeScreen')
+                    })
+                    .catch(error => {
+                        alert(error)
+                    });
+            })
+            .catch(error => {
+                alert(error)
+            })
+    }
+
+    
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
             <Background/>
@@ -13,13 +45,15 @@ const SignInScreen = ({navigation}) => {
                 <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} />
                 <Text style={styles.headerFont}> Sign-In </Text>
                 <View style={styles.whitePadding}/>
-                <TextInput style={styles.textInput} placeholder="Email Address" autoCapitalize="none"/> 
-                <TextInput style={styles.textInput} placeholder="Password" />
-                <TouchableOpacity style={styles.button} >
+                <TextInput style={styles.textInput} placeholder="Email Address" autoCapitalize="none"  onChangeText={(text) => setEmail(text)}
+                    value={email} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>  
+                <TextInput style={styles.textInput} placeholder="Password" secureTextEntry onChangeText={(text) => setPassword(text)}
+                    value={password} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
+                <TouchableOpacity style={styles.button} onPress={()=>onLoginPress()}>
                     <Image source={require('../assets/android/drawable-mdpi/g-login-arrow.png')} />
                 </TouchableOpacity>
                 <View style={styles.whitePadding}/>
-                <Text style={styles.descriptionFont}> Already have an account? </Text>
+                <Text style={styles.descriptionFont}> Don't have an account yet? </Text>
                 <TouchableOpacity onPress={()=>navigation.push('SignUpScreen')}> 
                     <Text style={styles.clickableFont}> SIGN UP </Text>
                 </TouchableOpacity>
@@ -30,7 +64,6 @@ const SignInScreen = ({navigation}) => {
 
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
-
 
 const styles = StyleSheet.create({
     background: {
