@@ -1,30 +1,39 @@
 import React, {useState, useEffect} from 'react';
-import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard } from 'react-native';
+import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard,FlatList } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config';
 import Autocomplete from 'react-native-autocomplete-input';
 
 import Background from '../components/background';
-import {getRxnowApproximateNames,getRxnowAllByConcepts,getRxNowDrugsByTtyName,getRxNowTermInfoByRxcui} from '../utils/medication';
+import {getRxnowApproximateNames,getRxnowAllByConcepts,getRxNowDrugsByTtyName,getRxNowTermInfoByRxcui, getAdverseByBnIn,getFdaLabelByRxcui} from '../utils/medication';
+
+
+const Item = ({ item, onPress }) => (
+    <TouchableOpacity onPress={onPress} >
+      <Text >{item.title}</Text>
+    </TouchableOpacity>
+);
 
 
 const MedicationAddScreen = ({navigation}) => {
     const [searchTerm, setSearchTerm] = useState('') 
-    // master rxcui API query result list
+    // master rxcui term list (all possibly ingredients and brand-names)
     const [rxcui, setRxcui] = useState([])
-    // filtered rxcui API query result list
+    // filtered rxcui term list (filtered list of ingredients and brand-names)
     const [filterRxcui, setFilterRxcui] = useState([])
+    // filtered list of drugs (ingredient, form, strength) based on user-selected ingredient or brand-name
+    const [drugList, setDrugList] = useState([])
+
 
     // returns filtered sub-set of master rxnow query
-    const findTerm = (term) =>{
+    const filterByTerm = (term) =>{
         if (term.length < 1) {
             return [];
         }
-        const searchTerm = term.trim();
-        console.log(searchTerm);
-        const regex = new RegExp(searchTerm,'i');
-        console.log('before');
+        const searchIngBn = term.trim();
+        console.log(searchIngBn);
+        const regex = new RegExp(searchIngBn,'i');
         console.log(rxcui[0]);
         const filter = rxcui.filter(ingredientBrand=>ingredientBrand.name.search(regex) >= 0)
         console.log(filter);
@@ -32,41 +41,49 @@ const MedicationAddScreen = ({navigation}) => {
     }
 
 
-    // createa  function that takes a single object as argument
+    // renders ingredients/brand names filtered by user search input
     const renderItem = ({item}) => (
         <TouchableOpacity>
-            <Text style={styles.descriptionFont}>{item.name}</Text>
+            <Text 
+            style={styles.descriptionFont} 
+            onPress={ ()=> {
+                getDrugsbytty(item.name);
+                 
+            }}>
+                {item.name}
+            </Text>
         </TouchableOpacity>
     );
+
+    // when ingredient/brand-name is selected by user from autocomplete list
+    async function getDrugsbytty(tty) {
+        // get list of drugs for that ingredient
+        const drugList = await getRxNowDrugsByTtyName(tty);
+        await console.log(drugList);
+        await setDrugList(drugList);
+    }
+
+    // renders drug product (molecule, form, strength [brand])
+    const renderDrug = ({ item }) => {
+        return <Item item={item} onPress={() => doSomething(item.name)} />;
+    };
+
+    // do something
+    const doSomething = () => {
+        return 0;
+    }
 
     useEffect(() => {
         load()
     }, [])
 
-    const onLoginPress = () => {
-    }
-
-
-
-
 
     async function load() {
         try {
             const rxStuff = await getRxnowAllByConcepts(['IN','BN','MIN']);
-            //const temp = await getRxNowDrugsByTtyName('molindone');
-            //await getRxNowTermInfoByRxcui('866516');
-            //await console.log(temp);
-            console.log('hello');
-            //const blahbah = await fetch('http://dummy.restapiexample.com/api/v1/employees');
-            //const monkey = await blahbah.json();
             await setRxcui(rxStuff);
-            await console.log(rxcui);
-        } catch (error) { console.log(error)}
-        // get IN, BN, MIN from api
-
-        // assign to hook
-        // create list of o
-        
+            await console.log('why');
+        } catch (error) { console.log(error)}        
     }
     
     return (
@@ -84,12 +101,16 @@ const MedicationAddScreen = ({navigation}) => {
                     listContainerStyle={styles.searchResults2}
                     listStyle={styles.searchResults2}
                     data={filterRxcui}
-                    defaultValue={searchTerm}
-                    onChangeText={(text) => setFilterRxcui(findTerm(text))}
+                    defaultValue={''}
+                    onChangeText={(text) => setFilterRxcui(filterByTerm(text))}
                     placeholder="Enter Ingredient or Brand"
                     renderItem={renderItem}
                 />
-                <View style={styles.medicationDisplay}></View>
+                <FlatList
+                    data={drugList}>
+                    renderItem={renderDrug}
+                    keyExtractor={item =>item.rxcui}
+                </FlatList>
             </Animatable.View>
         </KeyboardAvoidingView>
     )
@@ -128,6 +149,7 @@ const styles = StyleSheet.create({
         fontSize: 14, 
         color: 'rgba(0, 0, 0, 0.38)',
         margin:2.5,
+        paddingHorizontal: 20,
     },
     clickableFont: {
         fontFamily: 'roboto-medium',

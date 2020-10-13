@@ -3,8 +3,8 @@ export async function getRxnowApproximateNames(name) {
         const response = await fetch('https://rxnav.nlm.nih.gov/REST/Prescribe/drugs.json?name=metoprolol');
         const body = await response.json();
         return body
-    } catch  (response) {
-        reject()
+    } catch  (error) {
+        return error;
     }
 
 }
@@ -28,8 +28,8 @@ export async function getRxnowAllByConcepts(termTypes) {
         //console.log(allConcepts)
         return await allConcepts;
 
-    } catch  (response) { // error message, reject()?
-        //reject()
+    } catch  (error) { 
+        return error;
     }
 
 }
@@ -50,19 +50,13 @@ export async function getRxNowDrugsByTtyName(name) {
         const scd = await body.drugGroup.conceptGroup[3].conceptProperties;
         const sbd = await body.drugGroup.conceptGroup[2].conceptProperties;
         const scdSbd = await scd.concat(sbd);
-        console.log(scd);
-        //console.log(sbd==undefined);
+        // [ {BPCK}{GPCK}{SBD}{SCD} ]   -> take {SCD} from array tty objects
         console.log(scdSbd);
-        // body drugGroup.conceptgroup -> [array of tty objects]:
-            // [ {BPCK}{GPCK}{SBD}{SCD} ]   -> take {SCD} from array tty objects
-            // {"tty":"SCD",    "conceptProperties":[array of results ]   }:
-            // each result object: rxcui, name(concept, ie scd), synonym, tty, language, suppress, umlscui
-
-        return body
+        return await scdSbd
         
 
-    } catch  (response) { // error message, reject()?
-        //reject()
+    } catch  (error) {
+        return error;
     }
 }
 
@@ -84,7 +78,72 @@ export async function getRxNowTermInfoByRxcui(rxcui) {
         return body
         // return object only with relevant info
 
-    } catch  (response) { // error message, reject()?
-        //reject()
+    } catch  (error) { 
+        return error;
     }
+}
+
+// get top 10 adverse reactions from OpenFda adverse reaction API
+export async function getAdverseByBnIn(brandIngredient) {
+    var resourceStart = 'https://api.fda.gov/drug/event.json?search=patient.drug.openfda.substance_name:%22';
+    var resourceEnd = '%22&count=patient.reaction.reactionmeddrapt.exact';
+    var resource = resourceStart + brandIngredient + resourceEnd;
+    try {
+        const response = await fetch(resource);
+        const body = await response.json();
+        // get json array from response
+        const adverseTermsList = await body.results;
+        return await adverseTermsList.slice(0,10);
+
+    } catch  (error) { 
+        return error;
+    }
+
+}
+
+
+// get drug label information from openFDA label API
+export async function getFdaLabelByRxcui(rxcui){
+    var resourceStart = 'https://api.fda.gov/drug/label.json?search=openfda.rxcui:';
+    var resource = resourceStart + "%22" + rxcui + "%22";
+    try {
+        const response = await fetch(resource);
+        const body = await response.json();
+        // check that a label exists for drug product's rxcui
+        if(await body.hasOwnProperty('error')) {
+            await Promise.reject(new Error('openFDA did not return a label for given rxcui'));
+            alert('noe1');
+        // Parse "indications_and_usage" from label
+        } else {
+            const fdaLabel = await body.results[0];
+            // check if 'indications_and_usage' is property of label
+            const hasIndUsage = await fdaLabel.hasOwnProperty('indications_and_usage');
+            // parse only first two sentences of 'indications_and_usage'
+            if (await hasIndUsage) {
+                const indUsage = await fdaLabel.indications_and_usage[0];
+                const sentenceStart = await indUsage.indexOf('INDICATIONS AND USAGE') + 22;
+                const firstSentenceEnd = await indUsage.indexOf('.') + 1;
+                const firstIndUsageSentence = await indUsage.slice(sentenceStart,firstSentenceEnd == -1 ? indUsageSentence.length() :firstSentenceEnd );
+                //const secondSentenceEnd = await nthIndex(indUsage, '.',2) + 1;
+                //const secondindUsageSentence = await indUsage.slice(firstSentenceEnd, secondSentenceEnd)
+                //return await (firstIndUsageSentence + secondindUsageSentence);
+                console.log(firstIndUsageSentence);
+                //return indUsageSentence
+            } else {
+                await Promise.reject(new Error('label for given rxcui did not contain indications_and_usage information'));
+            }
+        }
+    } catch  (error) { 
+        return error;
+    }
+}
+
+
+function nthIndex(str, pat, n){
+    var L= str.length, i= -1;
+    while(n-- && i++<L){
+        i= str.indexOf(pat, i);
+        if (i < 0) break;
+    }
+    return i;
 }
