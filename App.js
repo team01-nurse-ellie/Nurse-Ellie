@@ -1,26 +1,53 @@
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-gesture-handler';
+
 import React, {useState, useEffect} from 'react';
+
 import * as Font from 'expo-font';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
 import { AppLoading } from 'expo';
 
 import { firebase } from "./components/Firebase/config.js";
 
+import DrawerContent from "./components/DrawerContent";
+
+// Screens
 import SplashScreen from './screens/SplashScreen';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import HomeScreen from './screens/HomeScreen';
+<<<<<<< HEAD
 import MedicationAddScreen from './screens/MedicationAddScreen';
+=======
+import MedicationListScreen from './screens/MedicationListScreen';
+import AddMedicationScreen from './screens/AddMedicationScreen';
+import MedicationDetailScreen from './screens/MedicationDetailScreen';
+import SettingsScreen from './screens/SettingsScreen';
+>>>>>>> master
 
 const RootStack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const getFonts = () => Font.loadAsync({
   'roboto-regular': require('./assets/fonts/Roboto-Regular.ttf'), 
   'roboto-medium': require('./assets/fonts/Roboto-Medium.ttf')
 });
+
+function DrawerRoutes(){
+  return (
+    <Drawer.Navigator drawerPosition='right' drawerContent={props=> <DrawerContent {...props}/>}>
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Medications" component={MedicationListScreen} />
+      <Drawer.Screen name="AddMedication" component={AddMedicationScreen} />
+      <Drawer.Screen name="Medication" component={MedicationDetailScreen} />
+      <Drawer.Screen name="Settings" component={SettingsScreen} />
+    </Drawer.Navigator>
+  )
+}
 
 function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -41,7 +68,7 @@ function App() {
         <RootStack.Navigator headerMode='none'>
           { isSignedIn ? (
             <>
-            <RootStack.Screen name="HomeScreen" component={HomeScreen} />
+            <RootStack.Screen name="HomeScreen" component={DrawerRoutes} />
             </>
           ) : (
             <>
