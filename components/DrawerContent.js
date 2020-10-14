@@ -25,6 +25,10 @@ function DrawerContent(props){
                     onPress={()=>{props.navigation.navigate('Medications')}}
                 />
                 <DrawerItem
+                    label="Patient List"
+                    onPress={()=>{props.navigation.navigate('Patients')}} 
+                />
+                <DrawerItem
                     label="Setting"
                     onPress={()=>{props.navigation.navigate('Settings')}}
                 />

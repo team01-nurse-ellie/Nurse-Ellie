@@ -23,6 +23,8 @@ import HomeScreen from './screens/HomeScreen';
 import MedicationListScreen from './screens/MedicationListScreen';
 import AddMedicationScreen from './screens/AddMedicationScreen';
 import MedicationDetailScreen from './screens/MedicationDetailScreen';
+import PatientListScreen from './screens/PatientListScreen';
+import PatientDetailScreen from './screens/PatientDetailScreen';
 import SettingsScreen from './screens/SettingsScreen';
 
 const RootStack = createStackNavigator();
@@ -40,6 +42,8 @@ function DrawerRoutes(){
       <Drawer.Screen name="Medications" component={MedicationListScreen} />
       <Drawer.Screen name="AddMedication" component={AddMedicationScreen} />
       <Drawer.Screen name="Medication" component={MedicationDetailScreen} />
+      <Drawer.Screen name="Patients" component={PatientListScreen} />
+      <Drawer.Screen name="Patient" component={PatientDetailScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
     </Drawer.Navigator>
   )
