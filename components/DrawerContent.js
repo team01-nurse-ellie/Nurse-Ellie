@@ -20,9 +20,15 @@ function DrawerContent(props){
                     label="Home"
                     onPress={() =>{props.navigation.navigate('Home')}}
                 />
+                 <Drawer.Section style={styles.bottomDrawerSection}>
+                <DrawerItem
+                   label="Medication List"
+                   onPress={()=>{props.navigation.navigate('Medications')}}
+                />
+                </Drawer.Section>
                  <DrawerItem
-                    label="Medication List"
-                    onPress={()=>{props.navigation.navigate('Medications')}}
+                    label="Health Professional"
+                    onPress={()=>{props.navigation.navigate('HealthProfessional')}}
                 />
                 <DrawerItem
                     label="Patient List"

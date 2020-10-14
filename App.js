@@ -26,7 +26,7 @@ import MedicationDetailScreen from './screens/MedicationDetailScreen';
 import PatientListScreen from './screens/PatientListScreen';
 import PatientDetailScreen from './screens/PatientDetailScreen';
 import SettingsScreen from './screens/SettingsScreen';
-
+import HealthProfessionalScreen from './screens/HealthProfessionalScreen';
 const RootStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -45,6 +45,7 @@ function DrawerRoutes(){
       <Drawer.Screen name="Patients" component={PatientListScreen} />
       <Drawer.Screen name="Patient" component={PatientDetailScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
+      <Drawer.Screen name="HealthProfessional" component={HealthProfessionalScreen} />
     </Drawer.Navigator>
   )
 }
