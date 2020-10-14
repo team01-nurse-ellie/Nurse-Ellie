@@ -25,7 +25,6 @@ export async function getAllByConcepts(termTypes) {
         // returns long list object with all possible ingredient and brand names:
         // {name,rxcui,tty}
         var allConcepts = await body.minConceptGroup.minConcept;
-        console.log(allConcepts[0].name);
         const regex = new RegExp(/[()\.[0-9]/,'i');
         var filterallConcepts = await (allConcepts[0]? allConcepts.filter(concept => concept.name.search(regex) == -1): [])
         return filterallConcepts;

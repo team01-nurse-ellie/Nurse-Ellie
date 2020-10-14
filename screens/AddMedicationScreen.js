@@ -51,7 +51,7 @@ const AddMedicationScreen = ({ navigation }) => {
         var searchIngrBrand = term.trim();
         searchIngrBrand = searchIngrBrand.replace(/[() ]/g, '\\$0')
         console.log(searchIngrBrand);
-        console.log(masterRxcui[0]);
+        console.log('search input');
         const regex = new RegExp(searchIngrBrand,'i');
         const filterList = (masterRxcui[0] ? masterRxcui.filter(ingredientBrand=>ingredientBrand.name.search(regex) >= 0) : []);
         console.log(filterList);
@@ -85,22 +85,17 @@ const AddMedicationScreen = ({ navigation }) => {
                     </View>
                     <MedicationsIcon/>
                 </View>
-                <View style={styles.searchInput}>
-                    <TextInput style={{minWidth: screenWidth*0.8}}placeholder="Search Medication..."></TextInput>
-                    <TouchableOpacity onPress={()=>Alert.alert('searching medication...')}>
-                        <SearchIcon/>
-                    </TouchableOpacity>
-                </View>
                 <Autocomplete
                         autoCapitalize="none"
                         autoCorrect={false}
-                        inputContainerStyle={styles.searchInput}
+                        containerStyle={styles.acContainer}
+                        inputContainerStyle={styles.acInputContainer}
                         listContainerStyle={styles.acListContainer}
                         listStyle={styles.acList}
                         data={filterRxcui}
                         defaultValue={''}
                         onChangeText={(text) => setFilterRxcui(filterByTerm(text))}
-                        placeholder="Enter Ingredient or Brand"
+                        placeholder="Enter medication"
                         renderItem={renderItem}
                         keyExtractor={(item,index)=>index.toString()}
                 />
@@ -175,13 +170,6 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "100",
     },
-    searchInput:{
-        flexDirection: 'row',
-        borderBottomColor: 'rgba(0, 0, 0, 0.4)',
-        borderBottomWidth: 1, 
-        minWidth: screenWidth * 0.80, 
-        marginVertical:10
-    },
     fieldText:{
         fontFamily: 'roboto-regular', 
         fontSize: 14, 
@@ -217,11 +205,27 @@ const styles = StyleSheet.create({
         height: screenHeight * 0.85,
         top: screenHeight * 0.15
     },
+    // container that surrounds result list
     acListContainer: {
-
+        //backgroundColor: 'rgba(204, 38, 9,1)', // red
+        height:180,
     },
-    acList: {
-
+    // result list
+    acList: { 
+        //backgroundColor: 'rgba(7, 204, 9,1)', // green
+        margin:0,
+    // container surround autocomplete component
+    },
+    acContainer: {
+        //backgroundColor:'rgba(63, 116, 191,1)', // blue
+    },
+    // container that surrounds textinput component
+    acInputContainer: {
+        backgroundColor: 'rgba(246, 247, 120,1)', // yellow
+        borderStartWidth:0,
+        borderEndWidth:0,
+        borderTopWidth:0,
+        borderBottomWidth:1,
     },
     descriptionFont: {
 
