@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
   <g id="Icon_material-sentiment-very-satisified" data-name="Icon material-sentiment-very-satisified" transform="translate(-73 -36)" opacity="0.7">
-    <path id="Path_1006" data-name="Path 1006" d="M25.5,14.25A2.25,2.25,0,1,1,23.25,12,2.25,2.25,0,0,1,25.5,14.25Z" transform="translate(70 33)"/>
-    <path id="Path_1007" data-name="Path 1007" d="M15,14.25A2.25,2.25,0,1,1,12.75,12,2.25,2.25,0,0,1,15,14.25Z" transform="translate(70 33)"/>
-    <path id="Icon_material-sentiment-very-satisfied" data-name="Icon material-sentiment-very-satisfied" d="M17.985,3A15,15,0,1,0,33,18,14.983,14.983,0,0,0,17.985,3ZM18,30A12,12,0,1,1,30,18,12,12,0,0,1,18,30Zm0-3.75A8.244,8.244,0,0,0,25.665,21H10.335A8.244,8.244,0,0,0,18,26.25Z" transform="translate(70 33)"/>
+    <path id="Path_1006" data-name="Path 1006" fill="#707070" stroke="#707070" d="M25.5,14.25A2.25,2.25,0,1,1,23.25,12,2.25,2.25,0,0,1,25.5,14.25Z" transform="translate(70 33)"/>
+    <path id="Path_1007" data-name="Path 1007" fill="#707070" stroke="#707070" d="M15,14.25A2.25,2.25,0,1,1,12.75,12,2.25,2.25,0,0,1,15,14.25Z" transform="translate(70 33)"/>
+    <path id="Icon_material-sentiment-very-satisfied" data-name="Icon material-sentiment-very-satisfied" fill="#707070" stroke="#707070" d="M17.985,3A15,15,0,1,0,33,18,14.983,14.983,0,0,0,17.985,3ZM18,30A12,12,0,1,1,30,18,12,12,0,0,1,18,30Zm0-3.75A8.244,8.244,0,0,0,25.665,21H10.335A8.244,8.244,0,0,0,18,26.25Z" transform="translate(70 33)"/>
   </g>
 </svg>
