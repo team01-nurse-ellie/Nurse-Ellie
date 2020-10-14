@@ -1,3 +1,6 @@
+
+/************************RxNorm Prescribable/Terms API ******************************/
+// 20 requests per second per IP address
 export async function getApproximateNames(name) {
     try {
         const response = await fetch('https://rxnav.nlm.nih.gov/REST/Prescribe/drugs.json?name=metoprolol');
@@ -35,23 +38,30 @@ export async function getAllByConcepts(termTypes) {
 
 }
 
-export async function getRxNowDrugsByTtyName(name) {
-    // /drugs API returns: clinical drug (SCD), clinical pack (GPCK), branded drug (SBD), branded pack (BPCK)
+// /drugs API returns: clinical drug (SCD), clinical pack (GPCK), branded drug (SBD), branded pack (BPCK)
+export async function getDrugsByTtyName(name) {
     var resource = 'https://rxnav.nlm.nih.gov/REST/Prescribe/drugs.json?name='
     resource += name;
-    console.log(resource);
+    console.log('resource is:' +resource);
+    var conceptGroups = [];
+    var concepts = [];
+    var scdSbd = [];
     try {
         const response = await fetch(resource);
         const body = await response.json();
-        // get json array from response
-        const allDrugs = await body.drugGroup;
-        // BPCK -> GPCK-> SBD -> SCD
-        // array of results, ie SCD drug products
-
-        const scd = await body.drugGroup.conceptGroup[3].conceptProperties;
-        const sbd = await body.drugGroup.conceptGroup[2].conceptProperties;
-        const scdSbd = await scd.concat(sbd);
-        // [ {BPCK}{GPCK}{SBD}{SCD} ]   -> take {SCD} from array tty objects
+        const allConceptGroups = await body.drugGroup.conceptGroup;
+        console.log(allConceptGroups.length);
+        for (var i = 0; i < allConceptGroups.length; i++) {
+            console.log(allConceptGroups[i].conceptProperties);
+            if( allConceptGroups[i].hasOwnProperty('conceptProperties') && allConceptGroups[i].tty=="SCD"){
+                console.log('hello');
+                scdSbd = concepts.concat(allConceptGroups[i].conceptProperties);
+            } 
+            if( allConceptGroups[i].hasOwnProperty('conceptProperties') && allConceptGroups[i].tty=="SBD"){
+                scdSbd = concepts.concat(allConceptGroups[i].conceptProperties);
+                console.log('hello2');
+            }   
+        }
         console.log(scdSbd);
         return await scdSbd
         
@@ -100,6 +110,13 @@ export async function getAdverseByBnIn(brandIngredient) {
     }
 
 }
+
+// get term inforation: 
+export async function getTermInfoByRxcui(rxcuis) {
+
+}
+
+/************************OpenFDA API ***********************************************/
 
 
 // get drug label information from openFDA label API
