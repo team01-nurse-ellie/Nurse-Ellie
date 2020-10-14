@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, Button, TextInput, Switch, KeyboardAvoidingView, TouchableOpacity, Dimensions, StyleSheet, Alert } from 'react-native';
+import { View, Text, Button, TextInput, Switch, KeyboardAvoidingView, TouchableOpacity, Dimensions, StyleSheet, Alert, FlatList} from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 import ScrollPicker from 'react-native-wheel-scroll-picker';
 import Autocomplete from 'react-native-autocomplete-input';
+import Modal from 'react-native-modal';
 
 import Background from '../components/background';
 import DatePicker from '../components/DatePicker';
@@ -22,6 +23,7 @@ const AddMedicationScreen = ({ navigation }) => {
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
     const [alarm, setAlarm] = useState('false');
+    const [showModal, setShowModal] = useState(false);
     const toggleSwitch = () => setAlarm(previousState => !previousState);
     // master rxcui term list (all possible ingredients and brand-names)
     const [masterRxcui, setMasterRxcui] = useState([])
@@ -61,18 +63,36 @@ const AddMedicationScreen = ({ navigation }) => {
     // renders ingredients/brand names filtered by user search input
     const renderItem = ({item}) => (
         <TouchableOpacity>
-            <Text style={styles.descriptionFont} onPress={ ()=> {console.log(item)}}>
+            <Text style={styles.descriptionFont} onPress={ ()=> {setShowModal(true)}}>
                 {item.name}
             </Text>
         </TouchableOpacity>
     );
-
+    
     return (
-        <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+        <KeyboardAvoidingView style={styles.background} behaviour='padding' enabled>
             <Background />
             <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
             </TouchableOpacity>
+            <Modal 
+            isVisible={showModal}
+            animationIn='slideInUp'
+            animationOut='slideOutDown'
+            onBackButtonPress={()=> setShowModal(false)}
+            backdropOpacity={0}
+            >
+                <View style={styles.modalDrawer}>
+                    <Text style={styles.title}>
+                    Add Medication
+                    </Text>
+                    <FlatList
+                    data={filterRxcui}
+                    renderItem={({ item }) => <Text>{item.name}</Text>}
+                    keyExtractor={(item,index)=>index.toString()}
+                    />
+                </View>
+            </Modal>
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
                 <View style={styles.header}>
                     <View style={{flexDirection:'row'}}>
@@ -86,18 +106,18 @@ const AddMedicationScreen = ({ navigation }) => {
                     <MedicationsIcon/>
                 </View>
                 <Autocomplete
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        containerStyle={styles.acContainer}
-                        inputContainerStyle={styles.acInputContainer}
-                        listContainerStyle={styles.acListContainer}
-                        listStyle={styles.acList}
-                        data={filterRxcui}
-                        defaultValue={''}
-                        onChangeText={(text) => setFilterRxcui(filterByTerm(text))}
-                        placeholder="Enter medication"
-                        renderItem={renderItem}
-                        keyExtractor={(item,index)=>index.toString()}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    containerStyle={styles.acContainer}
+                    inputContainerStyle={styles.acInputContainer}
+                    listContainerStyle={styles.acListContainer}
+                    listStyle={styles.acList}
+                    data={filterRxcui}
+                    defaultValue={''}
+                    onChangeText={(text) => setFilterRxcui(filterByTerm(text))}
+                    placeholder="Enter medication"
+                    renderItem={renderItem}
+                    keyExtractor={(item,index)=>index.toString()}
                 />
                 <View style={{alignItems: 'center', paddingTop: 10}}>
                     <PinkMedication/>
@@ -199,6 +219,17 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30, 
         borderTopRightRadius: 30, 
         paddingVertical: 50, 
+        paddingHorizontal: 30, 
+        position: 'absolute',
+        width: screenWidth,
+        height: screenHeight * 0.85,
+        top: screenHeight * 0.15
+    },
+    modalDrawer: {
+        backgroundColor: '#fff', 
+        borderTopLeftRadius: 30, 
+        borderTopRightRadius: 30, 
+        paddingVertical: 0, 
         paddingHorizontal: 30, 
         position: 'absolute',
         width: screenWidth,
