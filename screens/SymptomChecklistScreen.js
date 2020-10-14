@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput,Image, StyleSheet, Button, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TextInput,Image, StyleSheet, Button, Dimensions } from 'react-native';
+import { ScrollView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import * as Animatable from 'react-native-animatable'
 import CheckBox from '@react-native-community/checkbox';
 import Background from '../components/background';
@@ -65,12 +66,12 @@ const SymptomChecklistScreen = ({ navigation }) => {
             <Background />
             <Animatable.View style={styles.drawer} animation="fadeInUpBig">
             
-            <View>  
+            <ScrollView >  
                 <View style={styles.screenHeader}>
                     <Text style={styles.headerFont}>
                         {`Symptom Checklist`}
                     </Text>
-                    <ClipboardIcon style={styles.headerImage} />
+                    <ClipboardIcon fill="#000000" style={styles.headerImage} />
                 </View> 
 
                 <View style={styles.feelingView}>
@@ -79,11 +80,11 @@ const SymptomChecklistScreen = ({ navigation }) => {
                     </Text>
 
                     <View style={styles.feelingIcons}>
-                        <ClipboardIcon />
-                        <ClipboardIcon />
-                        <ClipboardIcon />
-                        <ClipboardIcon />
-                        <ClipboardIcon />
+                        <VeryDissatisfiedIcon fill="#000000" />
+                        <DissatisfiedIcon fill="#000000" />
+                        <NeutralIcon fill="#000000" />
+                        <SatisfiedIcon fill="#000000" />
+                        <VerySatisfiedIcon fill="#000000" />
                     </View>
 
                     <View style={styles.feelingWords}>
@@ -102,7 +103,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                     </Text>
 
                     <View style={styles.feelingYesNo}>
-                        <Text style={styles.feelingNo}>
+                        <Text style={styles.feelingYes}>
                             {`YES`}
                         </Text>
                         <Text style={styles.feelingNo}>
@@ -124,7 +125,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                                 onValueChange={setHeadSelection}
                                 style={styles.checkbox}
                             />
-                            <Text style={styles.simpleText}> Head</Text>
+                            <Text style={styles.simpleTextF}>Head</Text>
                         </View>
 
                         <View style={styles.discomfortCheckSubView}>
@@ -133,7 +134,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                                 onValueChange={setChestSelection}
                                 style={styles.checkbox}
                             />
-                            <Text style={styles.simpleText}> Chest</Text>
+                            <Text style={styles.simpleTextF}>Chest</Text>
                         </View>
 
                         <View style={styles.discomfortCheckSubView}>
@@ -142,7 +143,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                                 onValueChange={setStomachSelection}
                                 style={styles.checkbox}
                             />
-                            <Text style={styles.simpleText}> Stomach</Text>
+                            <Text style={styles.simpleTextF}>Stomach</Text>
                         </View>
 
                         <View style={styles.discomfortCheckSubView}>
@@ -151,7 +152,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                                 onValueChange={setBackSelection}
                                 style={styles.checkbox}
                             />
-                            <Text style={styles.simpleText}> Back</Text>
+                            <Text style={styles.simpleTextF}>Back</Text>
                         </View>
 
                         <View style={styles.discomfortCheckSubView}>
@@ -160,7 +161,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                                 onValueChange={setOtherSelection}
                                 style={styles.checkbox}
                             />
-                            <Text style={styles.simpleText}> Other</Text>
+                            <Text style={styles.simpleTextF}>Other</Text>
                         </View>
                     </View>
 
@@ -185,7 +186,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                                 onValueChange={setAchySelection}
                                 style={styles.checkbox}
                             />
-                            <Text style={styles.simpleText}> Achy or gnawing</Text>
+                            <Text style={styles.simpleTextF}>Achy or gnawing</Text>
                         </View>
 
                         <View style={styles.discomfortCheckSubView}>
@@ -194,7 +195,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                                 onValueChange={setBurningSelection}
                                 style={styles.checkbox}
                             />
-                            <Text style={styles.simpleText}> Burning</Text>
+                            <Text style={styles.simpleTextF}>Burning</Text>
                         </View>
 
                         <View style={styles.discomfortCheckSubView}>
@@ -203,7 +204,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                                 onValueChange={setSuddenSelection}
                                 style={styles.checkbox}
                             />
-                            <Text style={styles.simpleText}> Sudden</Text>
+                            <Text style={styles.simpleTextF}>Sudden</Text>
                         </View>
 
                         <View style={styles.discomfortCheckSubView}>
@@ -212,7 +213,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                                 onValueChange={setSevereSelection}
                                 style={styles.checkbox}
                             />
-                            <Text style={styles.simpleText}> Severe</Text>
+                            <Text style={styles.simpleTextF}>Severe</Text>
                         </View>
                     </View>
 
@@ -223,7 +224,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                                 onValueChange={setSqueezingSelection}
                                 style={styles.checkbox}
                             />
-                            <Text style={styles.simpleText}> Squeezing or pressure</Text>
+                            <Text style={styles.simpleTextF}>Squeezing or pressure</Text>
                         </View>
 
                         <View style={styles.discomfortCheckSubView}>
@@ -232,7 +233,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                                 onValueChange={setSharpSelection}
                                 style={styles.checkbox}
                             />
-                            <Text style={styles.simpleText}> Sharp</Text>
+                            <Text style={styles.simpleTextF}>Sharp</Text>
                         </View>
 
                         <View style={styles.discomfortCheckSubView}>
@@ -241,7 +242,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                                 onValueChange={setOther2Selection}
                                 style={styles.checkbox}
                             />
-                            <Text style={styles.simpleText}> Other</Text>
+                            <Text style={styles.simpleTextF}>Other</Text>
                         </View>
 
                     </View>
@@ -272,7 +273,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                     onPress={getFormValue}
                 />
 
-            </View>
+            </ScrollView>
 
             </Animatable.View>
         </>
@@ -297,6 +298,7 @@ const styles = StyleSheet.create({
         //justifyContent: 'space-between'
     },
 
+
     screenHeader: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -313,7 +315,7 @@ const styles = StyleSheet.create({
     },
 
     feelingView: {
-        paddingTop: 2,
+        paddingTop: 5,
     },
 
     feelingIcons: {
@@ -328,13 +330,13 @@ const styles = StyleSheet.create({
     },
 
     feelingPain: {
+        paddingRight: 80,
         flexDirection: 'row',
     },
 
     feelingYesNo: {
         marginLeft: 25,
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
 
         fontFamily: 'roboto-medium',
         color: 'grey'
@@ -361,16 +363,24 @@ const styles = StyleSheet.create({
 
     discomfortCheckSubView:{
         flexDirection: 'row',
-        marginRight: 5,
-        textAlignVertical: "center",
+        //marginRight: 5,
+        //textAlignVertical: "center",
     },
 
-    //////
-
+ 
     simpleText: {
         fontFamily: 'roboto-medium',
-        fontSize: 12.5,
+        fontSize: 13,
         color: 'grey',
+        lineHeight: 20,
+        marginBottom: 10,
+    },
+
+    simpleTextF: {
+        fontFamily: 'roboto-medium',
+        fontSize: 12,
+        color: 'grey',
+        lineHeight: 30,
     },
 
     underline: {
@@ -389,7 +399,8 @@ const styles = StyleSheet.create({
 
     inputText2:{
         borderBottomColor: '#42C86A',
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
+        marginBottom: 10,
     }
 
 });
