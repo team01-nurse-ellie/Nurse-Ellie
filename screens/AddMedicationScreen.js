@@ -29,6 +29,8 @@ const AddMedicationScreen = ({ navigation }) => {
     const [masterRxcui, setMasterRxcui] = useState([])
     // filtered rxcui term list (filtered list of ingredients and brand-names)
     const [filterRxcui, setFilterRxcui] = useState([]);
+    // ingredient/brand name selected
+    const [ingredientBrand, setIngredientBrand] = useState('');
     // filtered list of drugs (drug = ingredient+form+strength) based on user-selected ingredient or brand-name
     const [drugList, setDrugList] = useState([])
     // drug
@@ -41,7 +43,8 @@ const AddMedicationScreen = ({ navigation }) => {
     // load master list of molecules and brand-names
     async function load() {
         try {
-            const ingredientsBrand = await getAllByConcepts(['IN','BN','MIN']);
+            //const ingredientsBrand = await getAllByConcepts(['IN','BN','MIN']);
+            const ingredientsBrand = await getAllByConcepts(['BN']);
             await setMasterRxcui(ingredientsBrand);
             console.log(ingredientsBrand);
         } catch (error) { console.log(error)}        
@@ -60,14 +63,24 @@ const AddMedicationScreen = ({ navigation }) => {
         return filterList;
     }
 
-    // renders ingredients/brand names filtered by user search input
+    // AutoComplete item for ingredients/brand names, filtered by user search input
+    //<Text style={styles.descriptionFont} onPress={ ()=> {setShowModal(true)}}>
     const renderItem = ({item}) => (
         <TouchableOpacity>
-            <Text style={styles.descriptionFont} onPress={ ()=> {setShowModal(true)}}>
+            <Text style={styles.descriptionFont} onPress={()=> renderDrugListModal(item.name)}>
                 {item.name}
             </Text>
         </TouchableOpacity>
     );
+
+    // show modal and populate listview of modal
+    const renderDrugListModal = async (drug) => {
+        console.log('drug selected: ' + drug);
+        setShowModal(true);
+        const drugList = await getDrugsByTtyName(drug);
+        setDrugList(drugList);
+        console.log('drug list is: \n' + drugList);
+    }
     
     return (
         <KeyboardAvoidingView style={styles.background} behaviour='padding' enabled>
@@ -75,20 +88,23 @@ const AddMedicationScreen = ({ navigation }) => {
             <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
             </TouchableOpacity>
-            <Modal 
+            <Modal
+            style={{margin:0}} 
             isVisible={showModal}
             animationIn='slideInUp'
             animationOut='slideOutDown'
             onBackButtonPress={()=> setShowModal(false)}
             backdropOpacity={0}
+            onModalWillShow={()=> getDrugsByTtyName()}
             >
                 <View style={styles.modalDrawer}>
                     <Text style={styles.title}>
-                    Add Medication
+                        Add Medication
                     </Text>
                     <FlatList
-                    data={filterRxcui}
-                    renderItem={({ item }) => <Text>{item.name}</Text>}
+                    style={{margin:0}}
+                    data={drugList? drugList:[]}
+                    renderItem={({ item }) => <Text style={styles.medicationFont}>{item.name}</Text>}
                     keyExtractor={(item,index)=>index.toString()}
                     />
                 </View>
@@ -106,18 +122,18 @@ const AddMedicationScreen = ({ navigation }) => {
                     <MedicationsIcon/>
                 </View>
                 <Autocomplete
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    containerStyle={styles.acContainer}
-                    inputContainerStyle={styles.acInputContainer}
-                    listContainerStyle={styles.acListContainer}
-                    listStyle={styles.acList}
-                    data={filterRxcui}
-                    defaultValue={''}
-                    onChangeText={(text) => setFilterRxcui(filterByTerm(text))}
-                    placeholder="Enter medication"
-                    renderItem={renderItem}
-                    keyExtractor={(item,index)=>index.toString()}
+                autoCapitalize="none"
+                autoCorrect={false}
+                containerStyle={styles.acContainer}
+                inputContainerStyle={styles.acInputContainer}
+                listContainerStyle={styles.acListContainer}
+                listStyle={styles.acList}
+                data={filterRxcui}
+                defaultValue={''}
+                onChangeText={(text) => setFilterRxcui(filterByTerm(text))}
+                placeholder="Enter medication"
+                renderItem={renderItem}
+                keyExtractor={(item,index)=>index.toString()}
                 />
                 <View style={{alignItems: 'center', paddingTop: 10}}>
                     <PinkMedication/>
@@ -230,7 +246,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30, 
         borderTopRightRadius: 30, 
         paddingVertical: 0, 
-        paddingHorizontal: 30, 
+        paddingHorizontal: 0, 
         position: 'absolute',
         width: screenWidth,
         height: screenHeight * 0.85,
@@ -258,8 +274,10 @@ const styles = StyleSheet.create({
         borderTopWidth:0,
         borderBottomWidth:1,
     },
-    descriptionFont: {
-
+    medicationFont: {
+        fontFamily: 'roboto-regular', 
+        fontSize: 20, 
+        color: 'rgba(0, 0, 0, 0.85)'
     }
 });
 
