@@ -75,7 +75,6 @@ export async function getTermInfoByRxcui(rxcui) {
         // displayName will be BN + (form) if brand, else IN + (form)
         // fulll genericName is never empty wethere SCD|SBD
         // fullName will + [brandname] if brand
-        //console.log(rxcuiInfo);
 
         return body
         // return object only with relevant info

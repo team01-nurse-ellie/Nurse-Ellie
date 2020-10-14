@@ -3,6 +3,7 @@ import { View, Text, Button, TextInput, Switch, KeyboardAvoidingView, TouchableO
 
 import * as Animatable from 'react-native-animatable';
 import ScrollPicker from 'react-native-wheel-scroll-picker';
+import Autocomplete from 'react-native-autocomplete-input';
 
 import Background from '../components/background';
 import DatePicker from '../components/DatePicker';
@@ -11,8 +12,9 @@ import MenuIcon from '../assets/images/menu-icon.svg';
 import MedicationsIcon from '../assets/images/medications-icon';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 import SearchIcon from '../assets/images/search-icon';
-
 import PinkMedication from '../assets/images/pink-medication-icon';
+
+import {getAllByConcepts,getDrugsByTtyName,getTermInfoByRxcui, getAdverseByBnIn,getLabelByRxcui} from '../utils/medication';
 
 const AddMedicationScreen = ({ navigation }) => {
     const currentTime = new Date();
@@ -21,6 +23,49 @@ const AddMedicationScreen = ({ navigation }) => {
     const [endDate, setEndDate] = useState();
     const [alarm, setAlarm] = useState('false');
     const toggleSwitch = () => setAlarm(previousState => !previousState);
+    // master rxcui term list (all possible ingredients and brand-names)
+    const [masterRxcui, setMasterRxcui] = useState([])
+    // filtered rxcui term list (filtered list of ingredients and brand-names)
+    const [filterRxcui, setFilterRxcui] = useState([]);
+    // filtered list of drugs (drug = ingredient+form+strength) based on user-selected ingredient or brand-name
+    const [drugList, setDrugList] = useState([])
+    // drug
+    const [drug, setDrug] = useState([])
+
+    useEffect(() => {
+        load()
+    }, [])
+
+    // load master list of molecules and brand-names
+    async function load() {
+        try {
+            const ingredientsBrand = await getAllByConcepts(['IN','BN','MIN']);
+            await setMasterRxcui(ingredientsBrand);
+            console.log(ingredientsBrand);
+        } catch (error) { console.log(error)}        
+    }
+
+    // returns filtered sub-set of master rxnow query
+    const filterByTerm = (term) =>{
+        if (term.length < 1) { return [];}
+        var searchIngrBrand = term.trim();
+        searchIngrBrand = searchIngrBrand.replace(/[() ]/g, '\\$0')
+        console.log(searchIngrBrand);
+        console.log(masterRxcui[0]);
+        const regex = new RegExp(searchIngrBrand,'i');
+        const filterList = (masterRxcui[0] ? masterRxcui.filter(ingredientBrand=>ingredientBrand.name.search(regex) >= 0) : []);
+        console.log(filterList);
+        return filterList;
+    }
+
+    // renders ingredients/brand names filtered by user search input
+    const renderItem = ({item}) => (
+        <TouchableOpacity>
+            <Text style={styles.descriptionFont} onPress={ ()=> {console.log(item)}}>
+                {item.name}
+            </Text>
+        </TouchableOpacity>
+    );
 
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
@@ -46,6 +91,19 @@ const AddMedicationScreen = ({ navigation }) => {
                         <SearchIcon/>
                     </TouchableOpacity>
                 </View>
+                <Autocomplete
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        inputContainerStyle={styles.searchInput}
+                        listContainerStyle={styles.acListContainer}
+                        listStyle={styles.acList}
+                        data={filterRxcui}
+                        defaultValue={''}
+                        onChangeText={(text) => setFilterRxcui(filterByTerm(text))}
+                        placeholder="Enter Ingredient or Brand"
+                        renderItem={renderItem}
+                        keyExtractor={(item,index)=>index.toString()}
+                />
                 <View style={{alignItems: 'center', paddingTop: 10}}>
                     <PinkMedication/>
                 </View>
@@ -158,6 +216,15 @@ const styles = StyleSheet.create({
         width: screenWidth,
         height: screenHeight * 0.85,
         top: screenHeight * 0.15
+    },
+    acListContainer: {
+
+    },
+    acList: {
+
+    },
+    descriptionFont: {
+
     }
 });
 
