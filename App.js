@@ -24,7 +24,7 @@ import MedicationListScreen from './screens/MedicationListScreen';
 import AddMedicationScreen from './screens/AddMedicationScreen';
 import MedicationDetailScreen from './screens/MedicationDetailScreen';
 import SettingsScreen from './screens/SettingsScreen';
-import HealthProfessional from './screens/HealthProfessionalScreen';
+import HealthProfessionalScreen from './screens/HealthProfessionalScreen';
 const RootStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
