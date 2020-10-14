@@ -20,14 +20,10 @@ import SplashScreen from './screens/SplashScreen';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import HomeScreen from './screens/HomeScreen';
-<<<<<<< HEAD
-import MedicationAddScreen from './screens/MedicationAddScreen';
-=======
 import MedicationListScreen from './screens/MedicationListScreen';
 import AddMedicationScreen from './screens/AddMedicationScreen';
 import MedicationDetailScreen from './screens/MedicationDetailScreen';
 import SettingsScreen from './screens/SettingsScreen';
->>>>>>> master
 
 const RootStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
