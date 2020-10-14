@@ -62,29 +62,6 @@ const MedicationAddScreen = ({navigation}) => {
         await console.log(drugList);
         await setDrugList(drugList);
     }
-
-    // renders drug product (molecule, form, strength [brand])
-    const renderDrug = ({ item }) => {
-        return <Item item={item} onPress={() => doSomething(item.name)} />;
-    };
-
-    // do something
-    const doSomething = () => {
-        return 0;
-    }
-
-    useEffect(() => {
-        load()
-    }, [])
-
-
-    async function load() {
-        try {
-            const rxStuff = await getRxnowAllByConcepts(['IN','BN','MIN']);
-            await setRxcui(rxStuff);
-            await console.log('why');
-        } catch (error) { console.log(error)}        
-    }
     
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
