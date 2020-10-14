@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, Button, Dimensions, TouchableWithoutFeedback, TextInput, KeyboardAvoidingView, Keyboard } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Button, Dimensions, TouchableWithoutFeedback, TextInput, KeyboardAvoidingView, Keyboard, Alert } from 'react-native';
 import * as Animatable from 'react-native-animatable'
 import Background from '../components/background';
 import NurseEllieConnectLogo from '../assets/images/ellie-connect-logo.svg';
@@ -10,10 +10,45 @@ import FamilyFriendBtn from '../assets/images/familyfriend-unselected-icon.svg';
 import FamilyFriendBtnSelected from '../assets/images/familyfriend-selected-icon.svg';
 import Modal from 'react-native-modal';
 import CloseBtn from '../assets/images/close-button.svg';
-import QRScanner from '../components/QRScanner/qr-scanner';
+// import QRScanner from '../components/QRScanner/qr-scanner';
 import QRCode from 'react-native-qrcode-svg';
+import { firebase } from "../components/Firebase/config";
+import { generateCode } from '../utils/codeGenerator';
 
 const UserLinkScreen = ({ navigation }) => {
+
+    const [userCode, setUserCode] = useState("");
+    const [currentUser, setUser] = useState(null);
+
+    useEffect(() => {
+
+        firebase.auth().onAuthStateChanged(user => {
+
+            if (user) {
+                // console.log(user);
+                setUser(user);
+                firebase.firestore().collection("users").where("id", "==", user.uid).get().then((querySnapshot) => {
+
+                    querySnapshot.forEach(e => {
+                        // console.log(e.data());
+                        setUserCode(e.data().connectCode);
+                    });
+
+                    // console.log(querySnapshot[0].data());
+                });
+
+            }
+
+            return () => {
+                console.log("unmounted!")
+            }
+        })
+
+        // generateCode("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        // abcdefghijklmnopqrstuvwxyz  
+        // console.log(code);
+    }, []);
+
 
     const unselectedHP = {
         HPIcon: <HP_Btn style={styles.HPBtn} />,
@@ -56,7 +91,7 @@ const UserLinkScreen = ({ navigation }) => {
 
     const [isModalVisible, setModalVisible] = useState(false);
 
-    const [methodsShown, setMethodsShown] = useState(false);
+    // const [methodsShown, setMethodsShown] = useState(false);
 
     const buttonDeselect = () => {
         setConnectButtonHP(unselectedHP);
@@ -66,13 +101,13 @@ const UserLinkScreen = ({ navigation }) => {
     const closeModal = () => {
         buttonDeselect();
         setModalVisible(false);
-        setMethodsShown(false);
+        // setMethodsShown(false);
     };
 
     const openModal = () => {
         handleModalContent("METHODS");
         setModalVisible(true);
-        setMethodsShown(true);
+        // setMethodsShown(true);
     };
 
     const handleModalContent = (type) => {
@@ -95,9 +130,32 @@ const UserLinkScreen = ({ navigation }) => {
         });
     };
 
-    const refreshCode = () => {
-        console.log(NurseEllieLogo);
+    const promptRefreshCode = () => {
+
+        // console.log(NurseEllieLogo);
+        Alert.alert("Refresh Code", "Are you sure?", [
+            {
+                text: 'Cancel',
+            },
+            {
+                text: 'OK',
+                onPress: () => refreshCode()
+            },
+        ], { cancelable: true });
+        // alert("Are you sure you?");
+
     }
+
+    const refreshCode = () => {
+        let code = generateCode();
+        firebase.firestore().collection("users").doc(currentUser.uid).update({
+            connectCode: code
+        }).then(() => {
+            setUserCode(code);
+            closeModal();
+        });
+
+    };
 
     const modalGoBack = () => {
         console.log("modalGoBack()")
@@ -113,6 +171,8 @@ const UserLinkScreen = ({ navigation }) => {
     };
 
     const [methodsPressed, setMethodsPressed] = useState(false);
+
+    const [inputCode, setInputCode] = useState("");
 
     const methodsModal = (
         <View>
@@ -165,12 +225,12 @@ const UserLinkScreen = ({ navigation }) => {
                     logoSize={65}
                     logoBackgroundColor='transparent'
                     size={210}
-                    value="https://www.google.ca"
+                    value={userCode}
                 />
                 <Text style={{ fontSize: 25, fontFamily: 'roboto-regular', marginTop: "5%" }}>
-                    3FNENIVX
-                 </Text>
-                <TouchableOpacity onPress={refreshCode} style={styles.refreshCodeBtn}>
+                    {userCode}
+                </Text>
+                <TouchableOpacity onPress={promptRefreshCode} style={styles.refreshCodeBtn}>
                     <View style={{}}>
                         <Text style={styles.methodBtnText}>
                             Refresh
@@ -181,28 +241,42 @@ const UserLinkScreen = ({ navigation }) => {
         </View>
     );
 
-    const QRModal = (
-        <View>
-            <View style={{ alignItems: 'center' }}>
-                <Text style={{ fontSize: 25, fontFamily: 'roboto-regular', }}>
-                    Scan Code
-                </Text>
-                <QRScanner />
-            </View>
-        </View>
-    );
+    // const QRModal = (
+    //     <View>
+    //         <View style={{ alignItems: 'center' }}>
+    //             <Text style={{ fontSize: 25, fontFamily: 'roboto-regular', }}>
+    //                 Scan Code
+    //             </Text>
+    //             <QRScanner />
+    //         </View>
+    //     </View>
+    // );
 
     const inputCodeModal = (
         <View>
-            <View style={{ alignItems: 'center' }}>
-                <Text style={{ fontSize: 25, fontFamily: 'roboto-regular', }}>
+            <View style={{ alignItems: 'center', marginBottom: '10%' }}>
+                <Text style={{ fontSize: 25, fontFamily: 'roboto-regular' }}>
                     Enter Connect Code:
                 </Text>
             </View>
             <View>
-                <TextInput></TextInput>
-                <TouchableOpacity onPress={() => { }} style={styles.methodBtn}>
-                    <View style={{}}>
+                <TextInput
+                    textAlign="center"
+                    autoFocus={true}
+                    autoCapitalize="characters"
+                    style={styles.textInput}
+                    returnKeyType="done"
+                    // onSubmitEditing={Keyboard.dismiss} 
+                    onChangeText={(code) => setInputCode(code)}
+                // value={inputCode}          
+                >
+                </TextInput>
+                <TouchableOpacity onPress={() => {
+                    console.log(typeof (inputCode));
+                    alert("Connect to user");
+                    Keyboard.dismiss();
+                }} style={[styles.methodBtn, { marginTop: "10%" }]}>
+                    <View>
                         <Text style={styles.methodBtnText}>
                             Submit
                         </Text>
@@ -285,6 +359,13 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
+    textInput: {
+        borderBottomColor: 'rgba(112, 112, 112, 0.7)',
+        borderBottomWidth: 1.5,
+        fontSize: 16,
+        paddingTop: 8,
+        // backgroundColor: 'cyan'
+    },
     refreshCodeBtn: {
         backgroundColor: '#42C86A',
         elevation: 3,
@@ -375,22 +456,21 @@ const styles = StyleSheet.create({
     },
     screenHeader: {
         flexDirection: 'row',
-
     },
-    whitePadding: {
-        height: screenHeight / 8
-    },
-    textInput: {
-        borderBottomColor: 'black',
-        borderBottomWidth: 1
-    },
-    heading: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        position: 'absolute',
-        paddingHorizontal: 20,
-        paddingBottom: 5
-    },
+    // whitePadding: {
+    //     height: screenHeight / 8
+    // },
+    // textInput: {
+    //     borderBottomColor: 'black',
+    //     borderBottomWidth: 1
+    // },
+    // heading: {
+    //     flex: 1,
+    //     justifyContent: 'flex-end',
+    //     position: 'absolute',
+    //     paddingHorizontal: 20,
+    //     paddingBottom: 5
+    // },
     headerFont: {
         fontFamily: 'roboto-regular',
         fontSize: 32,
@@ -406,14 +486,14 @@ const styles = StyleSheet.create({
         fontFamily: 'roboto-regular',
         fontSize: 12
     },
-    clickableFont: {
-        fontFamily: 'roboto-medium',
-        fontSize: 14,
-    },
-    button: {
-        paddingRight: 30,
-        marginTop: 30
-    },
+    // clickableFont: {
+    //     fontFamily: 'roboto-medium',
+    //     fontSize: 14,
+    // },
+    // button: {
+    //     paddingRight: 30,
+    //     marginTop: 30
+    // },
     drawer: {
         flex: 4,
         // backgroundColor: 'gray',

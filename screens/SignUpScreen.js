@@ -5,6 +5,7 @@ import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
 
 import Background from '../components/background';
+import { generateCode } from '../utils/codeGenerator';
 
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
@@ -15,22 +16,53 @@ const SignUpScreen = ({ navigation }) => {
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
 
-    const onRegisterPress = () => {
+    // const generateCode = (chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", length = 5) => {
+    //     // default should be 5 charcters long. 
+    //     // default characters set to generate code from.  
+    //     let code = "";
+    //     for (let i = length; i > 0; --i) {
+    //         code += chars[Math.floor(Math.random() * chars.length)];
+    //     }
+    //     return code;
+    // };
+
+    const onRegisterPress = async () => {
         if (password !== confirmPassword) {
             alert("Passwords don't match.")
             return
         }
-        firebase
+        await firebase
             .auth()
             .createUserWithEmailAndPassword(email, password)
-            .then((response) => {
+            .then(async (response) => {
                 const uid = response.user.uid
+                const usersRef = firebase.firestore().collection('users')
+                let code = generateCode();
+                console.log(code)
+                // if (usersRef.where("connectCode", "==", code).get().length == 0) {
+                //     console.log("none found")
+                // }
+
+                // Ensures the code is not the same as any other user. 
+                await usersRef.where("connectCode", "==", code).get().then((querySnapshot) => {
+                    querySnapshot.forEach(e => {
+                        console.log("querying foreach");
+                        if (e.data().length > 0) {
+                            console.log("CHANGING");
+                            code = generateCode();
+                        }
+                    });
+                })
+
+                console.log(code)
+
                 const data = {
                     id: uid,
                     email,
                     fullName,
+                    connectCode: code
                 };
-                const usersRef = firebase.firestore().collection('users')
+
                 usersRef
                     .doc(uid)
                     .set(data)

@@ -2,6 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-gesture-handler';
 
 import React, { useState, useEffect } from 'react';
+import { YellowBox } from 'react-native';
+
 
 import * as Font from 'expo-font';
 import { StyleSheet, Text, View } from 'react-native';
@@ -56,6 +58,10 @@ function App() {
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
+
+    // QR screen uses a setTimeout() to delay the camera opening. React-Native pops up a warning about long timers so it is supressed now.
+    YellowBox.ignoreWarnings(['Setting a timer']);
+
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       setIsSignedIn(Boolean(user));
     });
