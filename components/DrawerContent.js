@@ -42,6 +42,10 @@ function DrawerContent(props) {
                     label="User Connect"
                     onPress={() => { props.navigation.navigate('UserLinkScreen') }}
                 />
+                <DrawerItem
+                    label="Symptom Checklist"
+                    onPress={() => { props.navigation.navigate('SymptomChecklistScreen') }}
+                />
             </Drawer.Section>
             <Drawer.Section style={styles.bottomDrawerSection}>
                 <DrawerItem
