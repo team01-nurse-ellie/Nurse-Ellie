@@ -26,16 +26,13 @@ const AddMedicationScreen = ({ navigation }) => {
     const [alarm, setAlarm] = useState('false');
     const [showModal, setShowModal] = useState(false);
     const toggleSwitch = () => setAlarm(previousState => !previousState);
+    //const [hideResults, setHideResults] = useState(false);
     // master rxcui term list (all possible ingredients and brand-names)
     const [masterRxcui, setMasterRxcui] = useState([])
     // filtered rxcui term list (filtered list of ingredients and brand-names)
     const [filterRxcui, setFilterRxcui] = useState([]);
-    // ingredient/brand name selected
-    const [ingredientBrand, setIngredientBrand] = useState('');
     // filtered list of drugs (drug = ingredient+form+strength) based on user-selected ingredient or brand-name
     const [drugList, setDrugList] = useState([])
-    // drug
-    const [drug, setDrug] = useState([])
 
     useEffect(() => {
         load()
@@ -77,7 +74,7 @@ const AddMedicationScreen = ({ navigation }) => {
         const drugList = await getDrugsByIngredientBrand(drug);
         setDrugList(drugList);
         console.log(drugList);
-        if (drugList.length > 0 ) {setShowModal(true)};
+        if (drugList.length > 0 ) {setFilterRxcui([]); setShowModal(true)};
 
     }
     
@@ -288,7 +285,7 @@ const styles = StyleSheet.create({
     // container that surrounds result list
     acListContainer: {
         //backgroundColor: 'rgba(204, 38, 9,1)', // red
-        height:180,
+        height:350,
     },
     // result list
     acList: { 
@@ -298,6 +295,7 @@ const styles = StyleSheet.create({
     },
     acContainer: {
         //backgroundColor:'rgba(63, 116, 191,1)', // blue
+        elevation: 5,
     },
     // container that surrounds textinput component
     acInputContainer: {
