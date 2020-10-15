@@ -14,6 +14,7 @@ import QRCode from 'react-native-qrcode-svg';
 import { firebase } from "../components/Firebase/config";
 import { generateCode } from '../utils/codeGenerator';
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
+import MenuIcon from '../assets/images/menu-icon.svg';
 
 const UserLinkScreen = ({ navigation }) => {
 
@@ -269,6 +270,9 @@ const UserLinkScreen = ({ navigation }) => {
         <>
             <KeyboardAvoidingView style={styles.background} behavior="padding" enabled>
                 <Background />
+                <TouchableOpacity style={styles.button} onPress={() => navigation.openDrawer()}>
+                    <MenuIcon />
+                </TouchableOpacity>
                 <Animatable.View style={styles.drawer} animation="fadeInUpBig">
                     <View style={styles.screenHeader}>
                         <Text style={styles.headerFont}>
@@ -467,10 +471,11 @@ const styles = StyleSheet.create({
     //     fontFamily: 'roboto-medium',
     //     fontSize: 14,
     // },
-    // button: {
-    //     paddingRight: 30,
-    //     marginTop: 30
-    // },
+    button: {
+        position: 'absolute',
+        right: 30,
+        top: 40
+    },
     drawer: {
         flex: 4,
         // backgroundColor: 'gray',

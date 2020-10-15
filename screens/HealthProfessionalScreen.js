@@ -1,8 +1,12 @@
-import React, { useState }from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config';
+
+// import Background from '../components/background';
+// import MenuIcon from '../assets/images/menu-icon.svg';
+// import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 
 import Background from '../components/hpBackground';
 import BlueAddIcon from '../assets/images/blue-add-icon';
@@ -10,7 +14,7 @@ import BlueAddIcon from '../assets/images/blue-add-icon';
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
-const HealthProfessionalScreen = ({navigation}) => {
+const HealthProfessionalScreen = ({ navigation }) => {
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [FieldofPractice, setFieldofPractice] = useState('')
@@ -28,6 +32,18 @@ const HealthProfessionalScreen = ({navigation}) => {
             'RegulatoryBody': ''
         })
      }*/
+
+
+    // const onHealthPress = async (res) => {
+    //     const data = await firebase.auth().currentUser.uid
+    //     var userDoc = firebase.firestore().collection("users").doc(data).update({
+    //         'FieldofPractice': '',
+    //         'LicenseNumber': '',
+    //         'RegulatoryBody': ''
+    //     })
+
+    //     const obj = {
+
 
    const onHealthPress = async (res) => {
    const data = await firebase.auth().currentUser.uid
@@ -81,12 +97,12 @@ const HealthProfessionalScreen = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center', 
-    }, 
+        justifyContent: 'center',
+    },
     heading: {
-        flex: 1, 
-        justifyContent: 'flex-end', 
-        paddingHorizontal: 20, 
+        flex: 1,
+        justifyContent: 'flex-end',
+        paddingHorizontal: 20,
         paddingBottom: 5
     },
     headerFont: {
@@ -95,12 +111,12 @@ const styles = StyleSheet.create({
         fontWeight: "100", 
     },
     whitePadding: {
-        height: screenHeight/8
+        height: screenHeight / 8
     },
     textInput: {
-        borderBottomColor: 'rgba(112, 112, 112, 0.7)', 
+        borderBottomColor: 'rgba(112, 112, 112, 0.7)',
         borderBottomWidth: 1.5,
-        fontSize: 16, 
+        fontSize: 16,
         paddingTop: 8
     },
     descriptionFont: {
@@ -111,7 +127,17 @@ const styles = StyleSheet.create({
     },
     clickableFont: {
         fontFamily: 'roboto-medium',
-        fontSize: 14, 
+        fontSize: 14,
+    },
+    button: {
+        // paddingRight: 30,
+        marginTop: 30,
+        alignSelf: 'flex-start'
+    },
+    menuButton: {
+        position: 'absolute',
+        right: 30,
+        top: 40
     },
     button: { 
         paddingRight: 30,
@@ -119,11 +145,11 @@ const styles = StyleSheet.create({
     }, 
     drawer: {
         flex: 4,
-        backgroundColor: '#fff', 
-        borderTopLeftRadius: 30, 
-        borderTopRightRadius: 30, 
-        paddingVertical: 50, 
-        paddingHorizontal: 30, 
+        backgroundColor: '#fff',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        paddingVertical: 50,
+        paddingHorizontal: 30,
         position: 'absolute',
         width: screenWidth,
         height: screenHeight * 0.85,
