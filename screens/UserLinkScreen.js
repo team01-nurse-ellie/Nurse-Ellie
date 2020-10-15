@@ -268,7 +268,7 @@ const UserLinkScreen = ({ navigation }) => {
 
     return (
         <>
-            <KeyboardAvoidingView style={styles.background} behavior="padding" enabled>
+            <KeyboardAvoidingView style={{ flex: 1, }} behavior="padding" enabled>
                 <Background />
                 <TouchableOpacity style={styles.button} onPress={() => navigation.openDrawer()}>
                     <MenuIcon />
@@ -294,6 +294,7 @@ const UserLinkScreen = ({ navigation }) => {
                         <Text style={styles.connectText}>
                             Connect to:
                     </Text>
+                        {/* <TextInput style={{ backgroundColor: 'pink' }}></TextInput> */}
                         <TouchableOpacity onPressIn={() => buttonSelect('hp')} style={connectButtonHP.button}>
                             <View style={styles.buttonFormat}>
                                 {connectButtonHP.HPIcon}
@@ -487,7 +488,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: screenWidth,
         height: screenHeight * 0.85,
-        bottom: 0,
+        // bottom: 0,
+        top: screenHeight * 0.15,   
         justifyContent: 'space-between'
     }
 });
