@@ -4,7 +4,6 @@ import { ScrollView, TouchableOpacity, TouchableWithoutFeedback } from 'react-na
 import * as Animatable from 'react-native-animatable'
 import CheckBox from '@react-native-community/checkbox';
 import Background from '../components/background';
-import { Card, CardItem } from 'native-base'
 
 import ClipboardIcon from '../assets/images/clipboard-icon.svg';
 import VeryDissatisfiedIcon from '../assets/images/scale-very-dissatisfied-icon.svg';
