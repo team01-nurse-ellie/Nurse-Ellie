@@ -16,12 +16,50 @@ import VerySatisfiedIcon from '../assets/images/scale-very-satisified-icon.svg';
 
 const SymptomChecklistScreen = ({ navigation }) => {
 
-    /** Get feelings */
+    // Variable to store value of 'HOW ARE YOU FEELING EMOTIONAL ICONS'
+    let emotions_icon_value = 'No Feelings'; 
+
+    const emotionClicked=(value)=>{
+        if (value == 'VDI'){
+            emotions_icon_value = 'Terrible'
+        }
+        else if (value == 'DI'){
+            emotions_icon_value = 'Not Good'
+        }
+        else if (value == 'NI'){
+            emotions_icon_value = 'Okay'
+        }
+        else if (value == 'SI'){
+            emotions_icon_value = 'Good'
+        }
+        else if (value == 'VSI'){
+            emotions_icon_value = 'Better'
+        }
+    }
+
+    //Having Pain or Discomfort
+    let pain_Discomfort = 'No';
+    
+
+    const havingPain=(value)=>{
+        if (value == 'YES'){
+            pain_Discomfort = 'Yes';
+        }
+        else {
+            pain_Discomfort = 'No';
+        }
+    }
+
+    /** Get Experiencing the pain or discomfort */
     const [headSelected, setHeadSelection] = useState(false);
     const [chestSelected, setChestSelection] = useState(false);
     const [stomachSelected, setStomachSelection] = useState(false);
     const [backSelected, setBackSelection] = useState(false);
     const [otherSelected, setOtherSelection] = useState(false);
+    const [inputLineOneText, getLineOneText] = useState('');
+    const setLineOneText=(enteredText)=>{
+        getLineOneText(enteredText);
+    }
 
     const [achySelected, setAchySelection] = useState(false);
     const [burningSelected, setBurningSelection] = useState(false);
@@ -30,7 +68,10 @@ const SymptomChecklistScreen = ({ navigation }) => {
     const [squeezingSelected, setSqueezingSelection] = useState(false);
     const [sharpSelected, setSharpSelection] = useState(false);
     const [other2Selected, setOther2Selection] = useState(false);
-
+    const [inputLine2Text, getLine2Text] = useState('');
+    const setLine2Text=(enteredText)=>{
+        getLine2Text(enteredText);
+    }
 
     /**Additional Detail value */
     const [additionalText, getAdditionalText] = useState('');
@@ -42,12 +83,15 @@ const SymptomChecklistScreen = ({ navigation }) => {
     /** Button Clicked Function */
     const getFormValue=()=>{
         
+       console.log('Emotion Icons Value: ' + emotions_icon_value);
+       console.log('Having Pain or Discomfort: ' + pain_Discomfort);
         
         headSelected == true ? console.log('Head YES') : console.log('Head NO');
         chestSelected == true ? console.log('Chest YES') : console.log('Chest NO');
         stomachSelected == true ? console.log('Stomach YES') : console.log('Stomach NO');
         backSelected == true ? console.log('Back YES') : console.log('Back NO');
         otherSelected == true ? console.log('Other YES') : console.log('Other NO');
+        console.log("Input 01: " + inputLineOneText)
 
         achySelected == true ? console.log('Achy YES') : console.log('Achy NO');
         burningSelected == true ? console.log('Burning YES') : console.log('Burning NO');
@@ -56,10 +100,12 @@ const SymptomChecklistScreen = ({ navigation }) => {
         squeezingSelected == true ? console.log('Squeezing YES') : console.log('Squeezing NO');
         sharpSelected == true ? console.log('Sharp YES') : console.log('Sharp NO');
         other2Selected == true ? console.log('Other2 YES') : console.log('Other2 NO');
-
-        console.log(additionalText);
+        console.log("Input 02: " + inputLine2Text)
+        
+        console.log("Additional Value: " + additionalText);
 
     }
+
 
     return (
         <>
@@ -80,12 +126,30 @@ const SymptomChecklistScreen = ({ navigation }) => {
                     </Text>
 
                     <View style={styles.feelingIcons}>
-                        <VeryDissatisfiedIcon fill="#000000" />
-                        <DissatisfiedIcon fill="#000000" />
-                        <NeutralIcon fill="#000000" />
-                        <SatisfiedIcon fill="#000000" />
-                        <VerySatisfiedIcon fill="#000000" />
+                        <TouchableOpacity  onPress={()=> emotionClicked('VDI')}>
+                            <VeryDissatisfiedIcon  fill="#000000"/>
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity  onPress={()=> emotionClicked('DI')}>
+                            <DissatisfiedIcon fill="#000000" />
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity  onPress={()=> emotionClicked('NI')}>
+                            <NeutralIcon fill="#000000" />
+                        </TouchableOpacity>
+                        
+
+                        <TouchableOpacity  onPress={()=> emotionClicked('SI')}>
+                            <SatisfiedIcon fill="#000000" />
+                        </TouchableOpacity>
+                        
+
+                        <TouchableOpacity  onPress={()=> emotionClicked('VSI')}>
+                            <VerySatisfiedIcon  fill="#000000" />
+                        </TouchableOpacity>
                     </View>
+
+                    
 
                     <View style={styles.feelingWords}>
                         <Text style={styles.simpleText}>
@@ -103,12 +167,17 @@ const SymptomChecklistScreen = ({ navigation }) => {
                     </Text>
 
                     <View style={styles.feelingYesNo}>
-                        <Text style={styles.feelingYes}>
-                            {`YES`}
-                        </Text>
-                        <Text style={styles.feelingNo}>
-                            {`NO`}
-                        </Text>
+                        <TouchableOpacity  onPress={()=> havingPain('YES')}>
+                            <Text style={styles.feelingPressed}>
+                                {`YES`}
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity  onPress={()=> havingPain('NO')}>
+                            <Text style={styles.feelingNo}>
+                                {`NO`}
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -165,14 +234,13 @@ const SymptomChecklistScreen = ({ navigation }) => {
                         </View>
                     </View>
 
-
-
-
-                    <TextInput style={styles.inputText2}
+                    <TextInput 
+                        style={styles.inputText2}
                         numberOfLines={1}
+                        onChangeText={setLineOneText}
+                        value={inputLineOneText}
                     />
                 </View>
-
               
                 <View style={styles.discomfortView}>
                     <Text style={styles.simpleText}>
@@ -248,19 +316,22 @@ const SymptomChecklistScreen = ({ navigation }) => {
                     </View>
 
 
-                    <TextInput style={styles.inputText2}
+                    <TextInput 
+                        value={inputLine2Text}
+                        style={styles.inputText2}
+                        multiline={true}
                         numberOfLines={1}
+                        onChangeText={setLine2Text}
+                         
+                        
                     />
                 </View>
-              
 
-   
-  
 
                 <Text style={styles.simpleText}>
                     {`Additional details you would like your health professional know.  More details can help your health professional give you better care or treatment.`}
                 </Text>
-
+ 
                 <TextInput 
                     style={styles.inputText}
                     multiline={true}
@@ -270,6 +341,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                 />
 
                 <Button title="SUBMIT" color="#42C86A"
+                    style={styles.lastButton}
                     onPress={getFormValue}
                 />
 
@@ -298,6 +370,7 @@ const styles = StyleSheet.create({
         //justifyContent: 'space-between'
     },
 
+   
 
     screenHeader: {
         flexDirection: 'row',
@@ -346,6 +419,16 @@ const styles = StyleSheet.create({
         marginLeft: 25,
     },
 
+    feelingPressed: {
+        color: 'red',
+        fontWeight: "bold",
+    },
+
+    feelingNotPressed: {
+        color: 'grey',
+        fontWeight: "bold",
+    },
+
     discomfortView: {
         marginTop: 2,
     },
@@ -354,7 +437,15 @@ const styles = StyleSheet.create({
         marginTop: 2,
         marginBottom: 5,
         borderColor: '#42C86A',
-        borderWidth: 1
+        borderWidth: 1,
+
+    },
+
+    lastButton: {
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30
     },
 
     discomfortCheckView:{
