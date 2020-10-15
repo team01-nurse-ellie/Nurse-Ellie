@@ -73,6 +73,7 @@ function getRxcuisTermInfo(rxcuis) {
         var rxcui;
         for (const element of rxcuis) {
             rxcui = rxterms[element];
+            console.log(rxcui);
             rxcuisTermInfo.push(parseRxcuiTermInfo(rxcui));
         }
     }
@@ -84,9 +85,9 @@ function getRxcuisTermInfo(rxcuis) {
  function parseRxcuiTermInfo(termInfo) {
     var medication = {}
     // [brand name]
-    medication.nameBrand = termInfo.BRAND_NAME;
+    medication.nameBrand = titleCase(termInfo.BRAND_NAME);
     // [brand name|chemical] ([route])
-    medication.nameDisplay = (termInfo.DISPLAY_NAME).substring(0,(termInfo.DISPLAY_NAME.indexOf('('))-1);
+    medication.nameDisplay = titleCase((termInfo.DISPLAY_NAME).substring(0,(termInfo.DISPLAY_NAME.indexOf('('))-1));
     // [chemical] [strength] [rxn dose form] [[brand name]]
     medication.nameFullGeneric = termInfo.FULL_GENERIC_NAME;
     // rxcui of generic equivalent
@@ -211,7 +212,7 @@ export async function getAdverseByBnIn(brandIngredient) {
         const body = await response.json();
         // get json array from response
         const results = await body.results;
-        var adverseTermsList = await (results.hasOwnProperty('error')? [] :results.slice(0,20));
+        var adverseTermsList = await ((typeof results == 'undefined')? [] :results.slice(0,20));
         var list = [];
         for (var element of adverseTermsList) {
             list.push(titleCase(element.term));
@@ -236,9 +237,13 @@ function nthIndex(str, pat, n){
 }
 
 function titleCase(string) {
-    var sentence = string.toLowerCase().split(" ");
-    for(var i = 0; i< sentence.length; i++){
-       sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1);
+    if (string){
+        var sentence = string.toLowerCase().split(" ");
+        for(var i = 0; i< sentence.length; i++){
+            sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1);
+        }
+        return sentence.join(" ");
+    } else {
+        return '';
     }
- return sentence.join(" ");
- }
+}

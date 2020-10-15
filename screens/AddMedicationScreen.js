@@ -14,6 +14,7 @@ import MedicationsIcon from '../assets/images/medications-icon';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 import SearchIcon from '../assets/images/search-icon';
 import PinkMedication from '../assets/images/pink-medication-icon';
+import MedicationCard from '../components/MedicationCard';
 
 import { getAllByConcepts, getDrugsByIngredientBrand} from '../utils/medication';
 
@@ -75,7 +76,7 @@ const AddMedicationScreen = ({ navigation }) => {
         console.log('drug selected: ' + drug);
         // why is this being called twice??
         const drugList = await getDrugsByIngredientBrand(drug);
-        await drugList? setDrugList(drugList): setDrugList([]);
+        setDrugList(drugList);
         console.log(drugList);
         setShowModal(true);
 
@@ -88,7 +89,7 @@ const AddMedicationScreen = ({ navigation }) => {
                 <MenuIcon/>
             </TouchableOpacity>
             <Modal
-            style={{margin:0}} 
+            style={styles.modalDrawer} 
             isVisible={showModal}
             animationIn='slideInUp'
             animationOut='slideOutDown'
@@ -96,17 +97,32 @@ const AddMedicationScreen = ({ navigation }) => {
             backdropOpacity={0}
             onModalWillShow={()=> getDrugsByIngredientBrand()}
             >
-                <View style={styles.modalDrawer}>
-                    <Text style={styles.title}>
-                        Add Medication
+                <View style={styles.modalHeader}>
+                    <Text style={styles.modalTitle}>
+                        Select Medication
                     </Text>
-                    <FlatList
-                    style={{margin:0}}
-                    //data={drugList? drugList:[]}
-                    //renderItem={({ item }) => <Text style={styles.medicationFont}>{item.name}</Text>}
-                    //keyExtractor={(item,index)=>index.toString()}
-                    />
                 </View>
+                <FlatList
+                style={{margin:0}}
+                data={drugList}
+                renderItem={({ item }) =>
+                <TouchableOpacity style={styles.searchButton} onPress={()=>console.log('you pressed me!')}>                         
+                    <MedicationCard>
+                        <View style={{justifyContent:'center', paddingHorizontal:6, width: 60}}>
+                            <PinkMedication/>
+                        </View>
+                        <View style={styles.medicationInfoView}>
+                            <Text style={styles.medicationFont}>{item.nameDisplay}</Text>
+                            <Text style={styles.functionFont}>{item.doseForm}</Text>
+                            <Text style={styles.frequencyfont}></Text>
+                        </View>
+                        <View style={styles.timeView}>
+                            <Text style={styles.strengthFont}>{item.strength}</Text>
+                        </View>
+                    </MedicationCard>
+                </TouchableOpacity>}
+                keyExtractor={(item,index)=>index.toString()}
+                />
             </Modal>
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
                 <View style={styles.header}>
@@ -134,9 +150,6 @@ const AddMedicationScreen = ({ navigation }) => {
                 renderItem={renderItem}
                 keyExtractor={(item,index)=>index.toString()}
                 />
-                <View style={{alignItems: 'center', paddingTop: 10}}>
-                    <PinkMedication/>
-                </View>
                 <View style={{alignItems: 'center', paddingVertical: 15}}>
                     <TimePicker
                         value={selectTime}
@@ -211,6 +224,11 @@ const styles = StyleSheet.create({
         fontWeight: '100', 
         paddingBottom: 8
     },
+    strengthFont: {
+        fontFamily: 'roboto-regular', 
+        fontSize: 18, 
+        color: 'rgba(0, 0, 0, 0.85)'
+    },
     bottomCard: {
         flexDirection:'row', 
         justifyContent:'space-between', 
@@ -244,12 +262,23 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff', 
         borderTopLeftRadius: 30, 
         borderTopRightRadius: 30, 
-        paddingVertical: 0, 
-        paddingHorizontal: 0, 
+        paddingVertical: 25, 
+        paddingHorizontal: 30, 
+        margin:0,
         position: 'absolute',
         width: screenWidth,
         height: screenHeight * 0.85,
-        top: screenHeight * 0.15
+        top: screenHeight * 0.15,
+    },
+    modalHeader:{
+        flexDirection:'row', 
+        justifyContent: 'space-between', 
+        paddingBottom: 20
+    },
+    modalTitle: {
+        fontFamily: 'roboto-regular',
+        fontSize: 24,
+        fontWeight: "100",
     },
     // container that surrounds result list
     acListContainer: {
