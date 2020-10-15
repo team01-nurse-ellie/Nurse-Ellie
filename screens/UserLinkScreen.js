@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, Button, Dimensions, TouchableWithoutFeedback, TextInput, KeyboardAvoidingView, Keyboard, Alert } from 'react-native';
 import * as Animatable from 'react-native-animatable'
 import Background from '../components/background';
@@ -10,43 +10,31 @@ import FamilyFriendBtn from '../assets/images/familyfriend-unselected-icon.svg';
 import FamilyFriendBtnSelected from '../assets/images/familyfriend-selected-icon.svg';
 import Modal from 'react-native-modal';
 import CloseBtn from '../assets/images/close-button.svg';
-// import QRScanner from '../components/QRScanner/qr-scanner';
 import QRCode from 'react-native-qrcode-svg';
 import { firebase } from "../components/Firebase/config";
 import { generateCode } from '../utils/codeGenerator';
+import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
 
 const UserLinkScreen = ({ navigation }) => {
 
     const [userCode, setUserCode] = useState("");
-    const [currentUser, setUser] = useState(null);
+    const { currentUser } = useContext(FirebaseAuthContext);
 
     useEffect(() => {
 
-        firebase.auth().onAuthStateChanged(user => {
+        if (currentUser) {
 
-            if (user) {
-                // console.log(user);
-                setUser(user);
-                firebase.firestore().collection("users").where("id", "==", user.uid).get().then((querySnapshot) => {
+            firebase.firestore().collection("users").where("id", "==", currentUser.uid).get().then((querySnapshot) => {
 
-                    querySnapshot.forEach(e => {
-                        // console.log(e.data());
-                        setUserCode(e.data().connectCode);
-                    });
-
-                    // console.log(querySnapshot[0].data());
+                querySnapshot.forEach(e => {
+                    // console.log(e.data());
+                    setUserCode(e.data().connectCode);
                 });
 
-            }
+                // console.log(querySnapshot[0].data());
+            });
+        }
 
-            return () => {
-                console.log("unmounted!")
-            }
-        })
-
-        // generateCode("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        // abcdefghijklmnopqrstuvwxyz  
-        // console.log(code);
     }, []);
 
 
@@ -224,7 +212,7 @@ const UserLinkScreen = ({ navigation }) => {
                     logo={NurseEllieLogo}
                     logoSize={65}
                     logoBackgroundColor='transparent'
-                    size={210}
+                    size={250}
                     value={userCode}
                 />
                 <Text style={{ fontSize: 25, fontFamily: 'roboto-regular', marginTop: "5%" }}>
@@ -240,17 +228,6 @@ const UserLinkScreen = ({ navigation }) => {
             </View>
         </View>
     );
-
-    // const QRModal = (
-    //     <View>
-    //         <View style={{ alignItems: 'center' }}>
-    //             <Text style={{ fontSize: 25, fontFamily: 'roboto-regular', }}>
-    //                 Scan Code
-    //             </Text>
-    //             <QRScanner />
-    //         </View>
-    //     </View>
-    // );
 
     const inputCodeModal = (
         <View>

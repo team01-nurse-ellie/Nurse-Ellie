@@ -3,20 +3,11 @@ import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, FlatList
 
 import * as Animatable from 'react-native-animatable';
 
-import MedIconIndex from '../components/MedicationImages';
+import Background from '../components/hpBackground';
+import MenuIcon from '../assets/images/hp-menu-icon';
 
-import Background from '../components/background';
-import MedicationCard from '../components/MedicationCard';
-import MenuIcon from '../assets/images/menu-icon';
-import MedicationsIcon from '../assets/images/medications-icon';
-import SearchIcon from '../assets/images/search-icon';
-
-const MedicationListScreen = ({navigation}) => {
-    const [medications, setMedications] = useState ([
-        {medicationName: 'Monopril', function: 'High Blood Pressure', frequency: '1x/day', alert: '10:00AM', key: '1'}, 
-        {medicationName: 'Cymbalta', function: 'Joint Pain', frequency: '1x/day', alert: '9:00AM', key: '2'}, 
-        {medicationName: 'Codeine', function: 'Cough & Cold', frequency: '15ml/day', alert: '10:00AM', key: '3'},
-    ])
+const PatientDetailScreen = ({route, navigation}) => {
+    const { item } = route.params;
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
             <Background/>
@@ -26,37 +17,13 @@ const MedicationListScreen = ({navigation}) => {
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
                 <View style={styles.header}>
                     <Text style={styles.title}>
-                        Medications
+                        {item.patientName}
                     </Text>
-                    <MedicationsIcon/>
+                    
                 </View>
-                <View style={styles.searchInput}>
-                    <TextInput style={{minWidth: screenWidth*0.8}}placeholder="Search Medication..."></TextInput>
-                    <TouchableOpacity onPress={()=>Alert.alert('searching medication...')}>
-                        <SearchIcon/>
-                    </TouchableOpacity>
-                </View>
-                <FlatList data={medications} renderItem={({item}) => (
-                    <TouchableOpacity style={styles.searchButton} onPress={()=>navigation.navigate('Medication', {item: item})}>
-                        <MedicationCard>
-                            <View style={{justifyContent:'center', paddingHorizontal:6, width: 60}}>
-                                {MedIconIndex.index[item.key]}
-                            </View>
-                            <View style={styles.medicationInfoView}>
-                            <Text style={styles.medicationFont}>{item.medicationName}</Text>
-                            <Text style={styles.functionFont}>{item.function}</Text>
-                            <Text style={styles.frequencyfont}>{item.frequency}</Text>
-                            </View>
-                            <View style={styles.timeView}>
-                                <Text style={styles.timeFont}>{item.alert}</Text>
-                            </View>
-                        </MedicationCard>
-                    </TouchableOpacity>
-                )}/>
-                <Button title="ADD NEW MEDICATION" color='#42C86A' onPress={()=>navigation.navigate('AddMedication')}/>
             </Animatable.View>
         </KeyboardAvoidingView>
-    )
+    );
 }
 
 var screenHeight = Dimensions.get("window").height;
@@ -65,7 +32,7 @@ var screenWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
     background: {
         flex: 1,
-        backgroundColor: '#42C86A',
+        backgroundColor: '#4285C8',
     }, 
     header:{
         flexDirection:'row', 
@@ -142,4 +109,5 @@ const styles = StyleSheet.create({
     }
 });
 
-export default MedicationListScreen;
+
+export default PatientDetailScreen;

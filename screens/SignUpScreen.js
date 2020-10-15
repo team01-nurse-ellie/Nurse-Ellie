@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
@@ -16,15 +16,11 @@ const SignUpScreen = ({ navigation }) => {
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
 
-    // const generateCode = (chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", length = 5) => {
-    //     // default should be 5 charcters long. 
-    //     // default characters set to generate code from.  
-    //     let code = "";
-    //     for (let i = length; i > 0; --i) {
-    //         code += chars[Math.floor(Math.random() * chars.length)];
-    //     }
-    //     return code;
-    // };
+    useEffect(() => {
+        return () => {
+
+        };
+    }, []);
 
     const onRegisterPress = async () => {
         if (password !== confirmPassword) {
