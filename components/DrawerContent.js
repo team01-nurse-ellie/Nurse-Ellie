@@ -7,10 +7,10 @@ import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Text, Drawer } from 'react-native-paper';
 
 
-function DrawerContent(props){
+function DrawerContent(props) {
     return (
         <View>
-            <DrawerContentScrollView {... props}>
+            <DrawerContentScrollView {...props}>
                 <View>
                     <Text> Name </Text>
                 </View>
@@ -18,45 +18,49 @@ function DrawerContent(props){
             <Drawer.Section style={styles.drawerSection}>
                 <DrawerItem
                     label="Home"
-                    onPress={() =>{props.navigation.navigate('Home')}}
+                    onPress={() => { props.navigation.navigate('Home') }}
                 />
-                 <Drawer.Section style={styles.bottomDrawerSection}>
-                <DrawerItem
-                   label="Medication List"
-                   onPress={()=>{props.navigation.navigate('Medications')}}
-                />
+                <Drawer.Section style={styles.bottomDrawerSection}>
+                    <DrawerItem
+                        label="Medication List"
+                        onPress={() => { props.navigation.navigate('Medications') }}
+                    />
                 </Drawer.Section>
-                 <DrawerItem
+                <DrawerItem
                     label="Health Professional"
-                    onPress={()=>{props.navigation.navigate('HealthProfessional')}}
+                    onPress={() => { props.navigation.navigate('HealthProfessional') }}
                 />
                 <DrawerItem
                     label="Patient List"
-                    onPress={()=>{props.navigation.navigate('Patients')}} 
+                    onPress={() => { props.navigation.navigate('Patients') }}
                 />
                 <DrawerItem
                     label="Setting"
-                    onPress={()=>{props.navigation.navigate('Settings')}}
+                    onPress={() => { props.navigation.navigate('Settings') }}
+                />
+                <DrawerItem
+                    label="User Connect"
+                    onPress={() => { props.navigation.navigate('UserLinkScreen') }}
                 />
             </Drawer.Section>
             <Drawer.Section style={styles.bottomDrawerSection}>
                 <DrawerItem
                     label="Sign Out"
-                    onPress={() =>{firebase.auth().signOut()}}
+                    onPress={() => { firebase.auth().signOut() }}
                 />
             </Drawer.Section>
         </View>
     )
 }
 
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
     container: {
         borderRadius: 30,
-    }, 
+    },
     drawerSection: {
         marginTop: 15
-    }, 
-    bottomDrawerSection:{
+    },
+    bottomDrawerSection: {
         marginBottom: 15
     }
 })
