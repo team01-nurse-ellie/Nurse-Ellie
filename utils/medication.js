@@ -1,27 +1,121 @@
+import {rxterms} from '../assets/data/RxTermsMap'
 
-/************************RxNorm Prescribable/Terms API ******************************/
-// 20 requests per second per IP address
-export async function getApproximateNames(name) {
+
+/******************************************************************************/
+/*********************RxNorm Prescribable/Terms API calls**********************/
+/*********************20 requests per second per IP address*******************/
+
+// returns RxTerms term info for each rxcui
+export async function getDrugsByIngredientBrand(ingredientBrand) {
     try {
-        const response = await fetch('https://rxnav.nlm.nih.gov/REST/Prescribe/drugs.json?name=metoprolol');
-        const body = await response.json();
-        return body
+        console.log('get all drugs for: ' + ingredientBrand);
+        // list of rxcui of drugs by ingredient or brand
+        var rxcuis = await getRxcuisByIngredientBrand(ingredientBrand);
+        // term info and adverse reaction for list of rxcuis
+        var rxcuisWithInfo = await getRxcuisInfo(rxcuis, ingredientBrand);
+        return rxcuisWithInfo;
     } catch  (error) {
         return error;
     }
-
+}
+// get drug product rxcuis for an ingredient/brand-name
+export async function getRxcuisByIngredientBrand(ingredientBrand) {
+        var resource = 'https://rxnav.nlm.nih.gov/REST/Prescribe/drugs.json?name='
+        resource += ingredientBrand;
+        console.log('resource is:' +resource);
+        var concepts = [];
+        var scdSbd = [];
+        var rxcuis = [];
+        try {
+            const response = await fetch(resource);
+            const body = await response.json();
+            const allConceptGroups = await body.drugGroup.conceptGroup;
+            for (var i = 0; i < allConceptGroups.length; i++) {
+                if( allConceptGroups[i].hasOwnProperty('conceptProperties') && allConceptGroups[i].tty=="SCD"){
+                    scdSbd = concepts.concat(allConceptGroups[i].conceptProperties);
+                } 
+                if( allConceptGroups[i].hasOwnProperty('conceptProperties') && allConceptGroups[i].tty=="SBD"){
+                    scdSbd = concepts.concat(allConceptGroups[i].conceptProperties);
+                }   
+            }
+            scdSbd.forEach(e=>rxcuis.push(e.rxcui));
+            return rxcuis;
+        } catch  (error) {
+            return error;
+        }
+}
+// get all information for rxcui (term info, adverse reactions)
+async function getRxcuisInfo(rxcuis,ingredientBrand) {
+    // get term info
+    var rxcuisTermInfo = getRxcuisTermInfo(rxcuis);
+    try {
+    // get adverse event list by ingredient/brand
+    const adverseTermsList = await getAdverseByBnIn(ingredientBrand);
+        // append adverse reaction to all rxcui
+        for (var element of rxcuisTermInfo) {
+            element.adverseEvents = adverseTermsList;
+        }
+    // get label information
+    for (var element of rxcuisTermInfo) {
+        element.information = '';
+    }
+    //
+    } catch (error) {
+        return error;
+    }
+    return rxcuisTermInfo;
 }
 
-// Prescribable RxNorm RESTful API
+// get term information for all rxcuis
+function getRxcuisTermInfo(rxcuis) {
+    var rxcuisTermInfo = [];
+    if(rxcuis[0]) {
+        var rxcui;
+        for (const element of rxcuis) {
+            rxcui = rxterms[element];
+            rxcuisTermInfo.push(parseRxcuiTermInfo(rxcui));
+        }
+    }
+    return rxcuisTermInfo;
+}
+
+// parse relevant properties from rxcui term info
+// https://mor.nlm.nih.gov/RxTerms/
+ function parseRxcuiTermInfo(termInfo) {
+    var medication = {}
+    // [brand name]
+    medication.nameBrand = termInfo.BRAND_NAME;
+    // [brand name|chemical] ([route])
+    medication.nameDisplay = (termInfo.DISPLAY_NAME).substring(0,(termInfo.DISPLAY_NAME.indexOf('('))-1);
+    // [chemical] [strength] [rxn dose form] [[brand name]]
+    medication.nameFullGeneric = termInfo.FULL_GENERIC_NAME;
+    // rxcui of generic equivalent
+    medication.rxcuiGeneric = termInfo.GENERIC_RXCUI;
+    // form derived from rxnom dose form
+    medication.doseForm = termInfo.NEW_DOSE_FORM;
+    // rxnorm dose form
+    medication.doseFormRxn = termInfo.RXN_DOSE_FORM;
+    // concept rxcui
+    medication.rxcui = termInfo.RXCUI;
+    // route
+    medication.route = termInfo.ROUTE;
+    // rxnorm prescribable name
+    medication.namePrescribe = termInfo.PSN;
+    // strength
+    medication.strength = termInfo.STRENGTH;
+    // term type. SBD=branded drug, SCD=clinical drug(non-brand)
+    medication.tty = termInfo.TTY;
+    return medication;
+}
+
 // Returns concept information for one or more specified term types(TTY).
-// Ex.2 tty=IN+SCD will return all ingredients and clinical drug names
 export async function getAllByConcepts(termTypes) {
     var resource = 'https://rxnav.nlm.nih.gov/REST/Prescribe/allconcepts.json?tty='
     for (var i = 0; i < termTypes.length; i++){
         if(i>0) resource += '+'
         resource += termTypes[i];
-        console.log(resource);
     }
+    console.log(resource);
     try {
         const response = await fetch(resource);
         const body = await response.json();
@@ -35,42 +129,9 @@ export async function getAllByConcepts(termTypes) {
     } catch  (error) { 
         return error;
     }
-
 }
 
-// /drugs API returns: clinical drug (SCD), clinical pack (GPCK), branded drug (SBD), branded pack (BPCK)
-export async function getDrugsByTtyName(name) {
-    var resource = 'https://rxnav.nlm.nih.gov/REST/Prescribe/drugs.json?name='
-    resource += name;
-    console.log('resource is:' +resource);
-    var conceptGroups = [];
-    var concepts = [];
-    var scdSbd = [];
-    try {
-        const response = await fetch(resource);
-        const body = await response.json();
-        const allConceptGroups = await body.drugGroup.conceptGroup;
-        console.log(allConceptGroups.length);
-        for (var i = 0; i < allConceptGroups.length; i++) {
-            console.log(allConceptGroups[i].conceptProperties);
-            if( allConceptGroups[i].hasOwnProperty('conceptProperties') && allConceptGroups[i].tty=="SCD"){
-                console.log('hello');
-                scdSbd = concepts.concat(allConceptGroups[i].conceptProperties);
-            } 
-            if( allConceptGroups[i].hasOwnProperty('conceptProperties') && allConceptGroups[i].tty=="SBD"){
-                scdSbd = concepts.concat(allConceptGroups[i].conceptProperties);
-                console.log('hello2');
-            }   
-        }
-        console.log(scdSbd);
-        return await scdSbd
-        
-
-    } catch  (error) {
-        return error;
-    }
-}
-
+/*
 export async function getTermInfoByRxcui(rxcui) {
     var resourceStart = 'https://rxnav.nlm.nih.gov/REST/RxTerms/rxcui/'
     var resourceEnd = '/allinfo.json';
@@ -80,44 +141,28 @@ export async function getTermInfoByRxcui(rxcui) {
         const body = await response.json();
         // get json array from response
         const rxcuiInfo = await body.rxtermsProperties;
-        // brandName will be empty if generic (SCD)
-        // displayName will be BN + (form) if brand, else IN + (form)
-        // fulll genericName is never empty wethere SCD|SBD
-        // fullName will + [brandname] if brand
-
         return body
-        // return object only with relevant info
 
     } catch  (error) { 
         return error;
     }
 }
-
-// get top 10 adverse reactions from OpenFda adverse reaction API
-export async function getAdverseByBnIn(brandIngredient) {
-    var resourceStart = 'https://api.fda.gov/drug/event.json?search=patient.drug.openfda.substance_name:%22';
-    var resourceEnd = '%22&count=patient.reaction.reactionmeddrapt.exact';
-    var resource = resourceStart + brandIngredient + resourceEnd;
+*/
+/*
+export async function getApproximateNames(name) {
     try {
-        const response = await fetch(resource);
+        const response = await fetch('https://rxnav.nlm.nih.gov/REST/Prescribe/drugs.json?name=metoprolol');
         const body = await response.json();
-        // get json array from response
-        const adverseTermsList = await body.results;
-        return await adverseTermsList.slice(0,10);
-
-    } catch  (error) { 
+        return body
+    } catch  (error) {
         return error;
     }
-
 }
+*/
 
-// get term inforation: 
-export async function getTermInfoByRxcui(rxcuis) {
 
-}
-
-/************************OpenFDA API ***********************************************/
-
+/******************************************************************************/
+/*************************** OpenFDA API **************************************/
 
 // get drug label information from openFDA label API
 export async function getLabelByRxcui(rxcui){
@@ -155,6 +200,31 @@ export async function getLabelByRxcui(rxcui){
     }
 }
 
+// get top 10 adverse reactions from OpenFda adverse reaction API
+export async function getAdverseByBnIn(brandIngredient) {
+    var resourceStart = 'https://api.fda.gov/drug/event.json?search=patient.drug.openfda.brand_name:%22';
+    var resourceEnd = '%22&count=patient.reaction.reactionmeddrapt.exact';
+    var resource = resourceStart + brandIngredient + resourceEnd;
+    console.log('resource is: ' +resource);
+    try {
+        const response = await fetch(resource);
+        const body = await response.json();
+        // get json array from response
+        const results = await body.results;
+        var adverseTermsList = await (results.hasOwnProperty('error')? [] :results.slice(0,20));
+        var list = [];
+        for (var element of adverseTermsList) {
+            list.push(titleCase(element.term));
+        }
+        return list;
+    } catch  (error) { 
+        return error;
+    }
+
+}
+
+/******************************************************************************/
+/*****************************  Helper functions*******************************/
 
 function nthIndex(str, pat, n){
     var L= str.length, i= -1;
@@ -164,3 +234,11 @@ function nthIndex(str, pat, n){
     }
     return i;
 }
+
+function titleCase(string) {
+    var sentence = string.toLowerCase().split(" ");
+    for(var i = 0; i< sentence.length; i++){
+       sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1);
+    }
+ return sentence.join(" ");
+ }

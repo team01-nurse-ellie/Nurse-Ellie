@@ -15,7 +15,7 @@ import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 import SearchIcon from '../assets/images/search-icon';
 import PinkMedication from '../assets/images/pink-medication-icon';
 
-import {getAllByConcepts,getDrugsByTtyName,getTermInfoByRxcui, getAdverseByBnIn,getLabelByRxcui} from '../utils/medication';
+import { getAllByConcepts, getDrugsByIngredientBrand} from '../utils/medication';
 
 const AddMedicationScreen = ({ navigation }) => {
     const currentTime = new Date();
@@ -44,10 +44,9 @@ const AddMedicationScreen = ({ navigation }) => {
     async function load() {
         try {
             //const ingredientsBrand = await getAllByConcepts(['IN','BN','MIN']);
-            const ingredientsBrand = await getAllByConcepts(['BN']);
+            const ingredientsBrand = await getAllByConcepts(['IN','BN']);
             await setMasterRxcui(ingredientsBrand);
-            console.log(ingredientsBrand);
-        } catch (error) { console.log(error)}        
+        } catch (error) { console.log(error)}
     }
 
     // returns filtered sub-set of master rxnow query
@@ -56,10 +55,8 @@ const AddMedicationScreen = ({ navigation }) => {
         var searchIngrBrand = term.trim();
         searchIngrBrand = searchIngrBrand.replace(/[() ]/g, '\\$0')
         console.log(searchIngrBrand);
-        console.log('search input');
         const regex = new RegExp(searchIngrBrand,'i');
         const filterList = (masterRxcui[0] ? masterRxcui.filter(ingredientBrand=>ingredientBrand.name.search(regex) >= 0) : []);
-        console.log(filterList);
         return filterList;
     }
 
@@ -76,10 +73,12 @@ const AddMedicationScreen = ({ navigation }) => {
     // show modal and populate listview of modal
     const renderDrugListModal = async (drug) => {
         console.log('drug selected: ' + drug);
+        // why is this being called twice??
+        const drugList = await getDrugsByIngredientBrand(drug);
+        await drugList? setDrugList(drugList): setDrugList([]);
+        console.log(drugList);
         setShowModal(true);
-        const drugList = await getDrugsByTtyName(drug);
-        setDrugList(drugList);
-        console.log('drug list is: \n' + drugList);
+
     }
     
     return (
@@ -95,7 +94,7 @@ const AddMedicationScreen = ({ navigation }) => {
             animationOut='slideOutDown'
             onBackButtonPress={()=> setShowModal(false)}
             backdropOpacity={0}
-            onModalWillShow={()=> getDrugsByTtyName()}
+            onModalWillShow={()=> getDrugsByIngredientBrand()}
             >
                 <View style={styles.modalDrawer}>
                     <Text style={styles.title}>
@@ -103,9 +102,9 @@ const AddMedicationScreen = ({ navigation }) => {
                     </Text>
                     <FlatList
                     style={{margin:0}}
-                    data={drugList? drugList:[]}
-                    renderItem={({ item }) => <Text style={styles.medicationFont}>{item.name}</Text>}
-                    keyExtractor={(item,index)=>index.toString()}
+                    //data={drugList? drugList:[]}
+                    //renderItem={({ item }) => <Text style={styles.medicationFont}>{item.name}</Text>}
+                    //keyExtractor={(item,index)=>index.toString()}
                     />
                 </View>
             </Modal>
