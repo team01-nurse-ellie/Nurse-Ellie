@@ -80,6 +80,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
 
     }
 
+    current_date = 0
     /** Button Clicked Function */
     const getFormValue=()=>{
         
