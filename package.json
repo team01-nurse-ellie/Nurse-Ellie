@@ -30,10 +30,7 @@
     "react-native-calendars": "^1.403.0",
     "react-native-gesture-handler": "~1.6.0",
     "react-native-modal": "^11.5.6",
-<<<<<<< HEAD
-=======
     "react-native-qrcode-svg": "^6.0.6",
->>>>>>> master
     "react-native-modalbox": "^2.0.2",
     "react-native-paper": "^4.2.0",
     "react-native-reanimated": "~1.9.0",
