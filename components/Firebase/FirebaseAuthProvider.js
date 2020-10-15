@@ -10,6 +10,9 @@ const FirebaseAuthProvider = ({ children }) => {
         let unsubscribe = firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 setUser(user);
+            } else {
+                // Once user signs out user will be set to null so that the screen will switch to splash screen.
+                setUser(null);
             }
         })
 
