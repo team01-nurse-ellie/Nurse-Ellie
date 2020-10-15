@@ -8,6 +8,7 @@ import {rxterms} from '../assets/data/RxTermsMap'
 // returns RxTerms term info for each rxcui
 export async function getDrugsByIngredientBrand(ingredientBrand) {
     try {
+        if (ingredientBrand == undefined) {throw "search term undefined"};
         console.log('get all drugs for: ' + ingredientBrand);
         // list of rxcui of drugs by ingredient or brand
         var rxcuis = await getRxcuisByIngredientBrand(ingredientBrand);
@@ -69,12 +70,11 @@ async function getRxcuisInfo(rxcuis,ingredientBrand) {
 // get term information for all rxcuis
 function getRxcuisTermInfo(rxcuis) {
     var rxcuisTermInfo = [];
-    if(rxcuis[0]) {
+    if(rxcuis != undefined) {
         var rxcui;
         for (const element of rxcuis) {
             rxcui = rxterms[element];
-            console.log(rxcui);
-            rxcuisTermInfo.push(parseRxcuiTermInfo(rxcui));
+            if (rxcui != undefined) rxcuisTermInfo.push(parseRxcuiTermInfo(rxcui));
         }
     }
     return rxcuisTermInfo;

@@ -55,7 +55,6 @@ const AddMedicationScreen = ({ navigation }) => {
         if (term.length < 1) { return [];}
         var searchIngrBrand = term.trim();
         searchIngrBrand = searchIngrBrand.replace(/[() ]/g, '\\$0')
-        console.log(searchIngrBrand);
         const regex = new RegExp(searchIngrBrand,'i');
         const filterList = (masterRxcui[0] ? masterRxcui.filter(ingredientBrand=>ingredientBrand.name.search(regex) >= 0) : []);
         return filterList;
@@ -78,7 +77,7 @@ const AddMedicationScreen = ({ navigation }) => {
         const drugList = await getDrugsByIngredientBrand(drug);
         setDrugList(drugList);
         console.log(drugList);
-        setShowModal(true);
+        if (drugList.length > 0 ) {setShowModal(true)};
 
     }
     
@@ -106,17 +105,16 @@ const AddMedicationScreen = ({ navigation }) => {
                 style={{margin:0}}
                 data={drugList}
                 renderItem={({ item }) =>
-                <TouchableOpacity style={styles.searchButton} onPress={()=>console.log('you pressed me!')}>                         
+                <TouchableOpacity style={styles.searchButton} onPress={()=> 0}>                         
                     <MedicationCard>
-                        <View style={{justifyContent:'center', paddingHorizontal:6, width: 60}}>
+                        <View style={{justifyContent:'center', flex:2}}>
                             <PinkMedication/>
                         </View>
                         <View style={styles.medicationInfoView}>
                             <Text style={styles.medicationFont}>{item.nameDisplay}</Text>
-                            <Text style={styles.functionFont}>{item.doseForm}</Text>
-                            <Text style={styles.frequencyfont}></Text>
+                            <Text style={styles.doseFont}>{item.doseForm}</Text>
                         </View>
-                        <View style={styles.timeView}>
+                        <View style={styles.strengthView}>
                             <Text style={styles.strengthFont}>{item.strength}</Text>
                         </View>
                     </MedicationCard>
@@ -229,6 +227,13 @@ const styles = StyleSheet.create({
         fontSize: 18, 
         color: 'rgba(0, 0, 0, 0.85)'
     },
+    medicationInfoView: {
+        flex:6,
+        paddingHorizontal: 10
+    },
+    strengthView: {
+        flex:2,
+    },
     bottomCard: {
         flexDirection:'row', 
         justifyContent:'space-between', 
@@ -306,6 +311,12 @@ const styles = StyleSheet.create({
         fontFamily: 'roboto-regular', 
         fontSize: 20, 
         color: 'rgba(0, 0, 0, 0.85)'
+    },
+    doseFont: {
+        fontFamily: 'roboto-regular', 
+        fontSize: 14, 
+        color: 'rgba(0, 0, 0, 0.85)',
+        paddingTop:5,
     }
 });
 
