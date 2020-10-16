@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Dimensions, StyleSheet, Keyboard } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config';
 
-// import Background from '../components/background';
-// import MenuIcon from '../assets/images/menu-icon.svg';
-// import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
-
 import Background from '../components/hpBackground';
+import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
+
+import MenuIcon from '../assets/images/hp-menu-icon.svg';
 import BlueAddIcon from '../assets/images/blue-add-icon';
 
 var screenHeight = Dimensions.get("window").height;
@@ -67,27 +66,31 @@ const HealthProfessionalScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Background/>
+            <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
+                <MenuIcon />
+            </TouchableOpacity>
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Image style={{left: -15}}source={require('../assets/android/drawable-mdpi/login-logo.png')} />
-                    <View>
-                        <Text style={styles.headerFont}> Account Change: </Text> 
-                        <Text style={styles.headerFont}> Health Professional </Text>
-                    </View>
-                </View>
-                <View style={styles.whitePadding}/>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: screenHeight / 10 }}>
+                <NurseEllieLogo height={75} style={{ flex: 1, marginRight: '5%' }} />
+                <Text style={{ fontFamily: 'roboto-regular', fontSize: 25, }}> {`Account Change:\n Health Professional`}</Text>
+            </View>
+
                 <TextInput style={styles.textInput} placeholder="Field of Practice" autoCapitalize="none"  onChangeText={(text) => setFieldofPractice(text)}
                     value={FieldofPractice} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
                 <TextInput style={styles.textInput}  placeholder="License Number" autoCapitalize="none" onChangeText={(text) => setLicenseNumber(text)} 
                  value={LicenseNumber} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
                 <TextInput style={styles.textInput} placeholder="Regulatory Body" autoCapitalize="none"  onChangeText={(text) => setRegulatoryBody(text)}
                     value={RegulatoryBody} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <Text>Status: Will be loaded from firebase db</Text>
-                <View style={{height: 15}}/>
+
+                <Text style={{marginBottom: 15}}>Status: Will be loaded from firebase db</Text>
+           
                 <Text style={styles.descriptionFont}>Your account will be verified in the next  2-3 business days. Thank you</Text>
+
                 <TouchableOpacity style={styles.button} onPress={()=>onHealthPress()}>
                     <BlueAddIcon/>
                 </TouchableOpacity>
+
                 <View style={styles.whitePadding}/>
             </Animatable.View>
         </View>
@@ -130,7 +133,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     button: {
-        // paddingRight: 30,
         marginTop: 30,
         alignSelf: 'flex-start'
     },
@@ -139,10 +141,6 @@ const styles = StyleSheet.create({
         right: 30,
         top: 40
     },
-    button: { 
-        paddingRight: 30,
-        marginTop: 30, 
-    }, 
     drawer: {
         flex: 4,
         backgroundColor: '#fff',
