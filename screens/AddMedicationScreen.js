@@ -70,10 +70,8 @@ const AddMedicationScreen = ({ navigation }) => {
     // show modal and populate listview of modal
     const renderDrugListModal = async (drug) => {
         console.log('drug selected: ' + drug);
-        // why is this being called twice??
         const drugList = await getDrugsByIngredientBrand(drug);
         setDrugList(drugList);
-        console.log(drugList);
         if (drugList.length > 0 ) {setFilterRxcui([]); setShowModal(true)};
 
     }

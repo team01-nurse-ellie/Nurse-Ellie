@@ -1,5 +1,7 @@
 import {rxterms} from '../assets/data/RxTermsMap'
+import {firebase} from '../components/Firebase/config';
 
+const rxCollection = firebase.firestore().collection('rxnormTerms');
 
 /******************************************************************************/
 /*********************RxNorm Prescribable/Terms API calls**********************/
@@ -48,7 +50,7 @@ export async function getRxcuisByIngredientBrand(ingredientBrand) {
 // get all information for rxcui (term info, adverse reactions)
 async function getRxcuisInfo(rxcuis,ingredientBrand) {
     // get term info
-    var rxcuisTermInfo = getRxcuisTermInfo(rxcuis);
+    var rxcuisTermInfo = await getRxcuisTermInfo(rxcuis);
     try {
     // get adverse event list by ingredient/brand
     const adverseTermsList = await getAdverseByBnIn(ingredientBrand);
@@ -68,16 +70,23 @@ async function getRxcuisInfo(rxcuis,ingredientBrand) {
 }
 
 // get term information for all rxcuis
-function getRxcuisTermInfo(rxcuis) {
+async function getRxcuisTermInfo(rxcuis) {
     var rxcuisTermInfo = [];
     if(rxcuis != undefined) {
         var rxcui;
         for (const element of rxcuis) {
-            rxcui = rxterms[element];
-            if (rxcui != undefined) rxcuisTermInfo.push(parseRxcuiTermInfo(rxcui));
+/*             rxcui = rxterms[element];
+            if (rxcui != undefined) rxcuisTermInfo.push(parseRxcuiTermInfo(rxcui)); */
+/*             const rxcui = await rxCollection.where('RXCUI', '==', element).get().then(querySnapshot => {
+                querySnapshot.forEach(e => {
+                    console.log(e.data());
+                });
+            }); */
+            await rxCollection.doc(element).get().then(doc => rxcuisTermInfo.push(parseRxcuiTermInfo(doc.data())));
         }
     }
     return rxcuisTermInfo;
+
 }
 
 // parse relevant properties from rxcui term info
