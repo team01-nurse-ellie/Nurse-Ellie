@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
-import { firebase } from '../components/Firebase/config'
+import { firebase } from '../components/Firebase/config';
 
-import Background from '../components/background';
-import MenuIcon from '../assets/images/menu-icon.svg';
-import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
+// import Background from '../components/background';
+// import MenuIcon from '../assets/images/menu-icon.svg';
+// import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 
+import Background from '../components/hpBackground';
+import BlueAddIcon from '../assets/images/blue-add-icon';
 
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
@@ -31,16 +33,26 @@ const HealthProfessionalScreen = ({ navigation }) => {
         })
      }*/
 
-    const onHealthPress = async (res) => {
-        const data = await firebase.auth().currentUser.uid
+
+    // const onHealthPress = async (res) => {
+    //     const data = await firebase.auth().currentUser.uid
+    //     var userDoc = firebase.firestore().collection("users").doc(data).update({
+    //         'FieldofPractice': '',
+    //         'LicenseNumber': '',
+    //         'RegulatoryBody': ''
+    //     })
+
+    //     const obj = {
+
+
+   const onHealthPress = async (res) => {
+   const data = await firebase.auth().currentUser.uid
         var userDoc = firebase.firestore().collection("users").doc(data).update({
-            'FieldofPractice': '',
+            'FieldofPractice':'',
             'LicenseNumber': '',
             'RegulatoryBody': ''
         })
-
         const obj = {
-
             FieldofPractice,
             LicenseNumber,
             RegulatoryBody,
@@ -54,43 +66,33 @@ const HealthProfessionalScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Background />
-            <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
-                <MenuIcon />
-            </TouchableOpacity>
-            <Animatable.View style={styles.drawer} animation="fadeInUpBig">
-
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: screenHeight / 10 }}>
-                    <NurseEllieLogo height={75} style={{ flex: 1, marginRight: '5%' }} />
-                    <Text style={{ fontFamily: 'roboto-regular', fontSize: 25, }}> {`Health Professional\n Sign Up`}</Text>
+            <Background/>
+            <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Image style={{left: -15}}source={require('../assets/android/drawable-mdpi/login-logo.png')} />
+                    <View>
+                        <Text style={styles.headerFont}> Account Change: </Text> 
+                        <Text style={styles.headerFont}> Health Professional </Text>
+                    </View>
                 </View>
-
-                {/*   <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} /> */}
-                {/*  <View style={styles.whitePadding} /> */}
-
-                <TextInput style={styles.textInput} placeholder="FieldofPractice" autoCapitalize="none" onChangeText={(text) => setFieldofPractice(text)}
-                    value={FieldofPractice} returnKeyType='done' onSubmitEditing={Keyboard.dismiss} />
-                <TextInput style={styles.textInput} placeholder="LicenseNumber" autoCapitalize="none" onChangeText={(text) => setLicenseNumber(text)}
-                    value={LicenseNumber} returnKeyType='done' onSubmitEditing={Keyboard.dismiss} />
-                <TextInput style={styles.textInput} placeholder="RegulatoryBody" autoCapitalize="none" onChangeText={(text) => setRegulatoryBody(text)}
-                    value={RegulatoryBody} returnKeyType='done' onSubmitEditing={Keyboard.dismiss} />
-                <Text>Your account will be verified in the next  2-3 business days. Thank you</Text>
+                <View style={styles.whitePadding}/>
+                <TextInput style={styles.textInput} placeholder="Field of Practice" autoCapitalize="none"  onChangeText={(text) => setFieldofPractice(text)}
+                    value={FieldofPractice} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
+                <TextInput style={styles.textInput}  placeholder="License Number" autoCapitalize="none" onChangeText={(text) => setLicenseNumber(text)} 
+                 value={LicenseNumber} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
+                <TextInput style={styles.textInput} placeholder="Regulatory Body" autoCapitalize="none"  onChangeText={(text) => setRegulatoryBody(text)}
+                    value={RegulatoryBody} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
                 <Text>Status: Will be loaded from firebase db</Text>
-
-                <TouchableOpacity style={styles.button} onPress={() => onHealthPress()}>
-                    <Image source={require('../assets/android/drawable-mdpi/g-login-arrow.png')} />
+                <View style={{height: 15}}/>
+                <Text style={styles.descriptionFont}>Your account will be verified in the next  2-3 business days. Thank you</Text>
+                <TouchableOpacity style={styles.button} onPress={()=>onHealthPress()}>
+                    <BlueAddIcon/>
                 </TouchableOpacity>
-
-                <View style={styles.whitePadding} />
-                <Text style={styles.descriptionFont}> Already have an account? </Text>
-                <TouchableOpacity onPress={() => navigation.push('SignInScreen')}>
-                    <Text style={styles.clickableFont}> SIGN IN </Text>
-                </TouchableOpacity>
+                <View style={styles.whitePadding}/>
             </Animatable.View>
         </View>
     )
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -105,16 +107,8 @@ const styles = StyleSheet.create({
     },
     headerFont: {
         fontFamily: 'roboto-regular',
-        fontSize: 32,
-        fontWeight: "100",
-        left: screenWidth / 3.5,
-        top: screenHeight * 0.07,
-        paddingBottom: 30
-    },
-    headerImage: {
-        position: 'absolute',
-        left: screenWidth / 20,
-        top: screenHeight * 0.07
+        fontSize: 28,
+        fontWeight: "100", 
     },
     whitePadding: {
         height: screenHeight / 8
@@ -126,9 +120,10 @@ const styles = StyleSheet.create({
         paddingTop: 8
     },
     descriptionFont: {
-        fontFamily: 'roboto-regular',
-        fontSize: 12,
-        color: 'rgba(0, 0, 0, 0.38)'
+        fontFamily: 'roboto-regular', 
+        fontSize: 14, 
+        textAlign: 'center',
+        color: 'rgba(0, 0, 0, 0.7)'
     },
     clickableFont: {
         fontFamily: 'roboto-medium',
@@ -144,6 +139,10 @@ const styles = StyleSheet.create({
         right: 30,
         top: 40
     },
+    button: { 
+        paddingRight: 30,
+        marginTop: 30, 
+    }, 
     drawer: {
         flex: 4,
         backgroundColor: '#fff',

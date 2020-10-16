@@ -4,7 +4,13 @@ import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, FlatList
 import * as Animatable from 'react-native-animatable';
 
 import Background from '../components/hpBackground';
+import Card from '../components/StandardCard';
 import MenuIcon from '../assets/images/hp-menu-icon';
+import EditIcon from '../assets/images/edit-icon';
+import PlusIcon from '../assets/images/plus-icon';
+import EnterIcon from '../assets/images/entry-triangle-icon';
+import DissatisifiedIcon from '../assets/images/scale-dissatisfied-icon';
+import TempAvatar from '../assets/images/temp-avatar';
 
 const PatientDetailScreen = ({route, navigation}) => {
     const { item } = route.params;
@@ -19,8 +25,59 @@ const PatientDetailScreen = ({route, navigation}) => {
                     <Text style={styles.title}>
                         {item.patientName}
                     </Text>
-                    
+                    <TouchableOpacity>
+                        <EditIcon/>
+                    </TouchableOpacity>
                 </View>
+                <View style={{flexDirection: 'row', justifyContent:'center', paddingBottom: 13}}>
+                    <TempAvatar/>
+                </View>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 8}}>
+                    <View>
+                        <Text style={styles.apptFont}> Next Appointment </Text>
+                    </View>
+                    <View>
+                        <Text style={styles.dateFont}> Monday, November 23, 2020 </Text>
+                    </View>
+                </View>
+                 <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 8}}>
+                    <View>
+                        <Text style={styles.apptFont}> Last Appointment </Text>
+                    </View>
+                    <View>
+                        <Text style={styles.dateFont}> {item.lastSeen} </Text>
+                    </View>
+                </View>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 13}}>
+                    <Text style={styles.subheadingfont}>
+                        Prescribed Medications
+                    </Text>
+                    <TouchableOpacity onPress={()=>Alert.alert("add medication for patient...")}>
+                        <PlusIcon/>
+                    </TouchableOpacity>
+                </View>
+                <View style={{flexDirection: 'row',  paddingTop: 13}}>
+                    <Text style={styles.subheadingfont}>
+                        Symptom Checklist
+                    </Text>
+                </View>
+                <Card>
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                        <Text style={styles.apptFont}> Completed Date: </Text>
+                        <Text style={styles.dateFont}> Monday, October 12, 2020 </Text>
+                    </View>
+                    <View style={{alignItems: 'center', paddingTop: 3}}>
+                        <DissatisifiedIcon/>
+                    </View>
+                </Card>
+                <TouchableOpacity onPress={()=>Alert.alert("requesting symptom checklist...")}>
+                    <View style={{flexDirection: 'row'}}>
+                        <Text style={styles.clickableFont}> 
+                            REQUEST SYMPTOM CHECKLIST
+                        </Text>
+                        <EnterIcon style={{paddingTop: 30}}/>
+                    </View>
+                </TouchableOpacity>
             </Animatable.View>
         </KeyboardAvoidingView>
     );
@@ -44,30 +101,31 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "100",
     }, 
-    medicationFont: {
+    apptFont: {
+        fontFamily: 'roboto-regular', 
+        fontSize: 17, 
+        color: 'rgba(0, 0, 0, 0.85)', 
+    },
+    dateFont:{
+        fontFamily: 'roboto-regular', 
+        fontSize: 14, 
+        color: 'rgba(0, 0, 0, 0.7)', 
+    },
+    subheadingfont: {
         fontFamily: 'roboto-regular', 
         fontSize: 20, 
         color: 'rgba(0, 0, 0, 0.85)'
-    },
-    functionFont:{
-        fontFamily: 'roboto-regular', 
-        fontSize: 14, 
-        color: 'rgba(0, 0, 0, 0.7)'
-    },
-    frequencyfont: {
-        fontFamily: 'roboto-regular', 
-        fontSize: 12, 
-        color: 'rgba(0, 0, 0, 0.7)'
     },
     timeFont: {
         fontFamily: 'roboto-regular', 
         fontSize: 18, 
         color: 'rgba(0, 0, 0, 0.85)'
     },
-    descriptionFont: {
-        fontFamily: 'roboto-regular', 
-        fontSize: 12, 
-        color: 'rgba(0, 0, 0, 0.38)', 
+    clickableFont: {
+        fontFamily: 'roboto-medium',
+        fontSize: 16, 
+        paddingTop: 5, 
+        paddingRight: 5
     },
     medicationInfoView: {
         width: 170,
@@ -85,16 +143,6 @@ const styles = StyleSheet.create({
         right: 30,
         top: 40 
     },
-    searchInput:{
-        flexDirection: 'row',
-        borderBottomColor: 'rgba(0, 0, 0, 0.6)',
-        borderBottomWidth: 1, 
-        minWidth: screenWidth * 0.80, 
-        marginVertical:10
-    },
-    searchButton:{
-        right: 5
-    },
     drawer: {
         flex: 4,
         backgroundColor: '#fff', 
@@ -108,6 +156,5 @@ const styles = StyleSheet.create({
         top: screenHeight * 0.15
     }
 });
-
 
 export default PatientDetailScreen;
