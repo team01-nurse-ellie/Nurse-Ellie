@@ -30,7 +30,6 @@ const PatientListScreen = ({navigation}) => {
                     <Text style={styles.title}>
                         Patients
                     </Text>
-                    
                 </View>
                 <View style={styles.searchInput}>
                     <TextInput style={{minWidth: screenWidth*0.8}}placeholder="Search Patient List..."></TextInput>
