@@ -16,7 +16,7 @@ import SearchIcon from '../assets/images/search-icon';
 import PinkMedication from '../assets/images/pink-medication-icon';
 import MedicationCard from '../components/MedicationCard';
 
-import { getAllByConcepts, getDrugsByIngredientBrand} from '../utils/medication';
+import { getAllByConcepts, getDrugsByIngredientBrand,getIndUseByRxcui} from '../utils/medication';
 
 const AddMedicationScreen = ({ navigation }) => {
     const currentTime = new Date();
@@ -71,8 +71,15 @@ const AddMedicationScreen = ({ navigation }) => {
         console.log('drug selected: ' + drug);
         const drugList = await getDrugsByIngredientBrand(drug);
         setDrugList(drugList);
+        console.log(drugList[0]);
         if (drugList.length > 0 ) {setFilterRxcui([]); setShowModal(true)};
-
+    }
+    // Retrieve OpenFda API labelling info for Rxcui
+    const addIndicationToDrug = async (drug) => {
+        // get label info for rxcui
+        const indication = await getIndUseByRxcui(drug.rxcui);
+        // add to rxcui (drug) object
+        drug.information = await indication;
     }
     
     return (

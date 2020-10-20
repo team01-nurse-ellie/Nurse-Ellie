@@ -1,9 +1,26 @@
-import {rxterms} from '../assets/data/RxTermsMap'
+// medication.js
 import {firebase} from '../components/Firebase/config';
 
 const rxCollection = firebase.firestore().collection('rxnormTerms');
 
-/******************************************************************************/
+/* Drug (rxcui) With Info
+   Example: Monopril 10mg
+        Object {
+        "adverseEvents": Array [],
+        "doseForm": "Tab",
+        "doseFormRxn": "Oral Tablet",
+        "information": "",
+        "nameBrand": "Monopril",
+        "nameDisplay": "Monopril",
+        "nameFullGeneric": "fosinopril sodium 10 MG Oral Tablet",
+        "namePrescribe": "Monopril 10 MG Oral Tablet",
+        "route": "Oral Pill",
+        "rxcui": 857171,
+        "rxcuiGeneric": 857169,
+        "strength": "10 mg",
+        "tty": "SBD",
+        }
+*/
 /*********************RxNorm Prescribable/Terms API calls**********************/
 /*********************20 requests per second per IP address*******************/
 
@@ -16,6 +33,13 @@ export async function getDrugsByIngredientBrand(ingredientBrand) {
         var rxcuis = await getRxcuisByIngredientBrand(ingredientBrand);
         // term info and adverse reaction for list of rxcuis
         var rxcuisWithInfo = await getRxcuisInfo(rxcuis, ingredientBrand);
+        // get indications and usage from openFDA API
+        for (var drug of rxcuisWithInfo) {
+            const indication = await getIndUseByRxcui(drug.rxcui);
+            indication instanceof Error? '': drug.information = indication;
+            console.log(drug.information);
+        }
+        // Return array of drug objects. For object structure example above: "Drug (rxcui) With Info"
         return rxcuisWithInfo;
     } catch  (error) {
         return error;
@@ -174,10 +198,11 @@ export async function getApproximateNames(name) {
 /******************************************************************************/
 /*************************** OpenFDA API **************************************/
 
-// get drug label information from openFDA label API
-export async function getLabelByRxcui(rxcui){
+// get drug label 'indications and usage' information from openFDA label API
+export async function getIndUseByRxcui(rxcui){
     var resourceStart = 'https://api.fda.gov/drug/label.json?search=openfda.rxcui:';
     var resource = resourceStart + "%22" + rxcui + "%22";
+    console.log(resource);
     try {
         const response = await fetch(resource);
         const body = await response.json();
@@ -189,18 +214,33 @@ export async function getLabelByRxcui(rxcui){
         } else {
             const fdaLabel = await body.results[0];
             // check if 'indications_and_usage' is property of label
-            const hasIndUsage = await fdaLabel.hasOwnProperty('indications_and_usage');
+            var hasIndUsage = await fdaLabel.hasOwnProperty('indications_and_usage');
+            console.log('has ind usage: ' + hasIndUsage);
             // parse only first two sentences of 'indications_and_usage'
             if (await hasIndUsage) {
-                const indUsage = await fdaLabel.indications_and_usage[0];
+                var indUsage = await fdaLabel.indications_and_usage[0];
+                console.log('ind usage raw: ' + indUsage);
                 const sentenceStart = await indUsage.indexOf('INDICATIONS AND USAGE') + 22;
-                const firstSentenceEnd = await indUsage.indexOf('.') + 1;
-                const firstIndUsageSentence = await indUsage.slice(sentenceStart,firstSentenceEnd == -1 ? indUsageSentence.length() :firstSentenceEnd );
-                //const secondSentenceEnd = await nthIndex(indUsage, '.',2) + 1;
-                //const secondindUsageSentence = await indUsage.slice(firstSentenceEnd, secondSentenceEnd)
-                //return await (firstIndUsageSentence + secondindUsageSentence);
-                console.log(firstIndUsageSentence);
-                //return indUsageSentence
+                // Indications and usage can be pages long, get substring
+                indUsage = indUsage.substr(0,250);
+                console.log('ind usage filter: ' + indUsage);
+                // remove any [...]
+                //const regex = /\[.*\]/gi
+                //indUsage = indUsage.replace(regex,'');
+                // Find first sentence by first period or second set of parenthesis
+                var firstSentenceEnd = await indUsage.indexOf('.') + 1;
+                console.log('index of period: ' + firstSentenceEnd)
+                var firstBracket = nthIndex(indUsage,'[',1);;
+                // if no period, then find 1st '[' or 3rd ')'
+                if (firstSentenceEnd == 0 || firstBracket > firstSentenceEnd) {
+                    var parenthesis = nthIndex(indUsage,')',3) + 1;
+                    firstBracket > firstSentenceEnd ? firstSentenceEnd = firstBracket : firstSentenceEnd = parenthesis;
+                    console.log('non-period sentence delimiter is: ' + firstSentenceEnd);
+                }
+                // if no parenthesis or period found, return entire 400 characters
+                const firstIndUsageSentence = await indUsage.slice(sentenceStart,firstSentenceEnd == 0 ? indUsageSentence.length() :firstSentenceEnd );
+                console.log('first ind sent: ' + firstIndUsageSentence);
+                return firstIndUsageSentence
             } else {
                 await Promise.reject(new Error('label for given rxcui did not contain indications_and_usage information'));
             }
@@ -230,12 +270,13 @@ export async function getAdverseByBnIn(brandIngredient) {
     } catch  (error) { 
         return error;
     }
-
 }
+
 
 /******************************************************************************/
 /*****************************  Helper functions*******************************/
 
+// find n'th corrence of pat in str
 function nthIndex(str, pat, n){
     var L= str.length, i= -1;
     while(n-- && i++<L){
