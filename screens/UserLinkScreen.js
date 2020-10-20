@@ -14,6 +14,7 @@ import QRCode from 'react-native-qrcode-svg';
 import { firebase } from "../components/Firebase/config";
 import { generateCode } from '../utils/codeGenerator';
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
+import MenuIcon from '../assets/images/menu-icon.svg';
 
 const UserLinkScreen = ({ navigation }) => {
 
@@ -267,8 +268,11 @@ const UserLinkScreen = ({ navigation }) => {
 
     return (
         <>
-            <KeyboardAvoidingView style={styles.background} behavior="padding" enabled>
+            <KeyboardAvoidingView style={{ flex: 1, }} behavior="padding" enabled>
                 <Background />
+                <TouchableOpacity style={styles.button} onPress={() => navigation.openDrawer()}>
+                    <MenuIcon />
+                </TouchableOpacity>
                 <Animatable.View style={styles.drawer} animation="fadeInUpBig">
                     <View style={styles.screenHeader}>
                         <Text style={styles.headerFont}>
@@ -290,6 +294,7 @@ const UserLinkScreen = ({ navigation }) => {
                         <Text style={styles.connectText}>
                             Connect to:
                     </Text>
+                        {/* <TextInput style={{ backgroundColor: 'pink' }}></TextInput> */}
                         <TouchableOpacity onPressIn={() => buttonSelect('hp')} style={connectButtonHP.button}>
                             <View style={styles.buttonFormat}>
                                 {connectButtonHP.HPIcon}
@@ -467,10 +472,11 @@ const styles = StyleSheet.create({
     //     fontFamily: 'roboto-medium',
     //     fontSize: 14,
     // },
-    // button: {
-    //     paddingRight: 30,
-    //     marginTop: 30
-    // },
+    button: {
+        position: 'absolute',
+        right: 30,
+        top: 40
+    },
     drawer: {
         flex: 4,
         // backgroundColor: 'gray',
@@ -482,7 +488,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: screenWidth,
         height: screenHeight * 0.85,
-        bottom: 0,
+        // bottom: 0,
+        top: screenHeight * 0.15,   
         justifyContent: 'space-between'
     }
 });
