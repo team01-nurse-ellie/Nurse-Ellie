@@ -125,7 +125,7 @@ export async function getAllByConcepts(termTypes) {
         if(i>0) resource += '+'
         resource += termTypes[i];
     }
-    console.log(resource);
+    //console.log(resource);
     try {
         const response = await fetch(resource);
         const body = await response.json();

@@ -57,17 +57,16 @@ const AddMedicationScreen = ({ navigation }) => {
         return filterList;
     }
 
-    // AutoComplete item for ingredients/brand names, filtered by user search input
-    //<Text style={styles.descriptionFont} onPress={ ()=> {setShowModal(true)}}>
+    // AutoComplete item based on user text input (by ingredients/brand name)
     const renderItem = ({item}) => (
         <TouchableOpacity>
-            <Text style={styles.descriptionFont} onPress={()=> renderDrugListModal(item.name)}>
+            <Text style={styles.acDescriptionFont} onPress={()=> renderDrugListModal(item.name)}>
                 {item.name}
             </Text>
         </TouchableOpacity>
     );
 
-    // show modal and populate listview of modal
+    // Shows modal and populates ListView of modal with MedicationCard
     const renderDrugListModal = async (drug) => {
         console.log('drug selected: ' + drug);
         const drugList = await getDrugsByIngredientBrand(drug);
@@ -289,11 +288,18 @@ const styles = StyleSheet.create({
     acList: { 
         //backgroundColor: 'rgba(7, 204, 9,1)', // green
         margin:0,
+        padding: 4,
     // container surround autocomplete component
     },
     acContainer: {
         //backgroundColor:'rgba(63, 116, 191,1)', // blue
         elevation: 5,
+    },
+    acDescriptionFont : {
+        fontFamily: 'roboto-regular', 
+        fontSize: 18, 
+        fontWeight: '100',
+        padding: 2,
     },
     // container that surrounds textinput component
     acInputContainer: {
