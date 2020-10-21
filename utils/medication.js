@@ -37,7 +37,6 @@ export async function getDrugsByIngredientBrand(ingredientBrand) {
         for (var drug of rxcuisWithInfo) {
             const indication = await getIndUseByRxcui(drug.rxcui);
             indication instanceof Error? '': drug.information = indication;
-            console.log(drug.information);
         }
         // Return array of drug objects. For object structure example above: "Drug (rxcui) With Info"
         return rxcuisWithInfo;
@@ -202,7 +201,8 @@ export async function getApproximateNames(name) {
 export async function getIndUseByRxcui(rxcui){
     var resourceStart = 'https://api.fda.gov/drug/label.json?search=openfda.rxcui:';
     var resource = resourceStart + "%22" + rxcui + "%22";
-    console.log(resource);
+    //console.log(resource);
+    console.log(rxcui + ' rxcui start');
     try {
         const response = await fetch(resource);
         const body = await response.json();
@@ -215,31 +215,39 @@ export async function getIndUseByRxcui(rxcui){
             const fdaLabel = await body.results[0];
             // check if 'indications_and_usage' is property of label
             var hasIndUsage = await fdaLabel.hasOwnProperty('indications_and_usage');
-            console.log('has ind usage: ' + hasIndUsage);
             // parse only first two sentences of 'indications_and_usage'
             if (await hasIndUsage) {
                 var indUsage = await fdaLabel.indications_and_usage[0];
-                console.log('ind usage raw: ' + indUsage);
-                const sentenceStart = await indUsage.indexOf('INDICATIONS AND USAGE') + 22;
+                //console.log('ind usage raw: ' + indUsage);
+                const sentenceStart = indUsage.indexOf('INDICATIONS AND USAGE') + 22;
+                //console.log(rxcui + ' sentence start ' + sentenceStart);
+                var sentenceEnd;
                 // Indications and usage can be pages long, get substring
                 indUsage = indUsage.substr(0,250);
-                console.log('ind usage filter: ' + indUsage);
-                // remove any [...]
-                //const regex = /\[.*\]/gi
-                //indUsage = indUsage.replace(regex,'');
-                // Find first sentence by first period or second set of parenthesis
-                var firstSentenceEnd = await indUsage.indexOf('.') + 1;
-                console.log('index of period: ' + firstSentenceEnd)
-                var firstBracket = nthIndex(indUsage,'[',1);;
-                // if no period, then find 1st '[' or 3rd ')'
-                if (firstSentenceEnd == 0 || firstBracket > firstSentenceEnd) {
-                    var parenthesis = nthIndex(indUsage,')',3) + 1;
-                    firstBracket > firstSentenceEnd ? firstSentenceEnd = firstBracket : firstSentenceEnd = parenthesis;
-                    console.log('non-period sentence delimiter is: ' + firstSentenceEnd);
+                //console.log(rxcui + ' ind 250: ' + indUsage);
+                // Find sentence markers: first '.', first '[', or second ')'
+                var periodIndex = indUsage.indexOf('.') + 1;
+                //console.log(rxcui + ' period index: ' + periodIndex);
+                var parenthesisIndex = nthIndex(indUsage,')',2) + 1;
+                //console.log(rxcui + ' parenthesis index :' + parenthesisIndex);
+                var bracketIndex = nthIndex(indUsage,'[',1) -1;
+                //console.log(rxcui + ' bracket index: ' + bracketIndex);
+                var andIndex = nthIndex(indUsage,'and',1) - 1;
+                //console.log(rxcui + ' andindex: ' + andIndex);
+                // determine appropriate marker to truncate 'one' sentence
+                if (periodIndex == 0 || bracketIndex < periodIndex) { // '.' does not separating sentence
+                    sentenceEnd = bracketIndex > sentenceStart ? bracketIndex : parenthesisIndex;
+                    sentenceEnd = sentenceEnd < 1 ? andIndex : sentenceEnd;
+                } else { // other than above special cases, 'one' sentence is up to first '.'
+                    sentenceEnd = periodIndex;
                 }
-                // if no parenthesis or period found, return entire 400 characters
-                const firstIndUsageSentence = await indUsage.slice(sentenceStart,firstSentenceEnd == 0 ? indUsageSentence.length() :firstSentenceEnd );
-                console.log('first ind sent: ' + firstIndUsageSentence);
+                //console.log(rxcui + ' sentence end check 1 ' + sentenceEnd);
+                // if none of the sentence markers found, return entire 250 characters
+                sentenceEnd = sentenceEnd <= sentenceStart ? indUsage.length : sentenceEnd;
+                //console.log(rxcui + ' sentence end check 2 ' + sentenceEnd);
+                //console.log(rxcui + ' 250 length: ' + indUsage.length);
+                var firstIndUsageSentence = indUsage.slice(sentenceStart, sentenceEnd);
+                //console.log(rxcui + ' final: ' + firstIndUsageSentence);
                 return firstIndUsageSentence
             } else {
                 await Promise.reject(new Error('label for given rxcui did not contain indications_and_usage information'));
@@ -255,7 +263,7 @@ export async function getAdverseByBnIn(brandIngredient) {
     var resourceStart = 'https://api.fda.gov/drug/event.json?search=patient.drug.openfda.brand_name:%22';
     var resourceEnd = '%22&count=patient.reaction.reactionmeddrapt.exact';
     var resource = resourceStart + brandIngredient + resourceEnd;
-    console.log('resource is: ' +resource);
+    //console.log('resource is: ' +resource);
     try {
         const response = await fetch(resource);
         const body = await response.json();

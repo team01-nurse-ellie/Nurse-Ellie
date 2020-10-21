@@ -71,7 +71,7 @@ const AddMedicationScreen = ({ navigation }) => {
         console.log('drug selected: ' + drug);
         const drugList = await getDrugsByIngredientBrand(drug);
         setDrugList(drugList);
-        console.log(drugList[0]);
+        //console.log(drugList);
         if (drugList.length > 0 ) {setFilterRxcui([]); setShowModal(true)};
     }
     // Retrieve OpenFda API labelling info for Rxcui
