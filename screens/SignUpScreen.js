@@ -56,7 +56,9 @@ const SignUpScreen = ({ navigation }) => {
                     id: uid,
                     email,
                     fullName,
-                    connectCode: code
+                    connectCode: code,
+                    // Holds the reference ids to userlink table  
+                    userLinks: []
                 };
 
                 usersRef

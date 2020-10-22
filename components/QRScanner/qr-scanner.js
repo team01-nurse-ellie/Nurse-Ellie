@@ -7,7 +7,7 @@ import QRCapture from '../../assets/images/qr-square.svg';
 import FlashOffIcon from '../../assets/images/flash-off.svg';
 import FlashOnIcon from '../../assets/images/flash-on.svg';
 
-const QRScanner = (navigation) => {
+const QRScanner = ({goBack, connectMethod, connectType, connectUser}) => {
 
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
@@ -36,9 +36,16 @@ const QRScanner = (navigation) => {
     }, []);
 
     const handlQRCodeScanned = (scannerResult) => {
-        console.log(scannerResult)
-        alert(scannerResult.data)
         setScanned(true);
+        connectUser(connectMethod, connectType, scannerResult.data);
+ 
+        setTimeout(t=> {
+            setScanned(false);
+        }, 2500);  
+
+        // if (f(a, b, scannerResult.data) === "done") {
+        //     setScanned(false);
+        // }
         // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     };
 
@@ -48,7 +55,7 @@ const QRScanner = (navigation) => {
     };
 
     const cancel = () => {
-        navigation.goBack();
+        goBack();
     };
 
     const { width, height } = Dimensions.get('screen');

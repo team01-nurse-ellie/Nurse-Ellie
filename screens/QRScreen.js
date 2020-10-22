@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import QRScanner from '../components/QRScanner/qr-scanner';
-import * as Animatable from 'react-native-animatable';
+import * as Animatable from 'react-native-animatable'; 
 
-const QRScreen = ({ navigation }) => {
+const QRScreen = ({ navigation, route, ...props }) => {
 
     // const [showQR, setShowQR] = useState(true);
+    const { params } = route; 
     useEffect(() => {
-
+          
         // setTimeout(t => {
         //     setShowQR(true);
         // }, 1000);
@@ -17,7 +18,7 @@ const QRScreen = ({ navigation }) => {
     return (
         <>
             {/* <View style={{ flex: 1, backgroundColor: 'black', zIndex: -99 }}> */}
-            <QRScanner {...navigation} style={{}} />
+            <QRScanner {...navigation} {...params.connecting} />
             {/*  </View> */}
 
         </>
