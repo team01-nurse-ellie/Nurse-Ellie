@@ -9,6 +9,6 @@ npm-debug.*
 *.orig.*
 web-build/
 config.js
-
+assets/data/RxTermsMap.js
 # macOS
 .DS_Store
