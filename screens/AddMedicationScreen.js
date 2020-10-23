@@ -7,6 +7,7 @@ import ScrollPicker from 'react-native-wheel-scroll-picker';
 import Background from '../components/background';
 import DatePicker from '../components/DatePicker';
 import TimePicker from '../components/TimePicker';
+import IconPicker from '../components/IconPicker';
 import MenuIcon from '../assets/images/menu-icon.svg';
 import MedicationsIcon from '../assets/images/medications-icon';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
@@ -16,6 +17,7 @@ import PinkMedication from '../assets/images/pink-medication-icon';
 
 const AddMedicationScreen = ({ navigation }) => {
     const currentTime = new Date();
+    const [medIcon, setMedIcon] = useState('1');
     const [selectTime, setSelectTime] = useState(currentTime.getHours() * 3600 + currentTime.getMinutes() * 60);
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
@@ -38,7 +40,9 @@ const AddMedicationScreen = ({ navigation }) => {
                         Add Medication
                     </Text>
                     </View>
-                    <MedicationsIcon/>
+                    <TouchableOpacity>
+                        <MedicationsIcon/>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.searchInput}>
                     <TextInput style={{minWidth: screenWidth*0.8}}placeholder="Search Medication..."></TextInput>
@@ -46,8 +50,11 @@ const AddMedicationScreen = ({ navigation }) => {
                         <SearchIcon/>
                     </TouchableOpacity>
                 </View>
-                <View style={{alignItems: 'center', paddingTop: 10}}>
-                    <PinkMedication/>
+                <View style={{alignItems: 'center', paddingTop: 15}}>
+                    <IconPicker
+                        selected={medIcon}
+                        onSelect={setMedIcon}
+                    />
                 </View>
                 <View style={{alignItems: 'center', paddingVertical: 15}}>
                     <TimePicker
@@ -58,7 +65,6 @@ const AddMedicationScreen = ({ navigation }) => {
                 <View style={styles.bottomCard}>
                     <View>
                         <Text style={styles.fieldText}> Reminder Times </Text>
-                        <Text style={styles.fieldText}> Dosage </Text>
                     </View>
                 </View>
                 <View style={{paddingBottom: 14}}/>
@@ -66,7 +72,7 @@ const AddMedicationScreen = ({ navigation }) => {
                     <View>
                         <Text style={styles.fieldText}> Start </Text>
                         <Text style={styles.fieldText}> Days </Text>
-                        <Text style={styles.fieldText}> Duration </Text>
+                        <Text style={styles.fieldText}> End </Text>
                         <Text style={styles.fieldText}> Alarm </Text>
                     </View>
                     <View style={{justifyContent:'flex-end'}}>
