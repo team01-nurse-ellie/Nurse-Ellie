@@ -22,7 +22,7 @@ const App = () => {
   useEffect(() => {
 
     // QR screen uses a setTimeout() to delay the camera opening. React-Native pops up a warning about long timers so it is supressed now.
-    YellowBox.ignoreWarnings(['Setting a timer']);
+    YellowBox.ignoreWarnings(['Non-serializable values were found in the navigation state', 'Setting a timer']);
 
   }, []);
 

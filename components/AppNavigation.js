@@ -27,7 +27,7 @@ import SymptomChecklistScreen from '../screens/SymptomChecklistScreen';
 
 // Navigation modules
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, TransitionSpecs } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 const RootStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -71,7 +71,20 @@ const AppNavigation = () => {
                         {currentUser ? (
                             <>
                                 <RootStack.Screen name="HomeScreen" component={DrawerRoutes} options={{ headerShown: false }} />
-                                <RootStack.Screen name="QRScreen" component={QRScreen} options={{ headerStyle: { backgroundColor: patient_styles.background.backgroundColor }, title: "Scan" }} />
+                                <RootStack.Screen name="QRScreen" component={QRScreen} options={{ 
+                                    transitionSpec: {
+                                        // Disables the animation when pushing the screen. 
+                                        open: {
+                                            animation: 'timing',
+                                            config: {
+                                                duration: 0,
+                                            }
+                                        }, 
+                                        // Requires a close object for when screen is popped. 
+                                        close: TransitionSpecs.TransitionIOSSpec   
+                                    },
+                                    // Color of header depending on account type.
+                                    headerStyle: { backgroundColor: (accountType == "patient") ? patient_styles.background.backgroundColor : hp_styles.background.backgroundColor}, title: "Scan" }} />
                             </>
                         ) : (
                                 <>

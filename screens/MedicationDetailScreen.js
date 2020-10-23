@@ -109,6 +109,10 @@ const styles = StyleSheet.create({
         fontSize: 12, 
         color: 'rgba(0, 0, 0, 0.38)', 
     },
+    medicationInfoView: {
+        width: 170,
+        paddingHorizontal: 10
+    },
     clickableFont: {
         fontFamily: 'roboto-medium',
         fontSize: 14, 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, Button, Dimensions, TouchableWithoutFeedback, TextInput, KeyboardAvoidingView, Keyboard, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, TextInput, KeyboardAvoidingView, Keyboard, Alert } from 'react-native';
 import * as Animatable from 'react-native-animatable'
 import Background from '../components/background';
 import NurseEllieConnectLogo from '../assets/images/ellie-connect-logo.svg';
@@ -19,7 +19,15 @@ import MenuIcon from '../assets/images/menu-icon.svg';
 const UserLinkScreen = ({ navigation }) => {
 
     const [userCode, setUserCode] = useState("");
+    const [currentUserData, setUserData] = useState(null); 
     const { currentUser } = useContext(FirebaseAuthContext);
+    const [connectType, setConnectType] = useState("");
+    const [modalContentRender, setContentRender] = useState({
+        showMethodsModal: true,
+        showProvideCode: false,
+        showInputCode: false
+    });
+    const [submitDisable, setSubmitDisable] = useState(false);
 
     useEffect(() => {
 
@@ -69,12 +77,13 @@ const UserLinkScreen = ({ navigation }) => {
 
     const buttonSelect = (type) => {
 
-        if (type === 'hp') {
+        if (type === 'HEALTH_PRO') {
             setConnectButtonHP((state) => (selectedHP));
-        } else if (type === 'ff') {
+        } else if (type === 'FRIEND_FAMILY') {
             setConnectButtonFamilyFriend((state) => (selectedFF));
         }
 
+        setConnectType(type);
         openModal();
     };
 
@@ -103,10 +112,24 @@ const UserLinkScreen = ({ navigation }) => {
         console.log("handled")
         if (type === "METHODS") {
             // modalContent = methodsModal;
+            setContentRender(state => ({
+                ...state,
+                showMethodsModal: true
+            }))
             setModalContent(methodsModal)
         } else if (type === "PROVIDE") {
             setModalContent(provideCodeModal);
+            setContentRender(state => ({
+                ...state,
+                showMethodsModal: false,
+                showProvideCode: true
+            }))
         } else if (type === "INPUT") {
+            setContentRender(state => ({
+                ...state,
+                showMethodsModal: false,  
+                showProvideCode: false
+            }))
             setModalContent(inputCodeModal);
         }
     };
@@ -115,7 +138,11 @@ const UserLinkScreen = ({ navigation }) => {
         console.log("go to qr screen")
         closeModal();
         setTimeout(t => {
-            navigation.navigate('QRScreen');
+            navigation.navigate('QRScreen', { connecting: {
+                connectUser: connectUser,
+                connectMethod: "QR", 
+                connectType: connectType
+            }});
         });
     };
 
@@ -141,7 +168,6 @@ const UserLinkScreen = ({ navigation }) => {
             connectCode: code
         }).then(() => {
             setUserCode(code);
-            closeModal();
         });
 
     };
@@ -159,6 +185,99 @@ const UserLinkScreen = ({ navigation }) => {
         }
     };
 
+    const connectUser = async (connectMethod, connectType, data = null) => {
+  
+        let isFF = false;
+
+        if (connectType == "FRIEND_FAMILY") {
+            isFF = true;
+        }
+
+        await firebase.firestore().collection("users").where("connectCode", "==", (data) ? data : inputCode).get().then(async querySnapshot => {
+           
+            let foundUser = false;
+            let userID = null;  
+            let user = null;
+            
+            querySnapshot.forEach(i => {
+                foundUser = true;
+                user = i.data();
+                userID = i.id;   
+            });
+
+            if (foundUser === true) {
+
+                let matches = [];
+
+                await firebase.firestore().collection("users").doc(currentUser.uid).get().then(async doc => {
+                   
+                    if (doc.data()) {  
+                        setUserData(doc.data());  
+                        matches = doc.data().userLinks.filter(ref => user.userLinks.includes(ref));
+                        // console.log(doc.data().userLinks, `user1`)
+                        // console.log(user.userLinks, "user2")
+                        // console.log(matches, `matches`);
+                    }
+
+                    if (matches.length > 0) {
+                        alert("Already connected!");   
+                    } else {
+                        await firebase.firestore().collection("userlinks").add({
+                            connectionType: connectType,
+                            connectionMethod: connectMethod,
+                            isFriendFamily: isFF,
+                            user1: currentUser.uid,
+                            user2: userID
+                        }).then(async docRef => {   
+                            let currentUserRefSet = false;
+                            let secondUserRefSet = false;
+
+                            // Setting current user ref
+                            await firebase.firestore().collection("users").doc(currentUser.uid).update({
+                                userLinks: firebase.firestore.FieldValue.arrayUnion(docRef.id)
+                            }).then(() => {
+                                currentUserRefSet = true;
+                                console.log("Setted current user, userlinks array")
+                            }).catch(error => {
+                                console.log(error)
+                            });
+
+                            // Setting 2nd user ref
+                            await firebase.firestore().collection("users").doc(userID).update({
+                                userLinks: firebase.firestore.FieldValue.arrayUnion(docRef.id)
+                            }).then(() => {
+                                secondUserRefSet = true;
+                                console.log("Setted second user, userlinks array")
+                            }).catch(err => {
+                                console.log(error)
+                            });
+                            
+                            if (currentUserRefSet && secondUserRefSet) {
+                                alert("Connected successfully!");
+                            } else {
+                                alert("Couldn't set references for either user!")
+                            }
+
+                        }).catch(error => {
+                            alert("Failed to connect with user!");
+                        });
+                    }
+                    // enables submit button
+                    setSubmitDisable(false);
+                });
+
+            } else {
+                alert("User not found!")
+                // enables submit button
+                setSubmitDisable(false);
+            }
+
+        }).catch((error) => {
+            console.log(error);
+        })
+
+        // return "done";
+    };
     const [methodsPressed, setMethodsPressed] = useState(false);
 
     const [inputCode, setInputCode] = useState("");
@@ -244,14 +363,20 @@ const UserLinkScreen = ({ navigation }) => {
                     autoCapitalize="characters"
                     style={styles.textInput}
                     returnKeyType="done"
-                    // onSubmitEditing={Keyboard.dismiss} 
-                    onChangeText={(code) => setInputCode(code)}
+                    onSubmitEditing={Keyboard.dismiss} 
+                    onChange={(event) => {
+                        setInputCode(event.nativeEvent.text.trim());
+                        // console.log(event.nativeEvent.text)
+                    }}
                 // value={inputCode}          
                 >
                 </TextInput>
-                <TouchableOpacity onPress={() => {
-                    console.log(typeof (inputCode));
-                    alert("Connect to user");
+                <TouchableOpacity disabled={submitDisable} onPress={() => {
+                    // Disables button to prevent POSTing data more than once.
+                    setSubmitDisable(true);
+                    setTimeout(t=> {
+                        connectUser("INPUT", connectType);
+                    }, 250);
                     Keyboard.dismiss();
                 }} style={[styles.methodBtn, { marginTop: "10%" }]}>
                     <View>
@@ -268,7 +393,7 @@ const UserLinkScreen = ({ navigation }) => {
 
     return (
         <>
-            <KeyboardAvoidingView style={styles.background} behavior="padding" enabled>
+            <KeyboardAvoidingView style={{ flex: 1, }} behavior="padding" enabled>
                 <Background />
                 <TouchableOpacity style={styles.button} onPress={() => navigation.openDrawer()}>
                     <MenuIcon />
@@ -294,7 +419,8 @@ const UserLinkScreen = ({ navigation }) => {
                         <Text style={styles.connectText}>
                             Connect to:
                     </Text>
-                        <TouchableOpacity onPressIn={() => buttonSelect('hp')} style={connectButtonHP.button}>
+                        {/* <TextInput style={{ backgroundColor: 'pink' }}></TextInput> */}
+                        <TouchableOpacity onPressIn={() => buttonSelect('HEALTH_PRO')} style={connectButtonHP.button}>
                             <View style={styles.buttonFormat}>
                                 {connectButtonHP.HPIcon}
                                 <Text style={connectButtonHP.text}>
@@ -302,7 +428,7 @@ const UserLinkScreen = ({ navigation }) => {
                             </Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPressIn={() => buttonSelect('ff')} style={connectButtonFamilyFriend.button}>
+                        <TouchableOpacity onPressIn={() => buttonSelect('FRIEND_FAMILY')} style={connectButtonFamilyFriend.button}>
                             <View style={styles.buttonFormat}>
                                 {connectButtonFamilyFriend.FamilyFriendIcon}
                                 <Text style={connectButtonFamilyFriend.text}>
@@ -315,7 +441,7 @@ const UserLinkScreen = ({ navigation }) => {
                         // needs to be set to 0, otherwise it flickers when modal is closing.
                         backdropTransitionOutTiming={0}
                         isVisible={isModalVisible}
-                        onBackButtonPress={closeModal}
+                        // onBackButtonPress={closeModal} 
                         onBackdropPress={closeModal}
                         onBackButtonPress={modalGoBack}
                     >
@@ -327,7 +453,9 @@ const UserLinkScreen = ({ navigation }) => {
                                 </TouchableOpacity>
                             </View>
                             {/* Modal content */}
-                            {modalContent}
+                            {/* Can't render using states for each JSX element, need to do this way to perserve state updates. */}
+                            {modalContentRender.showMethodsModal ? methodsModal : 
+                                !modalContentRender.showProvideCode ? inputCodeModal : provideCodeModal}
                         </View>
                     </Modal>
                 </Animatable.View>
@@ -487,7 +615,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: screenWidth,
         height: screenHeight * 0.85,
-        bottom: 0,
+        // bottom: 0,
+        top: screenHeight * 0.15,   
         justifyContent: 'space-between'
     }
 });
