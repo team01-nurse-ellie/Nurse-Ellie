@@ -8,7 +8,7 @@ NurseEllie's vision is to help patients adhere to their medication regimen, and 
 Register an account to use medication tracking and reminder features. Health professionals can register a professional account and connect with their patients to track patient medication intake and receive feedback in the form of a symptom checklist 
 
 ## Preview 
-![Nurse Ellie Screens Banner](https://github.com/team01-nurse-ellie/Nurse-Ellie/documentation-resources/Demo.jpg "Demo Screens")
+![Nurse Ellie Screens Banner](https://github.com/team01-nurse-ellie/Nurse-Ellie/blob/master/documentation-resources/Demo.jpg "Demo Screens")
 
 ## Technologies
 Nurse Ellie is written in React Native using Expo using Firebase Authentication and Firestore. 
