@@ -1,5 +1,5 @@
 import React from 'react';
-import { Easing, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Easing, StyleSheet, Dimensions, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import Modal from 'react-native-modalbox';
 import PropTypes from 'prop-types';
 import MedIconIndex from '../components/MedicationImages';
@@ -8,7 +8,7 @@ class Component extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            selected: props.selected,
+            selected: '1',
             isModalOpen: false,
         };
     }
@@ -35,7 +35,7 @@ class Component extends React.Component {
     };
 
     render(){
-        const { current, isModalOpen, selected } = this.state;
+        const { isModalOpen, selected } = this.state;
         return (
             <React.Fragment>
                 <TouchableWithoutFeedback onPress={this.onModalOpen} >
@@ -62,7 +62,7 @@ class Component extends React.Component {
                             ))}
                         </View>
                         <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
-                            <TouchableOpacity onPress={this.onModalClose}>
+                            <TouchableOpacity onPress={this.onSelect}>
                                 <Text> Select </Text>
                             </TouchableOpacity>
                         </View>
@@ -78,6 +78,9 @@ Component.propTypes = {
   selected: PropTypes.string,
 };
 
+var screenHeight = Dimensions.get("window").height;
+var screenWidth = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
     backdrop: {
         alignItems: 'center',
@@ -88,7 +91,9 @@ const styles = StyleSheet.create({
     innerModal: {
         alignItems: 'center',
         backgroundColor: 'white',
-        paddingHorizontal: 50
+        paddingHorizontal: 50, 
+        borderRadius: 30, 
+        width: screenWidth * 0.75
     },
     iconContainer: {
         alignItems: 'center',

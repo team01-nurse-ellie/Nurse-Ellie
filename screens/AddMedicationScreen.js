@@ -10,6 +10,7 @@ import Background from '../components/background';
 import DatePicker from '../components/DatePicker';
 import TimePicker from '../components/TimePicker';
 import IconPicker from '../components/IconPicker';
+import DayOfWeekPicker from '../components/DayOfWeekPicker';
 import MenuIcon from '../assets/images/menu-icon.svg';
 import MedicationsIcon from '../assets/images/medications-icon';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
@@ -22,6 +23,7 @@ import { getAllByConcepts, getDrugsByIngredientBrand,getIndUseByRxcui} from '../
 const AddMedicationScreen = ({ navigation }) => {
     const currentTime = new Date();
     const [medIcon, setMedIcon] = useState('1');
+    const [selectDoW, setSelectDoW] = useState([]);
     const [selectTime, setSelectTime] = useState(currentTime.getHours() * 3600 + currentTime.getMinutes() * 60);
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
@@ -111,7 +113,8 @@ const AddMedicationScreen = ({ navigation }) => {
                 <TouchableOpacity style={styles.searchButton} onPress={()=> 0}>                         
                     <MedicationCard>
                         <View style={{justifyContent:'center', flex:2}}>
-                            <PinkMedication/>
+                            <PinkMedication
+                             />
                         </View>
                         <View style={styles.medicationInfoView}>
                             <Text style={styles.medicationFont}>{item.nameDisplay}</Text>
@@ -135,9 +138,6 @@ const AddMedicationScreen = ({ navigation }) => {
                         Add Medication
                     </Text>
                     </View>
-                    <TouchableOpacity>
-                        <MedicationsIcon/>
-                    </TouchableOpacity>
                 </View>
                 <Autocomplete
                 autoCapitalize="none"
@@ -153,7 +153,12 @@ const AddMedicationScreen = ({ navigation }) => {
                 renderItem={renderItem}
                 keyExtractor={(item,index)=>index.toString()}
                 />
+               
                 <View style={{alignItems: 'center', paddingVertical: 15}}>
+                    <IconPicker 
+                        selected={medIcon}
+                        onSelect={setMedIcon}
+                    />
                     <TimePicker
                         value={selectTime}
                         onSelect={setSelectTime}
@@ -179,7 +184,9 @@ const AddMedicationScreen = ({ navigation }) => {
                                 onSelect={setStartDate}
                                 placeholder="Start Date"/>
                         </View>
-                        <Text style={styles.fieldText}> M, W, F </Text>
+                        <DayOfWeekPicker 
+                            selected={selectDoW}
+                            onSelect={setSelectDoW} />
                         <View style={{paddingBottom: 8}}>
                             <DatePicker 
                                 selected={endDate}

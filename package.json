@@ -14,7 +14,7 @@
     "@react-navigation/drawer": "^5.9.2",
     "@react-navigation/native": "^5.7.5",
     "@react-navigation/stack": "^5.9.0",
-    "expo": "~38.0.8",
+    "expo": "^38.0.10",
     "expo-barcode-scanner": "~8.2.1",
     "expo-camera": "~8.3.1",
     "expo-permissions": "~9.0.1",
