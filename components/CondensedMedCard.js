@@ -23,11 +23,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 4, 
     marginVertical: 6, 
     paddingVertical: 3, 
-    width: 150
+    width: 120, 
+    height: 155, 
   }, 
   cardContent: {
     marginHorizontal: 18, 
     marginVertical: 10, 
+    alignItems: 'center', 
   }
 })
 

@@ -5,6 +5,9 @@ import * as Animatable from 'react-native-animatable';
 
 import Background from '../components/hpBackground';
 import Card from '../components/StandardCard';
+import CondensedCard from '../components/CondensedMedCard';
+import MedIconIndex from '../components/MedicationImages';
+
 import MenuIcon from '../assets/images/hp-menu-icon';
 import EditIcon from '../assets/images/edit-icon';
 import PlusIcon from '../assets/images/plus-icon';
@@ -13,6 +16,12 @@ import DissatisifiedIcon from '../assets/images/scale-dissatisfied-icon';
 import TempAvatar from '../assets/images/temp-avatar';
 
 const PatientDetailScreen = ({route, navigation}) => {
+    const [medications, setMedications] = useState ([
+        {medicationName: 'Monopril', function: 'High Blood Pressure', frequency: '1x/day', alert: '10:00AM', key: '1'}, 
+        {medicationName: 'Cymbalta', function: 'Joint Pain', frequency: '1x/day', alert: '9:00AM', key: '2'}, 
+        {medicationName: 'Codeine', function: 'Cough & Cold', frequency: '15ml/day', alert: '10:00AM', key: '3'},
+        {medicationName: 'Caffeine', function: 'Cough & Cold', frequency: '15ml/day', alert: '10:00AM', key: '4'},
+    ])
     const { item } = route.params;
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
@@ -56,6 +65,16 @@ const PatientDetailScreen = ({route, navigation}) => {
                         <PlusIcon/>
                     </TouchableOpacity>
                 </View>
+                <FlatList horizontal data={medications} renderItem={({item}) => (
+                    <TouchableOpacity style={styles.searchButton} onPress={()=>navigation.navigate('Medication', {item: item})}>
+                        <CondensedCard>
+                            <Text style={{paddingBottom: 10}}> {item.medicationName}</Text>
+                            {MedIconIndex.index[item.key]}
+                            <Text> Intake Time </Text>
+                            <Text> {item.alert}</Text>
+                        </CondensedCard>
+                    </TouchableOpacity>
+                )}/>
                 <View style={{flexDirection: 'row',  paddingTop: 13}}>
                     <Text style={styles.subheadingfont}>
                         Symptom Checklist
