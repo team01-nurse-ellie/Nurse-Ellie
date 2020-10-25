@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, StyleSheet, Dimensions } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Camera } from 'expo-camera';
@@ -9,6 +9,7 @@ import FlashOnIcon from '../../assets/images/flash-on.svg';
 
 const QRScanner = ({goBack, connectMethod, connectType, connectUser}) => {
 
+    const mounted = useRef(true);
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
     const [flashOn, setFlash] = useState(false);
@@ -24,15 +25,19 @@ const QRScanner = ({goBack, connectMethod, connectType, connectUser}) => {
         })();
 
         setTimeout(t => {
+            // adds a slight delay to allow camera to load up without delaying initial screen load up when navigating to QR screen.
             setShowQR(true);
         }, 200);
-        // adds a slight delay to allow camera to load up without delaying initial screen load up when navigating to QR screen.
 
         // if (hasPermission == true) {
         // } else {
         //     alert("Camera needs permissions");
         // }
 
+        return () => {
+            mounted.current = false;
+            console.log("UNMOUNTING QR Scanner");
+        }
     }, []);
 
     const handlQRCodeScanned = (scannerResult) => {
@@ -40,7 +45,10 @@ const QRScanner = ({goBack, connectMethod, connectType, connectUser}) => {
         connectUser(connectMethod, connectType, scannerResult.data);
  
         setTimeout(t=> {
-            setScanned(false);
+            if (mounted.current === true) {
+                // If component unmounts it will not update the state, this prevents the warning msg from popping up. 
+                setScanned(false);
+            }
         }, 2500);  
 
         // if (f(a, b, scannerResult.data) === "done") {
@@ -50,7 +58,6 @@ const QRScanner = ({goBack, connectMethod, connectType, connectUser}) => {
     };
 
     const toggleFlash = () => {
-        // console.log(!flashOn)
         setFlash(!flashOn);
     };
 
