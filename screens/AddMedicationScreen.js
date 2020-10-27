@@ -77,8 +77,8 @@ const AddMedicationScreen = ({ navigation }) => {
 
   // AutoComplete item based on user text input (by ingredients/brand name)
   const renderItem = ({ item }) => (
-    <TouchableOpacity>
-      <Text style={styles.acDescriptionFont} onPress={() => renderDrugListModal(item.name)}>
+    <TouchableOpacity style={styles.acListItem} onPress={() => renderDrugListModal(item.name)}>
+      <Text style={styles.acListFont} >
         {item.name}
       </Text>
     </TouchableOpacity>
@@ -152,21 +152,22 @@ const AddMedicationScreen = ({ navigation }) => {
             <Text style={styles.title}>Add Medication</Text>
           </View>
         </View>
-        <Autocomplete
-          autoCapitalize="none"
-          autoCorrect={false}
-          containerStyle={styles.acContainer}
-          inputContainerStyle={styles.acInputContainer}
-          listContainerStyle={styles.acListContainer}
-          listStyle={styles.acList}
-          data={filterRxcui}
-          defaultValue={''}
-          onChangeText={text => setFilterRxcui(filterByTerm(text))}
-          placeholder="Enter medication"
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-        />
-
+        <View style={styles.acView}>
+          <Autocomplete
+            autoCapitalize="none"
+            autoCorrect={false}
+            containerStyle={styles.acContainer}
+            inputContainerStyle={styles.acInputContainer}
+            listContainerStyle={styles.acListContainer}
+            listStyle={styles.acList}
+            data={filterRxcui}
+            defaultValue={''}
+            onChangeText={text => setFilterRxcui(filterByTerm(text))}
+            placeholder="Enter medication"
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
         <View style={{ alignItems: 'center', paddingVertical: 15 }}>
           <IconPicker selected={medIcon} onSelect={setMedIcon} />
           <TimePicker value={selectTime} onSelect={setSelectTime} />
@@ -295,27 +296,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '100',
   },
-  // container that surrounds result list
-  acListContainer: {
-    //backgroundColor: 'rgba(204, 38, 9,1)', // red
-    height: 350,
+  // view surrounding entire autocomplete component
+  acView: {
+    flex: 1,
   },
-  // result list
-  acList: {
-    //backgroundColor: 'rgba(7, 204, 9,1)', // green
-    margin: 0,
-    padding: 4,
-    // container surround autocomplete component
-  },
+  // container surround autocomplete input and list components
   acContainer: {
     //backgroundColor:'rgba(63, 116, 191,1)', // blue
-    elevation: 5,
-  },
-  acDescriptionFont: {
-    fontFamily: 'roboto-regular',
-    fontSize: 18,
-    fontWeight: '100',
-    padding: 2,
+    flex: 1,
+    width: '100%',
   },
   // container that surrounds textinput component
   acInputContainer: {
@@ -324,6 +313,27 @@ const styles = StyleSheet.create({
     borderEndWidth: 0,
     borderTopWidth: 0,
     borderBottomWidth: 1,
+  },
+  // container that surrounds result list
+  acListContainer: {
+    //backgroundColor: 'rgba(204, 38, 9,1)', // red
+    flex: 1,
+    height: 450,
+  },
+  // result list
+  acList: {
+    // backgroundColor: 'rgba(7, 204, 9,1)', // green
+    margin: 0,
+    padding: 4,
+    flex: 1,
+  },
+  acListItem: {
+  },
+  acListFont: {
+    fontFamily: 'roboto-regular',
+    fontSize: 18,
+    fontWeight: '100',
+    padding: 2,
   },
   medicationFont: {
     fontFamily: 'roboto-regular',
