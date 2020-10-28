@@ -28,7 +28,7 @@ const rxCollection = firebase.firestore().collection('rxnormTerms');
 export async function getDrugsByIngredientBrand(ingredientBrand) {
     try {
         if (ingredientBrand == undefined) {throw "search term undefined"};
-        console.log('get all drugs for: ' + ingredientBrand);
+        //console.log('get all drugs for: ' + ingredientBrand);
         // list of rxcui of drugs by ingredient or brand
         var rxcuis = await getRxcuisByIngredientBrand(ingredientBrand);
         // term info and adverse reaction for list of rxcuis
@@ -48,7 +48,7 @@ export async function getDrugsByIngredientBrand(ingredientBrand) {
 export async function getRxcuisByIngredientBrand(ingredientBrand) {
         var resource = 'https://rxnav.nlm.nih.gov/REST/Prescribe/drugs.json?name='
         resource += ingredientBrand;
-        console.log('resource is:' +resource);
+        //console.log('resource is:' +resource);
         var concepts = [];
         var scdSbd = [];
         var rxcuis = [];
@@ -202,7 +202,7 @@ export async function getIndUseByRxcui(rxcui){
     var resourceStart = 'https://api.fda.gov/drug/label.json?search=openfda.rxcui:';
     var resource = resourceStart + "%22" + rxcui + "%22";
     //console.log(resource);
-    console.log(rxcui + ' rxcui start');
+    //console.log(rxcui + ' rxcui start');
     try {
         const response = await fetch(resource);
         const body = await response.json();

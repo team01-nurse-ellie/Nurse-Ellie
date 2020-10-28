@@ -44,10 +44,11 @@ const AddMedicationScreen = ({ navigation }) => {
   const [filterRxcui, setFilterRxcui] = useState([]);
   // filtered list of drugs (drug = ingredient+form+strength) based on user-selected ingredient or brand-name
   const [drugList, setDrugList] = useState([]);
-  // User selected medication (from search list)
-  const [medicationSelected, setMedicationSelected] = useState();
-  const [autoResult, setAutoResult] = useState(false);
+  // User selected search term (from Autocomplete)
   const [searchResult, setSearchResult] = useState('');
+  // User selected medication (Object with all drug information)
+  const [medicationToAdd, setMedicationToAdd] = useState("Add Medication");
+
 
   useEffect(() => {
     load();
@@ -59,7 +60,7 @@ const AddMedicationScreen = ({ navigation }) => {
       //const ingredientsBrand = await getAllByConcepts(['IN','BN','MIN']);
       const ingredientsBrand = await getAllByConcepts(['IN', 'BN']);
       await setMasterRxcui(ingredientsBrand);
-      setMedicationSelected('Add Medication');
+      setMedicationToAdd('Add Medication');
     } catch (error) {
       console.log(error);
     }
@@ -81,33 +82,45 @@ const AddMedicationScreen = ({ navigation }) => {
 
   // AutoComplete item based on user text input (by ingredients/brand name)
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.acListItem} onPress={() => {renderDrugListModal(item.name); setSearchResult(item.name);}}>
+    <TouchableOpacity 
+      style={styles.acListItem} 
+      onPress={() => {renderDrugListModal(item.name); setSearchResult(item.name); setDrugList([]);}}>
       <Text style={styles.acListFont} >
         {item.name}
       </Text>
     </TouchableOpacity>
   );
-
   // Shows modal and populates ListView of modal with MedicationCard
   const renderDrugListModal = async drug => {
-    console.log(`drug selected: ${drug}`);
+    //console.log(`drug selected: ${drug}`);
+    // render drug modal
+    setShowModal(true);
     const drugList = await getDrugsByIngredientBrand(drug);
     setDrugList(drugList);
     //console.log(drugList);
     if (drugList.length > 0) {
       setFilterRxcui([]);
-      setShowModal(true);
     }
   };
-  // User selects medication from list
-  const selectMedication = ({item}) => {
-    // change header of Add Medication screen
-    setMedicationSelected(item.nameDisplay);
-    // 
+  // Create header for AddMedication screen from a user selected medication
+  const createMedicationHeader = () => {
+    var header;
+    if(medicationToAdd === Object(medicationToAdd)){
+      header = medicationToAdd.nameDisplay;
+      header += ' ' + medicationToAdd.strength;
+      header += ' ' + medicationToAdd.doseForm;
+    }
+    return header;
+  }
+  
+  // add medication using firestore
+  const addMedicationToDB = () => {
+    var str = JSON.stringify(medicationToAdd);
+    Alert.alert("Medication Added", "Add me to firestore: \n" + str);
+    console.log("medication to add: \n" + str);
+    return;
+  }
 
-  };
-  // User chooses to add mediction
-    // add medication using firestore
 
   return (
     <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
@@ -125,13 +138,15 @@ const AddMedicationScreen = ({ navigation }) => {
         onModalWillShow={() => getDrugsByIngredientBrand()}
       >
         <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>{medicationSelected}</Text>
+          <Text style={styles.modalTitle}>{searchResult}</Text>
         </View>
         <FlatList
           style={{ margin: 0 }}
           data={drugList}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.searchButton} onPress={() => 0}>
+            <TouchableOpacity 
+              style={styles.searchButton} 
+              onPress={()=>{setMedicationToAdd(item); setShowModal(false); setSearchResult('');}}>
               <MedicationCard>
                 <View style={{ justifyContent: 'center', flex: 2 }}>
                   <PinkMedication />
@@ -155,7 +170,12 @@ const AddMedicationScreen = ({ navigation }) => {
             <TouchableOpacity style={{ paddingTop: 5, paddingRight: 10 }} onPress={() => navigation.goBack()}>
               <ReturnIcon />
             </TouchableOpacity>
-            <Text style={styles.title}>Add Medication</Text>
+            <Text 
+              style={styles.title}>
+                {medicationToAdd != "Add Medication" && medicationToAdd!='' ? 
+                createMedicationHeader() : 
+                "Add Medication"}
+            </Text>
           </View>
         </View>
         <View style={styles.acView}>
@@ -168,7 +188,6 @@ const AddMedicationScreen = ({ navigation }) => {
             listStyle={styles.acList}
             data={filterRxcui}
             defaultValue={searchResult}
-            onShowResult={filterRxcui.length == 0? console.log('exactly 0') : console.log('longer than 0')}
             onChangeText={text => {setFilterRxcui(filterByTerm(text));}}
             //onShowResult={()=> setAutoResult('true')}
             placeholder="Enter medication"
@@ -217,7 +236,7 @@ const AddMedicationScreen = ({ navigation }) => {
             </View>
           </View>
           <View style={{ paddingBottom: 14 }} />
-          <Button title="ADD MEDICATION" color="#42C86A" onPress={() => Alert.alert('medication added')} />
+          <Button title="ADD MEDICATION" color="#42C86A" onPress={addMedicationToDB} />
           </> 
         )
         }
@@ -238,6 +257,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingBottom: 20,
+    marginRight: 15,
   },
   title: {
     fontFamily: 'roboto-regular',
