@@ -38,13 +38,16 @@ const AddMedicationScreen = ({ navigation }) => {
   const [alarm, setAlarm] = useState('false');
   const [showModal, setShowModal] = useState(false);
   const toggleSwitch = () => setAlarm(previousState => !previousState);
-  //const [hideResults, setHideResults] = useState(false);
   // master rxcui term list (all possible ingredients and brand-names)
   const [masterRxcui, setMasterRxcui] = useState([]);
   // filtered rxcui term list (filtered list of ingredients and brand-names)
   const [filterRxcui, setFilterRxcui] = useState([]);
   // filtered list of drugs (drug = ingredient+form+strength) based on user-selected ingredient or brand-name
   const [drugList, setDrugList] = useState([]);
+  // User selected medication (from search list)
+  const [medicationSelected, setMedicationSelected] = useState();
+  const [autoResult, setAutoResult] = useState(false);
+  const [searchResult, setSearchResult] = useState('');
 
   useEffect(() => {
     load();
@@ -56,6 +59,7 @@ const AddMedicationScreen = ({ navigation }) => {
       //const ingredientsBrand = await getAllByConcepts(['IN','BN','MIN']);
       const ingredientsBrand = await getAllByConcepts(['IN', 'BN']);
       await setMasterRxcui(ingredientsBrand);
+      setMedicationSelected('Add Medication');
     } catch (error) {
       console.log(error);
     }
@@ -77,7 +81,7 @@ const AddMedicationScreen = ({ navigation }) => {
 
   // AutoComplete item based on user text input (by ingredients/brand name)
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.acListItem} onPress={() => renderDrugListModal(item.name)}>
+    <TouchableOpacity style={styles.acListItem} onPress={() => {renderDrugListModal(item.name); setSearchResult(item.name);}}>
       <Text style={styles.acListFont} >
         {item.name}
       </Text>
@@ -95,13 +99,15 @@ const AddMedicationScreen = ({ navigation }) => {
       setShowModal(true);
     }
   };
-  // Retrieve OpenFda API labelling info for Rxcui
-  const addIndicationToDrug = async drug => {
-    // get label info for rxcui
-    const indication = await getIndUseByRxcui(drug.rxcui);
-    // add to rxcui (drug) object
-    drug.information = await indication;
+  // User selects medication from list
+  const selectMedication = ({item}) => {
+    // change header of Add Medication screen
+    setMedicationSelected(item.nameDisplay);
+    // 
+
   };
+  // User chooses to add mediction
+    // add medication using firestore
 
   return (
     <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
@@ -119,7 +125,7 @@ const AddMedicationScreen = ({ navigation }) => {
         onModalWillShow={() => getDrugsByIngredientBrand()}
       >
         <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>Select Medication</Text>
+          <Text style={styles.modalTitle}>{medicationSelected}</Text>
         </View>
         <FlatList
           style={{ margin: 0 }}
@@ -154,56 +160,67 @@ const AddMedicationScreen = ({ navigation }) => {
         </View>
         <View style={styles.acView}>
           <Autocomplete
-            autoCapitalize="none"
+            autoCapitalize="sentences"
             autoCorrect={false}
             containerStyle={styles.acContainer}
             inputContainerStyle={styles.acInputContainer}
             listContainerStyle={styles.acListContainer}
             listStyle={styles.acList}
             data={filterRxcui}
-            defaultValue={''}
-            onChangeText={text => setFilterRxcui(filterByTerm(text))}
+            defaultValue={searchResult}
+            onShowResult={filterRxcui.length == 0? console.log('exactly 0') : console.log('longer than 0')}
+            onChangeText={text => {setFilterRxcui(filterByTerm(text));}}
+            //onShowResult={()=> setAutoResult('true')}
             placeholder="Enter medication"
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
           />
         </View>
-        <View style={{ alignItems: 'center', paddingVertical: 15 }}>
-          <IconPicker selected={medIcon} onSelect={setMedIcon} />
-          <TimePicker value={selectTime} onSelect={setSelectTime} />
-        </View>
-        <View style={styles.bottomCard}>
-          <View>
-            <Text style={styles.fieldText}> Reminder Times </Text>
+        {filterRxcui.length != 0 ? (
+          <>
+            <View></View>
+          </>
+        ) : (
+          <>
+          <View style={{ alignItems: 'center', paddingVertical: 15 }}>
+            <IconPicker selected={medIcon} onSelect={setMedIcon} />
+            <TimePicker value={selectTime} onSelect={setSelectTime} />
           </View>
-        </View>
-        <View style={{ paddingBottom: 14 }} />
-        <View style={styles.bottomCard}>
-          <View>
-            <Text style={styles.fieldText}> Start </Text>
-            <Text style={styles.fieldText}> Days </Text>
-            <Text style={styles.fieldText}> End </Text>
-            <Text style={styles.fieldText}> Alarm </Text>
-          </View>
-          <View style={{ justifyContent: 'flex-end' }}>
-            <View style={{ paddingBottom: 8 }}>
-              <DatePicker selected={startDate} onSelect={setStartDate} placeholder="Start Date" />
+          <View style={styles.bottomCard}>
+            <View>
+              <Text style={styles.fieldText}> Reminder Times </Text>
             </View>
-            <DayOfWeekPicker selected={selectDoW} onSelect={setSelectDoW} />
-            <View style={{ paddingBottom: 8 }}>
-              <DatePicker selected={endDate} onSelect={setEndDate} placeholder="End Date" />
-            </View>
-            <Switch
-              trackColor={{ false: '#767577', true: '#42C86A' }}
-              thumbColor={alarm ? '#F4F3F4' : '#F4F3F4'}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
-              value={alarm}
-            />
           </View>
-        </View>
-        <View style={{ paddingBottom: 14 }} />
-        <Button title="ADD MEDICATION" color="#42C86A" onPress={() => Alert.alert('medication added')} />
+          <View style={{ paddingBottom: 14 }} />
+          <View style={styles.bottomCard}>
+            <View>
+              <Text style={styles.fieldText}> Start </Text>
+              <Text style={styles.fieldText}> Days </Text>
+              <Text style={styles.fieldText}> End </Text>
+              <Text style={styles.fieldText}> Alarm </Text>
+            </View>
+            <View style={{ justifyContent: 'flex-end' }}>
+              <View style={{ paddingBottom: 8 }}>
+                <DatePicker selected={startDate} onSelect={setStartDate} placeholder="Start Date" />
+              </View>
+              <DayOfWeekPicker selected={selectDoW} onSelect={setSelectDoW} />
+              <View style={{ paddingBottom: 8 }}>
+                <DatePicker selected={endDate} onSelect={setEndDate} placeholder="End Date" />
+              </View>
+              <Switch
+                trackColor={{ false: '#767577', true: '#42C86A' }}
+                thumbColor={alarm ? '#F4F3F4' : '#F4F3F4'}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={alarm}
+              />
+            </View>
+          </View>
+          <View style={{ paddingBottom: 14 }} />
+          <Button title="ADD MEDICATION" color="#42C86A" onPress={() => Alert.alert('medication added')} />
+          </> 
+        )
+        }
       </Animatable.View>
     </KeyboardAvoidingView>
   );
@@ -305,6 +322,7 @@ const styles = StyleSheet.create({
     //backgroundColor:'rgba(63, 116, 191,1)', // blue
     flex: 1,
     width: '100%',
+    position: 'absolute',
   },
   // container that surrounds textinput component
   acInputContainer: {
@@ -318,7 +336,7 @@ const styles = StyleSheet.create({
   acListContainer: {
     //backgroundColor: 'rgba(204, 38, 9,1)', // red
     flex: 1,
-    height: 450,
+    height: screenHeight*0.55,
   },
   // result list
   acList: {
