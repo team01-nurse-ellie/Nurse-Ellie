@@ -42,7 +42,9 @@
     "react-native-unordered-list": "^1.0.4",
     "react-native-web": "~0.11.7",
     "react-native-wheel-scroll-picker": "^0.2.4",
-    "styled-components": "^5.2.0"
+    "styled-components": "^5.2.0",
+    "expo-notifications": "~0.3.3",
+    "expo-constants": "~9.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
