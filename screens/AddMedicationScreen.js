@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -26,9 +26,12 @@ import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 import PinkMedication from '../assets/images/pink-medication-icon';
 import MedicationCard from '../components/MedicationCard';
 
-import { getAllByConcepts, getDrugsByIngredientBrand, getIndUseByRxcui } from '../utils/medication';
+import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
+import * as fsFn  from '../utils/firestore';
+import { getAllByConcepts, getDrugsByIngredientBrand} from '../utils/medication';
 
 const AddMedicationScreen = ({ navigation }) => {
+  const { currentUser } = useContext(FirebaseAuthContext);
   const currentTime = new Date();
   const [medIcon, setMedIcon] = useState('1');
   const [selectDoW, setSelectDoW] = useState([]);
@@ -118,6 +121,12 @@ const AddMedicationScreen = ({ navigation }) => {
     var str = JSON.stringify(medicationToAdd);
     Alert.alert("Medication Added", "Add me to firestore: \n" + str);
     console.log("medication to add: \n" + str);
+    fsFn.addMedication(currentUser.uid, medicationToAdd);
+    fsFn.getAllMedications(currentUser.uid);
+  }
+
+  const getMedInfoSetting = () => {
+    // retrieve 
     return;
   }
 
