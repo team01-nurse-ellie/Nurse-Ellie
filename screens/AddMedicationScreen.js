@@ -1,8 +1,3 @@
-// Require start and end date when adding medication (firestore cannot store undefined date)
-// Require days of week to be selected
-// Changed DaysOfWeekPicker component sunday as index 0 to match JS Date standard
-//
-
 import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
@@ -20,6 +15,7 @@ import {
 import * as Animatable from 'react-native-animatable';
 import Autocomplete from 'react-native-autocomplete-input';
 import Modal from 'react-native-modal';
+import moment from 'moment';
 
 import Background from '../components/background';
 import DatePicker from '../components/DatePicker';
@@ -34,6 +30,7 @@ import MedicationCard from '../components/MedicationCard';
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
 import * as fsFn  from '../utils/firestore';
 import { getAllByConcepts, getDrugsByIngredientBrand} from '../utils/medication';
+import { ActivityIndicator } from 'react-native-paper';
 
 const AddMedicationScreen = ({ navigation }) => {
   const { currentUser } = useContext(FirebaseAuthContext);
@@ -46,6 +43,7 @@ const AddMedicationScreen = ({ navigation }) => {
   const [alarm, setAlarm] = useState('false');
   const [showModal, setShowModal] = useState(false);
   const toggleSwitch = () => setAlarm(previousState => !previousState);
+  const [loading, setLoading] = useState();
   // master rxcui term list (all possible ingredients and brand-names)
   const [masterRxcui, setMasterRxcui] = useState([]);
   // filtered rxcui term list (filtered list of ingredients and brand-names)
@@ -100,11 +98,12 @@ const AddMedicationScreen = ({ navigation }) => {
   );
   // Shows modal and populates ListView of modal with MedicationCard
   const renderDrugListModal = async drug => {
-    //console.log(`drug selected: ${drug}`);
+    setLoading(true);
     // render drug modal
     setShowModal(true);
     const drugList = await getDrugsByIngredientBrand(drug);
     setDrugList(drugList);
+    setLoading(false);
     //console.log(drugList);
     if (drugList.length > 0) {
       setFilterRxcui([]);
@@ -123,7 +122,8 @@ const AddMedicationScreen = ({ navigation }) => {
   
   // Add medication with user settings to user collection
   const addMedicationToDB = async () => {
-    // Check that there is start date, end date, day(s) of week, and medication object
+    console.log(selectTime);
+    // Check that there is start date, end date, day(s) of week, start dateand medication object
     if (startDate == undefined || endDate == undefined) {
       Alert.alert('', '\nPlease select a start and end date');
       return;
@@ -133,6 +133,8 @@ const AddMedicationScreen = ({ navigation }) => {
     } else if (medicationToAdd !== Object(medicationToAdd)) {
       Alert.alert('', '\nPlease find medication to add');
       return;
+    } else if(moment(endDate) < moment(startDate) || moment(endDate) < moment(currentTime)){
+      Alert.alert('', '\nPlease select a valid end date');
     }
     //var str = JSON.stringify(medicationToAdd);
     //console.log("medication to add: \n" + str);
@@ -149,10 +151,15 @@ const AddMedicationScreen = ({ navigation }) => {
     await fsFn.addMedication(currentUser.uid, medicationToAdd
       // Clear user input components if addition to DB successful
       ).then(() => {
-        resetUserInput;
+        resetUserInput();
         Alert.alert('','\nMedication Added!');
       }
-        ).catch(e => {console.log(e)});
+      ).catch(e => {
+        e.toString() == 'Error: Medication already in user collection'? 
+        (Alert.alert('','\nYou have already added this medication'), resetUserInput()) : 
+        console.log(e);
+      });
+      //).catch(e => {console.log(e.toString())});
   }
 
   // Reset user input components to default values
@@ -161,8 +168,8 @@ const AddMedicationScreen = ({ navigation }) => {
     setStartDate();
     setEndDate();
     setSelectDoW([]);
+    setAlarm(false);
     setMedicationToAdd('Add Medication');
-    return;
   }
 
 
@@ -181,32 +188,42 @@ const AddMedicationScreen = ({ navigation }) => {
         backdropOpacity={0}
         onModalWillShow={() => getDrugsByIngredientBrand()}
       >
-        <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>{searchResult}</Text>
-        </View>
-        <FlatList
-          style={{ margin: 0 }}
-          data={drugList}
-          renderItem={({ item }) => (
-            <TouchableOpacity 
-              style={styles.searchButton} 
-              onPress={()=>{setMedicationToAdd(item); setShowModal(false); setSearchResult('');}}>
-              <MedicationCard>
-                <View style={{ justifyContent: 'center', flex: 2 }}>
-                  <PinkMedication />
-                </View>
-                <View style={styles.medicationInfoView}>
-                  <Text style={styles.medicationFont}>{item.nameDisplay}</Text>
-                  <Text style={styles.doseFont}>{item.doseForm}</Text>
-                </View>
-                <View style={styles.strengthView}>
-                  <Text style={styles.strengthFont}>{item.strength}</Text>
-                </View>
-              </MedicationCard>
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-        />
+      {loading ? (
+        <>
+          <ActivityIndicator/>
+          <Text style={{alignSelf:'center'}}> Searching ...</Text>
+        </>
+        ) : (
+        <>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>{searchResult}</Text>
+          </View>
+          <FlatList
+            style={{ margin: 0 }}
+            data={drugList}
+            renderItem={({ item }) => (
+              <TouchableOpacity 
+                style={styles.searchButton} 
+                onPress={()=>{setMedicationToAdd(item); setShowModal(false); setSearchResult('');}}>
+                <MedicationCard>
+                  <View style={{ justifyContent: 'center', flex: 2 }}>
+                    <PinkMedication />
+                  </View>
+                  <View style={styles.medicationInfoView}>
+                    <Text style={styles.medicationFont}>{item.nameDisplay}</Text>
+                    <Text style={styles.doseFont}>{item.doseForm}</Text>
+                  </View>
+                  <View style={styles.strengthView}>
+                    <Text style={styles.strengthFont}>{item.strength}</Text>
+                  </View>
+                </MedicationCard>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </>
+        )
+      }
       </Modal>
       <Animatable.View style={styles.drawer} animation="fadeInUpBig">
         <View style={styles.header}>
@@ -380,6 +397,7 @@ const styles = StyleSheet.create({
   // view surrounding entire autocomplete component
   acView: {
     flex: 1,
+    marginBottom:25
   },
   // container surround autocomplete input and list components
   acContainer: {

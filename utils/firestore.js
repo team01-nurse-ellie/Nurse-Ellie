@@ -1,28 +1,22 @@
 import { firebase } from '../components/Firebase/config';
 
-
 const userCollection = firebase.firestore().collection("users");
 
-// Adds a medication to user
+// Adds a medication to user collection
 export async function addMedication (userId, medObj){
-    let isMedAdded;
-    // See if drug object valid with check for unique rxcui identifier
+    // Check if drug object valid (has rxcui from rxnorm)
     let medHasRxcui = medObj.hasOwnProperty('rxcui');
-    // Check if medication already added to user
+    // Checks before adding medication to DB
     if(medHasRxcui) {
+        // Check if medication already added to user collection
         try {
-        await userCollection.doc(userId).collection("medications")
-            .where("rxcui", "==", medObj.rxcui)
-            .get()
-            .then(async querySnapshot => {
-                if (querySnapshot.empty) {
-                    console.log('not added already');
-                    isMedAdded = false;
-                } else 
-                {
-                    console.log('med already in db');
-                    isMedAdded = true;
-                }
+            await userCollection.doc(userId).collection("medications")
+                .where("rxcui", "==", medObj.rxcui)
+                .get()
+                .then(async querySnapshot => {
+                    if (!querySnapshot.empty) {
+                        throw Error('Medication already in user collection');
+                    }
             });
         } catch (error) {
             throw error;
@@ -30,16 +24,12 @@ export async function addMedication (userId, medObj){
     } else {
         throw Error('Cannot add medication, object does not contain "rxcui" property');
     }
-    // Add medication to user collection
-    if(!isMedAdded && medHasRxcui) {
-        console.log('checks passed. ready to add');
-        await userCollection.doc(userId).collection("medications")
-        .add(medObj)
-        .then(console.log('medication added'))
-        .catch(error => {
+    // Checks passed, ready to add medication to user collection
+    await userCollection.doc(userId).collection("medications").add(medObj
+        ).then(console.log('medication added')
+        ).catch(error => {
             alert("Failed to add medication!");
         });
-    }
 }
 
 // get all medication documents for a user
@@ -48,7 +38,8 @@ export async function getAllMedications(userId) {
     await userCollection.doc(userId).collection("medications").get(
     ).then( querySnapshot => {
         querySnapshot.forEach( doc => {
-            medications.push(doc);
+            medications.push(doc.data());
+            console.log(doc.data());
         })
     }).catch(error => {
         console.log(error)
