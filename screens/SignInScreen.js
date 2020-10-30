@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard } from 'react-native';
 
+
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config';
 
@@ -9,7 +10,8 @@ import Background from '../components/background';
 const SignInScreen = ({navigation}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    
+  
+   
     const onLoginPress = () => {
         firebase
             .auth()
@@ -37,6 +39,9 @@ const SignInScreen = ({navigation}) => {
             })
     }
 
+
+
+     
     
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
@@ -61,6 +66,8 @@ const SignInScreen = ({navigation}) => {
         </KeyboardAvoidingView>
     )
 }
+
+
 
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;

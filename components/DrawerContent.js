@@ -8,6 +8,8 @@ import { Text, Drawer } from 'react-native-paper';
 
 
 function DrawerContent(props){
+
+
     return (
         <View>
             <DrawerContentScrollView {... props}>
@@ -16,6 +18,7 @@ function DrawerContent(props){
                 </View>
             </DrawerContentScrollView>
             <Drawer.Section style={styles.drawerSection}>
+           
                 <DrawerItem
                     label="Home"
                     onPress={() =>{props.navigation.navigate('Home')}}
@@ -33,6 +36,10 @@ function DrawerContent(props){
                 <DrawerItem
                     label="Setting"
                     onPress={()=>{props.navigation.navigate('Settings')}}
+                />
+                  <DrawerItem
+                    label="User Profile"
+                    onPress={()=>{props.navigation.navigate('UserProfile')}}
                 />
             </Drawer.Section>
             <Drawer.Section style={styles.bottomDrawerSection}>

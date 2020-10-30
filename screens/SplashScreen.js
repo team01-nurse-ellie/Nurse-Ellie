@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Image, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 
 import Background from '../components/background';
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
-
+import { firebase } from "../components/Firebase/config";
 const SplashScreen = ({navigation}) => {
+   
+    firebase.auth().signOut();
+   
+   
     return (
         <View style={styles.container}>
             <Background/>
@@ -17,6 +21,7 @@ const SplashScreen = ({navigation}) => {
         </View>
     )
 }
+
 
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;

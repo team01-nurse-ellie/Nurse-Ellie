@@ -1,64 +1,83 @@
 import React, { useState }from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard } from 'react-native';
-import MenuIcon from '../assets/images/menu-icon';
+import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard, Picker, Alert} from 'react-native';
+import DatePicker from 'react-native-datepicker'
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
-
 import Background from '../components/background';
-
+import MenuIcon from '../assets/images/menu-icon';
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
-const HealthProfessionalScreen = ({navigation}) => {
-    const [FieldofPractice, setFieldofPractice] = useState('')
-    const [LicenseNumber, setLicenseNumber] = useState('')
-    const [RegulatoryBody, setRegulatoryBody] = useState('')
+const UserProfile = ({navigation}) => {
+    const [fullName, setFullName] = useState('')
+    const [email, setEmail] = useState('')
+    const [DOB, setDob] = useState('')
     const usersRef = firebase.firestore().collection('users')
-
-   const onHealthPress = async (res) => {
+    const [gender, setGender] = useState('none')
+    
+   const onEditUser = async (res) => {
    const data = await firebase.auth().currentUser.uid
     var userDoc = firebase.firestore().collection("users").doc(data).update({
-        'FieldofPractice':'',
-        'LicenseNumber': '',
-        'RegulatoryBody': ''
+        'fullName':'',
+        'email': '',
+        'gender': '',
+        'DOB': ''
     })
 
     const obj = {
-
-                    FieldofPractice,
-                    LicenseNumber,
-                    RegulatoryBody,
-                };
-                const usersRef = firebase.firestore().collection('users')
-                usersRef
-                    .doc(data)
-                    .update(obj)
+        fullName,
+        email,
+        gender,
+        DOB
+    };
+    const usersRef = firebase.firestore().collection('users')
+    usersRef.doc(data).update(obj)
+    navigation.navigate('HomeScreen')
 
     }
 
-    return (
+    const simpleAlertHandler = () => {
+        //function to make simple alert
+        alert('Hello I am Simple Alert');
+      };
+
+
+    
+return (
         <View style={styles.container}>
             <Background/>
+           
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
             <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
             </TouchableOpacity>
                 <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} />
-                <Text style={styles.headerFont}> Health Professional Sign Up </Text>
+                <Text style={styles.headerFont}>Edit User Profile</Text>
                 <View style={styles.whitePadding}/>
                
-                <TextInput style={styles.textInput} placeholder="FieldofPractice" autoCapitalize="none"  onChangeText={(text) => setFieldofPractice(text)}
-                    value={FieldofPractice} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <TextInput style={styles.textInput}  placeholder="LicenseNumber" autoCapitalize="none" onChangeText={(text) => setLicenseNumber(text)} 
-                 value={LicenseNumber} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <TextInput style={styles.textInput} placeholder="RegulatoryBody" autoCapitalize="none"  onChangeText={(text) => setRegulatoryBody(text)}
-                    value={RegulatoryBody} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <Text>Your account will be verified in the next  2-3 business days. Thank you</Text>
-                <Text>Status: Will be loaded from firebase db</Text>
-                <TouchableOpacity style={styles.button} onPress={()=>onHealthPress()}>
+                <TextInput style={styles.textInput} placeholder="Full Name" autoCapitalize="none"  onChangeText={(text) => setFullName(text)}
+                    value={fullName} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
+
+                <TextInput style={styles.textInput} placeholder="Gmail" autoCapitalize="none"  onChangeText={(text) => setEmail(text)}
+                    value={email} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
+                   
+                <Text style={styles.textInput}>Gender</Text>
+                 <Picker
+                        gender={gender}
+                        style={{ height: 150, width: 150 }}
+                        onValueChange={(itemValue, itemIndex) => setGender(itemValue)}
+                    >
+                        <Picker.Item label="Men" value="men" />
+                        <Picker.Item label="Women" value="women" />
+                        <Picker.Item label="Other" value="other" />
+                    </Picker>
+                
+                <TouchableOpacity style={styles.button} onPress={() => { onEditUser(); simpleAlertHandler(); }}>  
                     <Image source={require('../assets/android/drawable-mdpi/g-login-arrow.png')} />
                 </TouchableOpacity>
                 <View style={styles.whitePadding}/>
+                <Text style={styles.descriptionFont}></Text>
+               
             </Animatable.View>
         </View>
     )
@@ -125,4 +144,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default HealthProfessionalScreen;
+export default UserProfile;

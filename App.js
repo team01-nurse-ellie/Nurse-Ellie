@@ -25,6 +25,7 @@ import AddMedicationScreen from './screens/AddMedicationScreen';
 import MedicationDetailScreen from './screens/MedicationDetailScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import HealthProfessionalScreen from './screens/HealthProfessionalScreen';
+import UserProfile from './screens/UserProfile';
 const RootStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -36,12 +37,14 @@ const getFonts = () => Font.loadAsync({
 function DrawerRoutes(){
   return (
     <Drawer.Navigator drawerPosition='right' drawerContent={props=> <DrawerContent {...props}/>}>
+     
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Medications" component={MedicationListScreen} />
       <Drawer.Screen name="AddMedication" component={AddMedicationScreen} />
       <Drawer.Screen name="Medication" component={MedicationDetailScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name="HealthProfessional" component={HealthProfessionalScreen} />
+      <Drawer.Screen name="UserProfile" component={UserProfile} />
     </Drawer.Navigator>
   )
 }
@@ -66,6 +69,7 @@ function App() {
           { isSignedIn ? (
             <>
             <RootStack.Screen name="HomeScreen" component={DrawerRoutes} />
+
             </>
           ) : (
             <>
