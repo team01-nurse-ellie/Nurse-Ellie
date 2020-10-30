@@ -1,3 +1,8 @@
+// Require start and end date when adding medication (firestore cannot store undefined date)
+// Require days of week to be selected
+// Changed DaysOfWeekPicker component sunday as index 0 to match JS Date standard
+//
+
 import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
@@ -116,17 +121,47 @@ const AddMedicationScreen = ({ navigation }) => {
     return header;
   }
   
-  // add medication using firestore
-  const addMedicationToDB = () => {
-    var str = JSON.stringify(medicationToAdd);
-    Alert.alert("Medication Added", "Add me to firestore: \n" + str);
-    console.log("medication to add: \n" + str);
-    fsFn.addMedication(currentUser.uid, medicationToAdd);
-    fsFn.getAllMedications(currentUser.uid);
+  // Add medication with user settings to user collection
+  const addMedicationToDB = async () => {
+    // Check that there is start date, end date, day(s) of week, and medication object
+    if (startDate == undefined || endDate == undefined) {
+      Alert.alert('', '\nPlease select a start and end date');
+      return;
+    } else if (selectDoW.length == 0) {
+      Alert.alert('', '\nPlease select days of week medication will be taken');
+      return;
+    } else if (medicationToAdd !== Object(medicationToAdd)) {
+      Alert.alert('', '\nPlease find medication to add');
+      return;
+    }
+    //var str = JSON.stringify(medicationToAdd);
+    //console.log("medication to add: \n" + str);
+    var medSettings = {
+      'medIcon': medIcon,
+      'intakeTime' : selectTime,
+      'startDate' : startDate,
+      'endDate' : endDate,
+      'daysOfWeek' : selectDoW,
+      'alarm': alarm,
+    }
+    // Merge medication information from APIs and user specified medication settings
+    Object.assign(medicationToAdd, medSettings);
+    await fsFn.addMedication(currentUser.uid, medicationToAdd
+      // Clear user input components if addition to DB successful
+      ).then(() => {
+        resetUserInput;
+        Alert.alert('','\nMedication Added!');
+      }
+        ).catch(e => {console.log(e)});
   }
 
-  const getMedInfoSetting = () => {
-    // retrieve 
+  // Reset user input components to default values
+  const resetUserInput = () => {
+    setMedIcon('1');
+    setStartDate();
+    setEndDate();
+    setSelectDoW([]);
+    setMedicationToAdd('Add Medication');
     return;
   }
 
@@ -199,7 +234,7 @@ const AddMedicationScreen = ({ navigation }) => {
             defaultValue={searchResult}
             onChangeText={text => {setFilterRxcui(filterByTerm(text));}}
             //onShowResult={()=> setAutoResult('true')}
-            placeholder="Enter medication"
+            placeholder="Find medication"
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
           />

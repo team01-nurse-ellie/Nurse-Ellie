@@ -1,14 +1,16 @@
 import { firebase } from '../components/Firebase/config';
 
+
 const userCollection = firebase.firestore().collection("users");
 
-// Adds a medication to  user
+// Adds a medication to user
 export async function addMedication (userId, medObj){
     let isMedAdded;
     // See if drug object valid with check for unique rxcui identifier
     let medHasRxcui = medObj.hasOwnProperty('rxcui');
     // Check if medication already added to user
     if(medHasRxcui) {
+        try {
         await userCollection.doc(userId).collection("medications")
             .where("rxcui", "==", medObj.rxcui)
             .get()
@@ -22,6 +24,11 @@ export async function addMedication (userId, medObj){
                     isMedAdded = true;
                 }
             });
+        } catch (error) {
+            throw error;
+        }
+    } else {
+        throw Error('Cannot add medication, object does not contain "rxcui" property');
     }
     // Add medication to user collection
     if(!isMedAdded && medHasRxcui) {
@@ -35,24 +42,13 @@ export async function addMedication (userId, medObj){
     }
 }
 
-// Removes a medication from user
-export async function removeMedication (userId, medId) {
-    
-}
-
-// Updates medication for user
-export async function updateMedication (userId, medId, medObj) {
-
-}
-
 // get all medication documents for a user
 export async function getAllMedications(userId) {
     var medications = [];
-    await userCollection.doc(userId).collection("medication").get(
+    await userCollection.doc(userId).collection("medications").get(
     ).then( querySnapshot => {
         querySnapshot.forEach( doc => {
             medications.push(doc);
-            console.log(doc.id, '=>', doc.data())
         })
     }).catch(error => {
         console.log(error)
@@ -60,4 +56,13 @@ export async function getAllMedications(userId) {
     return medications;
 }
 
-// get medication from a user
+// Removes a medication from user
+export async function removeMedication (userId, medId) {
+    
+}
+
+// Update medication for user
+export async function updateMedication (userId, medId, medObj) {
+    await userCollection.doc(userId)
+
+}
