@@ -6,9 +6,11 @@ import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 import { firebase } from "../components/Firebase/config";
 const SplashScreen = ({navigation}) => {
    
-    firebase.auth().signOut();
-   
-   
+    //firebase.auth().signOut();
+    useEffect(() => {
+        firebase.auth().signOut();
+
+    })
     return (
         <View style={styles.container}>
             <Background/>

@@ -24,10 +24,9 @@ const HealthProfessionalScreen = ({navigation}) => {
     })
 
     const obj = {
-
-                    FieldofPractice,
-                    LicenseNumber,
-                    RegulatoryBody,
+        FieldofPractice,
+        LicenseNumber,
+        RegulatoryBody,
                 };
                 const usersRef = firebase.firestore().collection('users')
                 usersRef
@@ -35,6 +34,13 @@ const HealthProfessionalScreen = ({navigation}) => {
                     .update(obj)
 
     }
+
+    const simpleAlertHandler = () => {
+        //function to make simple alert
+        alert('Your account will need validation in 2-3 business days');
+        navigation.navigate('HomeScreen')
+      };
+
 
     return (
         <View style={styles.container}>
@@ -53,9 +59,8 @@ const HealthProfessionalScreen = ({navigation}) => {
                  value={LicenseNumber} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
                 <TextInput style={styles.textInput} placeholder="RegulatoryBody" autoCapitalize="none"  onChangeText={(text) => setRegulatoryBody(text)}
                     value={RegulatoryBody} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <Text>Your account will be verified in the next  2-3 business days. Thank you</Text>
-                <Text>Status: Will be loaded from firebase db</Text>
-                <TouchableOpacity style={styles.button} onPress={()=>onHealthPress()}>
+               
+                <TouchableOpacity style={styles.button} onPress={()=>{ onEditUser(); simpleAlertHandler(); }}>
                     <Image source={require('../assets/android/drawable-mdpi/g-login-arrow.png')} />
                 </TouchableOpacity>
                 <View style={styles.whitePadding}/>

@@ -7,17 +7,17 @@ import Background from '../components/background';
 import MenuIcon from '../assets/images/menu-icon';
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
-
 const UserProfile = ({navigation}) => {
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
-    const [DOB, setDob] = useState('')
+    const [date, setDob] = useState('')
     const usersRef = firebase.firestore().collection('users')
     const [gender, setGender] = useState('none')
+
     
    const onEditUser = async (res) => {
    const data = await firebase.auth().currentUser.uid
-    var userDoc = firebase.firestore().collection("users").doc(data).update({
+    var userDoc = usersRef.doc(data).update({
         'fullName':'',
         'email': '',
         'gender': '',
@@ -28,18 +28,27 @@ const UserProfile = ({navigation}) => {
         fullName,
         email,
         gender,
-        DOB
+        date
     };
-    const usersRef = firebase.firestore().collection('users')
+    //const usersRef = firebase.firestore().collection('users')
     usersRef.doc(data).update(obj)
     navigation.navigate('HomeScreen')
 
     }
 
     const simpleAlertHandler = () => {
-        //function to make simple alert
-        alert('Hello I am Simple Alert');
-      };
+        alert('Your user profile is up to date');
+    };
+
+    const load = async () => {
+        const data = await firebase.auth().currentUser.uid
+
+    usersRef.ref('/users/' + data).on('value', (snapshot) => {
+        const userObj = snapshot.val();
+        this.fullName = userObj.fullName;
+        this.email = userObj.email;
+    });
+};
 
 
     
@@ -58,9 +67,36 @@ return (
                 <TextInput style={styles.textInput} placeholder="Full Name" autoCapitalize="none"  onChangeText={(text) => setFullName(text)}
                     value={fullName} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
 
-                <TextInput style={styles.textInput} placeholder="Gmail" autoCapitalize="none"  onChangeText={(text) => setEmail(text)}
+                <TextInput style={styles.textInput} placeholder="Back up Gmail" autoCapitalize="none"  onChangeText={(text) => setEmail(text)}
                     value={email} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                   
+
+                <DatePicker
+                        style={styles.datePickerStyle}
+                        date={date} // Initial date from state
+                        mode="date" // The enum of date, datetime and time
+                        placeholder="select date"
+                        format="DD-MM-YYYY"
+                        minDate="01-01-2016"
+                        maxDate="01-01-2019"
+                        confirmBtnText="Confirm"
+                        cancelBtnText="Cancel"
+                        customStyles={{
+                            dateIcon: {
+                            //display: 'none',
+                            position: 'absolute',
+                            left: 0,
+                            top: 4,
+                            marginLeft: 0,
+                            },
+                            dateInput: {
+                            marginLeft: 36,
+                            },
+                        }}
+                        onDateChange={(date) => {
+                            setDob(date);
+                        }}
+                        />
+
                 <Text style={styles.textInput}>Gender</Text>
                  <Picker
                         gender={gender}
