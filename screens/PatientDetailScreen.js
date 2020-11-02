@@ -3,7 +3,7 @@ import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, FlatList
 
 import * as Animatable from 'react-native-animatable';
 
-import Background from '../components/hpBackground';
+import Background from '../components/BackgroundHP';
 import Card from '../components/StandardCard';
 import CondensedCard from '../components/CondensedMedCard';
 import MedIconIndex from '../components/MedicationImages';
