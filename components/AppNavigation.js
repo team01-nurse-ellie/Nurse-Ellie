@@ -25,7 +25,7 @@ import MedicationDetailScreen from '../screens/MedicationDetailScreen';
 import HealthProfessionalScreen from '../screens/HealthProfessionalScreen';
 import SymptomChecklistScreen from '../screens/SymptomChecklistScreen';
 import NotificationScreen from '../screens/NotificationScreen';
-
+import UserProfileScreen from '../screens/UserProfileScreen';
 // Navigation modules
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, TransitionSpecs } from '@react-navigation/stack';
@@ -57,10 +57,12 @@ const AppNavigation = () => {
                 <Drawer.Screen name="HealthProfessional" component={HealthProfessionalScreen} />
                 <Drawer.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen} />
                 <Drawer.Screen name="NotificationScreen" component={NotificationScreen}/>
+                <Drawer.Screen name="UserProfileScreen" component={UserProfileScreen}/>
+
             </Drawer.Navigator>
         );
     }
-
+    
     return (
         <>
             <StatusBar backgroundColor={(accountType == "patient") ? patient_styles.background.backgroundColor : hp_styles.background.backgroundColor} />

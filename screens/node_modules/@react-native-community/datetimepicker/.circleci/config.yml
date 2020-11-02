@@ -1,0 +1,56 @@
+version: 2.1
+
+orbs:
+  rn: react-native-community/react-native@4.0.0
+
+jobs:
+  checkout_code:
+    executor: rn/linux_js
+    steps:
+      - checkout
+      - persist_to_workspace:
+          root: .
+          paths: .
+
+  analyse:
+    executor: rn/linux_js
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install
+          command: yarn install --frozen-lockfile
+      - run:
+          name: Lint JS Code (ESLint)
+          command: yarn run lint
+      - run:
+          name: Flow
+          command: yarn run flow
+      - run:
+          name: Jest
+          command: yarn run test
+
+workflows:
+  test:
+    jobs:
+      - checkout_code
+      - analyse:
+          requires:
+            - checkout_code
+    # - rn/android_build:
+    #     name: build_android_release
+    #     project_path: "example/android"
+    #     requires:
+    #       - analyse
+    # - rn/android_test:
+    #     detox_configuration: "android.emu.release"
+    #     requires:
+    #       - build_android_release
+    # - rn/ios_build_and_test:
+    #     project_path: "example/ios/example.xcodeproj"
+    #     device: "iPhone X"
+    #     build_configuration: "Release"
+    #     scheme: "example"
+    #     detox_configuration: "ios.sim.release"
+    #     requires:
+    #       - analyse
