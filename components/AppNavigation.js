@@ -58,12 +58,8 @@ const AppNavigation = () => {
                 <Drawer.Screen name="HealthProfessional" component={HealthProfessionalScreen} />
                 <Drawer.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen} />
                 <Drawer.Screen name="NotificationScreen" component={NotificationScreen}/>
-<<<<<<< HEAD
                 <Drawer.Screen name="UserProfileScreen" component={UserProfileScreen}/>
-
-=======
                 <Drawer.Screen name="EditMedication" component={EditMedicationScreen}/>
->>>>>>> 299cc9827b21d76f87e01ebb77c6a48b43114373
             </Drawer.Navigator>
         );
     }
