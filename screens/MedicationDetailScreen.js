@@ -27,7 +27,7 @@ const MedicationDetailScreen = ({route, navigation}) => {
                 <Text style={styles.headerFont}>
                     {item.medicationName}
                 </Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=> navigation.navigate("EditMedication")}>
                     <EditIcon/>
                 </TouchableOpacity>
             </View>

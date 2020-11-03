@@ -19,6 +19,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import UserLinkScreen from '../screens/UserLinkScreen';
 import PatientListScreen from '../screens/PatientListScreen';
 import AddMedicationScreen from '../screens/AddMedicationScreen';
+import EditMedicationScreen from '../screens/EditMedicationScreen';
 import PatientDetailScreen from '../screens/PatientDetailScreen';
 import MedicationListScreen from '../screens/MedicationListScreen';
 import MedicationDetailScreen from '../screens/MedicationDetailScreen';
@@ -57,8 +58,12 @@ const AppNavigation = () => {
                 <Drawer.Screen name="HealthProfessional" component={HealthProfessionalScreen} />
                 <Drawer.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen} />
                 <Drawer.Screen name="NotificationScreen" component={NotificationScreen}/>
+<<<<<<< HEAD
                 <Drawer.Screen name="UserProfileScreen" component={UserProfileScreen}/>
 
+=======
+                <Drawer.Screen name="EditMedication" component={EditMedicationScreen}/>
+>>>>>>> 299cc9827b21d76f87e01ebb77c6a48b43114373
             </Drawer.Navigator>
         );
     }

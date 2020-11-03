@@ -266,11 +266,6 @@ const AddMedicationScreen = ({ navigation }) => {
             <IconPicker selected={medIcon} onSelect={setMedIcon} />
             <TimePicker value={selectTime} onSelect={setSelectTime} />
           </View>
-          <View style={styles.bottomCard}>
-            <View>
-              <Text style={styles.fieldText}> Reminder Times </Text>
-            </View>
-          </View>
           <View style={{ paddingBottom: 14 }} />
           <View style={styles.bottomCard}>
             <View>
@@ -371,6 +366,11 @@ const styles = StyleSheet.create({
     width: screenWidth,
     height: screenHeight * 0.85,
     top: screenHeight * 0.15,
+  },
+  menuButton:{
+    position: 'absolute',
+    right: 30,
+    top: 40 
   },
   modalDrawer: {
     backgroundColor: '#fff',
