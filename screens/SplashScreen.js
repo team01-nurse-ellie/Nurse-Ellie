@@ -3,14 +3,20 @@ import { View, Image, TouchableOpacity, Dimensions, StyleSheet } from 'react-nat
 
 import Background from '../components/background';
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
-
+import { firebase } from '../components/Firebase/config'
 const SplashScreen = ({ navigation }) => {
-    useEffect(() => {
-        firebase.auth().signOut();
+  
+        var user = firebase.auth().currentUser;
 
-    })
-
-    return (
+        if (user) {
+            firebase.auth().signOut()
+            console.log("User session is still within 1 hour, user is still signed in")
+        } else {
+            firebase.auth().signOut()
+            console.log("User is not sign in")
+        }
+       
+        return (
         <View style={styles.container}>
             <Background />
             <View style={styles.logoCircle}>
