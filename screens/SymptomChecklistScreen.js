@@ -84,7 +84,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
         };
         const usersRef = firebase.firestore().collection('users')
         usersRef.doc(data).update(obj)
-    }
+    
 
         /** printing codes */
         current_date = new Date();
