@@ -59,7 +59,11 @@ const AppNavigation = () => {
                 <Drawer.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen} />
                 <Drawer.Screen name="NotificationScreen" component={NotificationScreen}/>
                 <Drawer.Screen name="UserProfileScreen" component={UserProfileScreen}/>
+<<<<<<< HEAD
 
+=======
+                <Drawer.Screen name="EditMedication" component={EditMedicationScreen}/>
+>>>>>>> a5226094f9d9aa4a7e18a4ea0d9af4accdba1b36
             </Drawer.Navigator>
         );
     }
