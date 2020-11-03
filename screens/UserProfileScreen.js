@@ -1,5 +1,5 @@
 import React, { useState }from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard, Picker, Alert} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard, Picker, Alert, KeyboardAvoidingView} from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
@@ -40,27 +40,15 @@ const UserProfileScreen = ({navigation}) => {
         alert('Your user profile is up to date');
     };
 
-    let handleOnChange = ( email ) => {
-
-        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    
-        if ( re.test(email) ) {
-            
-        }
-        else {
-            console.log("INVALID EMAIL");
-        }
-    
-    }
-
 return (
-        <View style={styles.container}>
-            <Background/>
-           
-            <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
-            <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
-                <MenuIcon/>
-            </TouchableOpacity>
+      
+    <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+    <Background/>
+    <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
+        <MenuIcon/>
+    </TouchableOpacity>
+    <Animatable.View style={styles.drawer} animation="fadeInUpBig">
+        <View style={styles.rowContainer}>
                 <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} />
                 <Text style={styles.headerFont}>Edit User Profile</Text>
                 <View style={styles.whitePadding}/>
@@ -69,53 +57,49 @@ return (
                     value={fullName} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
 
                 <TextInput style={styles.textInput} typep="email" placeholder="New email" autoCapitalize="none"  onChangeText={(text) => setEmail(text)}
-                    value={email} returnKeyType='done' onSubmitEditing={Keyboard.dismiss} onChange={ handleOnChange }/>
-
-                <DatePicker
-                        style={styles.datePickerStyle}
-                        date={date} // Initial date from state
-                        mode="date" // The enum of date, datetime and time
-                        placeholder="select date"
-                        format="DD-MM-YYYY"
-                        minDate="01-01-2016"
-                        maxDate="01-01-2019"
-                        confirmBtnText="Confirm"
-                        cancelBtnText="Cancel"
-                        customStyles={{
-                            dateIcon: {
-                            position: 'absolute',
-                            left: 0,
-                            top: 4,
-                            marginLeft: 0,
-                            },
-                            dateInput: {
-                            marginLeft: 36,
-                            },
-                        }}
-                        onDateChange={(date) => {
+                    value={email} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
+                <Text></Text>
+                <DatePicker style={styles.datePickerStyle} date={date} // Initial date from state
+                mode="date" // The enum of date, datetime and time
+                placeholder="Date of Birth"
+                format="DD-MM-YYYY"
+                minDate="01-01-2016"
+                maxDate="01-01-2019"
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
+                customStyles={{
+                dateIcon: {
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                bottom: 0,
+                marginLeft: 0,
+                },
+                dateInput: {
+                marginLeft: 36,
+                },
+                }}
+                onDateChange={(date) => {
                             setDob(date);
-                        }}
-                        />
-
-                <Text style={styles.textInput}>Gender</Text>
-                 <Picker
-                        gender={gender}
-                        style={{ height: 150, width: 150 }}
-                        onValueChange={(itemValue, itemIndex) => setGender(itemValue)}
-                    >
+                }}
+            />
+                <Text style={styles.textInput}>Gender
+                 <Picker gender={gender} style={{ height: 130, width: 160 }} 
+                 onValueChange={(itemValue) => setGender(itemValue)}>
                         <Picker.Item label="Men" value="men" />
                         <Picker.Item label="Women" value="women" />
                         <Picker.Item label="Other" value="other" />
-                    </Picker>
+                </Picker>
+                </Text>
                 
                 <TouchableOpacity style={styles.button} onPress={() => { onEditUser(); simpleAlertHandler(); }}>  
                     <Image source={require('../assets/android/drawable-mdpi/g-login-arrow.png')} />
                 </TouchableOpacity>
                 <View style={styles.whitePadding}/>
                 <Text style={styles.descriptionFont}></Text>
-               
-            </Animatable.View>
-        </View>
+                </View>
+           </Animatable.View>
+           </KeyboardAvoidingView>
     )
 }
 
@@ -123,25 +107,40 @@ return (
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center', 
-    }, 
+        paddingTop: 100,
+        alignItems: "center"
+      },
+    background: {
+        flex: 10,
+        backgroundColor: '#42C86A',
+    },
+    menuButton:{
+        position: 'absolute',
+        right: 30,
+        top: 40 
+    },
+    Picker:{
+        position: 'absolute',
+        right: 30,
+        top: 40 
+    },
     heading: {
-        flex: 1, 
+        flex: 10, 
         justifyContent: 'flex-end', 
         paddingHorizontal: 20, 
         paddingBottom: 5
     },
     headerFont: {
         fontFamily: 'roboto-regular',
-        fontSize: 32,
+        fontSize: 28,
         fontWeight: "100", 
-        left: screenWidth/3.5, 
+        left: screenWidth/3.25, 
         top: screenHeight * 0.07,
         paddingBottom: 30
     },
     headerImage: {
         position: 'absolute', 
-        left: screenWidth/20, 
+        left: screenWidth/80, 
         top: screenHeight * 0.07
     },
     whitePadding: {
@@ -163,20 +162,20 @@ const styles = StyleSheet.create({
         fontSize: 14, 
     },
     button: { 
-        paddingRight: 30,
-        marginTop: 30
+        paddingRight: 100,
+        marginTop: 100
     }, 
     drawer: {
         flex: 4,
         backgroundColor: '#fff', 
-        borderTopLeftRadius: 30, 
+        borderTopLeftRadius: 40, 
         borderTopRightRadius: 30, 
         paddingVertical: 50, 
         paddingHorizontal: 30, 
         position: 'absolute',
         width: screenWidth,
         height: screenHeight * 0.85,
-        top: screenHeight * 0.15
+        top: screenHeight * 0.20
     }
 });
 

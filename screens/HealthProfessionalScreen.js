@@ -1,10 +1,12 @@
 import React, { useState }from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard } from 'react-native';
-import MenuIcon from '../assets/images/menu-icon';
+import { View, Text, TextInput, TouchableOpacity, Image, Dimensions, StyleSheet, Keyboard, KeyboardAvoidingView } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
-import Background from '../components/background';
 
+import Background from '../components/hpBackground';
+import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
+import MenuIcon from '../assets/images/hp-menu-icon.svg';
+import BlueAddIcon from '../assets/images/blue-add-icon';
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
@@ -39,14 +41,17 @@ const HealthProfessionalScreen = ({navigation}) => {
 
 
     return (
-        <View style={styles.container}>
+        
+        <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
             <Background/>
-            <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
             <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
             </TouchableOpacity>
-                <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} />
-                <Text style={styles.headerFont}> Health Professional Sign Up </Text>
+        <Animatable.View style={styles.drawer} animation="fadeInUpBig">
+        <View style={styles.rowContainer}>
+        <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} />
+                <Text style={styles.headerFont}> Health Professional</Text>
+                <Text style={styles.headerFont}> Sign Up</Text>
                 <View style={styles.whitePadding}/>
                
                 <TextInput style={styles.textInput} placeholder="FieldofPractice" autoCapitalize="none"  onChangeText={(text) => setFieldofPractice(text)}
@@ -55,39 +60,48 @@ const HealthProfessionalScreen = ({navigation}) => {
                  value={LicenseNumber} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
                 <TextInput style={styles.textInput} placeholder="RegulatoryBody" autoCapitalize="none"  onChangeText={(text) => setRegulatoryBody(text)}
                     value={RegulatoryBody} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-               
-                <TouchableOpacity style={styles.button} onPress={()=>{ onHealthPress(); HealthProfAlert(); }}>
-                    <Image source={require('../assets/android/drawable-mdpi/g-login-arrow.png')} />
+                <View style={styles.whitePadding}/>
+                <TouchableOpacity style={styles.BlueAddIcon} onPress={()=>{ onHealthPress(); HealthProfAlert(); }}>
+                    <BlueAddIcon />
                 </TouchableOpacity>
                 <View style={styles.whitePadding}/>
-            </Animatable.View>
         </View>
+                
+            </Animatable.View>
+        </KeyboardAvoidingView>
     )
 }
 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center', 
-    }, 
+    
+    background: {
+        flex: 10,
+        backgroundColor: '#42C86A',
+    },
+    menuButton:{
+        position: 'absolute',
+        right: 30,
+        top: 40 
+    },
+    
     heading: {
-        flex: 1, 
+        flex: 10, 
         justifyContent: 'flex-end', 
         paddingHorizontal: 20, 
         paddingBottom: 5
     },
     headerFont: {
         fontFamily: 'roboto-regular',
-        fontSize: 32,
+        fontSize: 28,
         fontWeight: "100", 
-        left: screenWidth/3.5, 
+        left: screenWidth/3.25, 
         top: screenHeight * 0.07,
         paddingBottom: 30
     },
     headerImage: {
         position: 'absolute', 
-        left: screenWidth/20, 
+        left: screenWidth/80, 
         top: screenHeight * 0.07
     },
     whitePadding: {
@@ -115,14 +129,14 @@ const styles = StyleSheet.create({
     drawer: {
         flex: 4,
         backgroundColor: '#fff', 
-        borderTopLeftRadius: 30, 
+        borderTopLeftRadius: 40, 
         borderTopRightRadius: 30, 
         paddingVertical: 50, 
         paddingHorizontal: 30, 
         position: 'absolute',
         width: screenWidth,
         height: screenHeight * 0.85,
-        top: screenHeight * 0.15
+        top: screenHeight * 0.20
     }
 });
 
