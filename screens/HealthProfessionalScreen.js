@@ -2,7 +2,6 @@ import React, { useState }from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Dimensions, StyleSheet, Keyboard, KeyboardAvoidingView } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
-
 import Background from '../components/hpBackground';
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 import MenuIcon from '../assets/images/hp-menu-icon.svg';
@@ -35,108 +34,98 @@ const HealthProfessionalScreen = ({navigation}) => {
     }
 
     const HealthProfAlert = () => {
-        alert('Your account will need validation in 2-3 business days');
+        alert('Your account will be verified in the next  2-3 business days. Thank you');
         navigation.navigate('HomeScreen')
       };
 
 
     return (
         
-        <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+        <View style={styles.container}>
             <Background/>
-            <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
-                <MenuIcon/>
+            <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
+                <MenuIcon />
             </TouchableOpacity>
-        <Animatable.View style={styles.drawer} animation="fadeInUpBig">
-        <View style={styles.rowContainer}>
-        <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} />
-                <Text style={styles.headerFont}> Health Professional</Text>
-                <Text style={styles.headerFont}> Sign Up</Text>
-                <View style={styles.whitePadding}/>
-               
-                <TextInput style={styles.textInput} placeholder="FieldofPractice" autoCapitalize="none"  onChangeText={(text) => setFieldofPractice(text)}
+            <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: screenHeight / 10 }}>
+                <NurseEllieLogo height={75} style={{ flex: 1, marginRight: '5%' }} />
+                <Text style={{ fontFamily: 'roboto-regular', fontSize: 25, }}> {`Account Change:\n Health Professional`}</Text>
+            </View>
+
+                <TextInput style={styles.textInput} placeholder="Field of Practice" autoCapitalize="none"  onChangeText={(text) => setFieldofPractice(text)}
                     value={FieldofPractice} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <TextInput style={styles.textInput}  placeholder="LicenseNumber" autoCapitalize="none" onChangeText={(text) => setLicenseNumber(text)} 
+                <TextInput style={styles.textInput}  placeholder="License Number" autoCapitalize="none" onChangeText={(text) => setLicenseNumber(text)} 
                  value={LicenseNumber} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <TextInput style={styles.textInput} placeholder="RegulatoryBody" autoCapitalize="none"  onChangeText={(text) => setRegulatoryBody(text)}
+                <TextInput style={styles.textInput} placeholder="Regulatory Body" autoCapitalize="none"  onChangeText={(text) => setRegulatoryBody(text)}
                     value={RegulatoryBody} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <View style={styles.whitePadding}/>
-                <TouchableOpacity style={styles.BlueAddIcon} onPress={()=>{ onHealthPress(); HealthProfAlert(); }}>
-                    <BlueAddIcon />
+                <Text style={{marginBottom: 15}}>Status: Pending</Text>
+                <TouchableOpacity style={styles.button} onPress={() => { onHealthPress(); HealthProfAlert(); }}>
+                    <BlueAddIcon/>
                 </TouchableOpacity>
+
                 <View style={styles.whitePadding}/>
-        </View>
-                
             </Animatable.View>
-        </KeyboardAvoidingView>
+        </View>
     )
 }
 
 
 const styles = StyleSheet.create({
-    
-    background: {
-        flex: 10,
-        backgroundColor: '#42C86A',
+    container: {
+        flex: 1,
+        justifyContent: 'center',
     },
-    menuButton:{
-        position: 'absolute',
-        right: 30,
-        top: 40 
-    },
-    
     heading: {
-        flex: 10, 
-        justifyContent: 'flex-end', 
-        paddingHorizontal: 20, 
+        flex: 1,
+        justifyContent: 'flex-end',
+        paddingHorizontal: 20,
         paddingBottom: 5
     },
     headerFont: {
         fontFamily: 'roboto-regular',
         fontSize: 28,
         fontWeight: "100", 
-        left: screenWidth/3.25, 
-        top: screenHeight * 0.07,
-        paddingBottom: 30
-    },
-    headerImage: {
-        position: 'absolute', 
-        left: screenWidth/80, 
-        top: screenHeight * 0.07
     },
     whitePadding: {
-        height: screenHeight/8
+        height: screenHeight / 8
     },
     textInput: {
-        borderBottomColor: 'rgba(112, 112, 112, 0.7)', 
+        borderBottomColor: 'rgba(112, 112, 112, 0.7)',
         borderBottomWidth: 1.5,
-        fontSize: 16, 
+        fontSize: 16,
         paddingTop: 8
     },
     descriptionFont: {
         fontFamily: 'roboto-regular', 
-        fontSize: 12, 
-        color: 'rgba(0, 0, 0, 0.38)'
+        fontSize: 14, 
+        textAlign: 'center',
+        color: 'rgba(0, 0, 0, 0.7)'
     },
     clickableFont: {
         fontFamily: 'roboto-medium',
-        fontSize: 14, 
+        fontSize: 14,
     },
-    button: { 
-        paddingRight: 30,
-        marginTop: 30
-    }, 
+    button: {
+        marginTop: 30,
+        alignSelf: 'flex-start'
+    },
+    menuButton: {
+        position: 'absolute',
+        right: 30,
+        top: 40
+    },
     drawer: {
         flex: 4,
-        backgroundColor: '#fff', 
-        borderTopLeftRadius: 40, 
-        borderTopRightRadius: 30, 
-        paddingVertical: 50, 
-        paddingHorizontal: 30, 
+        backgroundColor: '#fff',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        paddingVertical: 50,
+        paddingHorizontal: 30,
         position: 'absolute',
         width: screenWidth,
         height: screenHeight * 0.85,
-        top: screenHeight * 0.20
+        top: screenHeight * 0.15
     }
 });
 

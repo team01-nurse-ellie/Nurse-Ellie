@@ -31,11 +31,7 @@
     "react-native-autocomplete-input": "^4.2.0",
     "react-native-calendars": "^1.403.0",
     "react-native-datepicker": "^1.7.2",
-<<<<<<< HEAD
     "react-native-gesture-handler": "~1.6.0",
-=======
-    "react-native-gesture-handler": "^1.6.1",
->>>>>>> a5226094f9d9aa4a7e18a4ea0d9af4accdba1b36
     "react-native-modal": "^11.5.6",
     "react-native-modalbox": "^2.0.2",
     "react-native-paper": "^4.2.0",
