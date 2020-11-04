@@ -39,12 +39,13 @@
     "react-native-reanimated": "~1.9.0",
     "react-native-safe-area-context": "~3.0.7",
     "react-native-screens": "~2.9.0",
-    "react-native-svg": "12.1.0",
+    "react-native-svg": "^12.1.0",
     "react-native-svg-transformer": "^0.14.3",
     "react-native-unordered-list": "^1.0.4",
     "react-native-web": "~0.11.7",
     "react-native-wheel-scroll-picker": "^0.2.4",
-    "styled-components": "^5.2.0"
+    "styled-components": "^5.2.0",
+    "victory-native": "^35.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
