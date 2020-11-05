@@ -72,7 +72,11 @@ const UserProfileScreen = ({navigation}) => {
     };
 
     //gender function
-    
+    const placeholder = {
+        label: 'Select your gender...',
+        value: null,
+        color: '#9EA0A4',
+      };
 
 return (
       
@@ -84,7 +88,7 @@ return (
     <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: screenHeight / 10 }}>
         <NurseEllieLogo height={75} style={{ flex: 1, marginRight: '5%' }} />
-        <Text style={{ fontFamily: 'roboto-regular', fontSize: 25, }}> {`Edit User Profile`}</Text>
+        <Text style={{ fontFamily: 'roboto-regular', fontSize: 25, paddingRight: 30}}> {`Edit User Profile`}</Text>
     </View>
     
     <TextInput style={styles.textInput} placeholder="Full Name" autoCapitalize="none"  onChangeText={(text) => setFullName(text)}
@@ -138,8 +142,8 @@ return (
                             alignContent: "flex-start",
                             paddingLeft: 0
                 }}>Gender:</Text>
-                <View style={{paddingRight: 180}}>
-                <RNPickerSelect
+                <View style={{paddingRight: 150}}>
+                <RNPickerSelect placeholder={placeholder}
                 onValueChange={gender => setGender(gender)}
                 styles={{paddingLeft: 1000}}
                 items={[
