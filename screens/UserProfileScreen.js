@@ -1,23 +1,31 @@
 import React, { useState }from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard, Picker, Alert, KeyboardAvoidingView} from 'react-native';
-import DatePicker from 'react-native-datepicker'
+import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard, Picker, Alert, KeyboardAvoidingView, Animated} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
 import Background from '../components/background';
 import MenuIcon from '../assets/images/menu-icon';
+import EntryIcon from '/Users/hoangvu/Nurse-Ellie/assets/images/g-entry-arrow-icon.svg';
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
+import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import RNPickerSelect from 'react-native-picker-select';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const UserProfileScreen = ({navigation}) => {
+    //state declare
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
-    const [date, setDob] = useState('')
     const usersRef = firebase.firestore().collection('users')
     const [gender, setGender] = useState('none')
+    const [dateVisi, setDateVisi] = useState(false);
+    const [date, setDate] = useState(new Date(1598051730000));
 
-    
+
+    //update user profile to firebase
    const onEditUser = async (res) => {
    const data = await firebase.auth().currentUser.uid
+   
     var userDoc = usersRef.doc(data).update({
         'fullName':'',
         'email': '',
@@ -36,146 +44,196 @@ const UserProfileScreen = ({navigation}) => {
 
     }
 
+    // alert
     const simpleAlertHandler = () => {
         alert('Your user profile is up to date');
     };
 
+    // date function
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+
+        setDate(currentDate);
+    };
+
+    const showDatePicker = () => {
+        setDateVisi(true);
+      };
+    
+    const hideDatePicker = () => {
+        setDateVisi(false);
+      };
+    
+    const handleConfirm = (date) => {
+        console.warn("A date has been picked: ", date);
+        setDate(date);
+
+        hideDatePicker();
+    };
+
+    //gender function
+    
+
 return (
       
-    <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
-    <Background/>
-    <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
-        <MenuIcon/>
+    <View style={styles.container}>
+        <Background/>
+    <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
+        <MenuIcon />
     </TouchableOpacity>
-    <Animatable.View style={styles.drawer} animation="fadeInUpBig">
-        <View style={styles.rowContainer}>
-                <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} />
-                <Text style={styles.headerFont}>Edit User Profile</Text>
-                <View style={styles.whitePadding}/>
-               
-                <TextInput style={styles.textInput} placeholder="Full Name" autoCapitalize="none"  onChangeText={(text) => setFullName(text)}
+    <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
+    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: screenHeight / 10 }}>
+        <NurseEllieLogo height={75} style={{ flex: 1, marginRight: '5%' }} />
+        <Text style={{ fontFamily: 'roboto-regular', fontSize: 25, }}> {`Edit User Profile`}</Text>
+    </View>
+    
+    <TextInput style={styles.textInput} placeholder="Full Name" autoCapitalize="none"  onChangeText={(text) => setFullName(text)}
                     value={fullName} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
 
-                <TextInput style={styles.textInput} typep="email" placeholder="New email" autoCapitalize="none"  onChangeText={(text) => setEmail(text)}
-                    value={email} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <Text></Text>
-                <DatePicker style={styles.datePickerStyle} date={date} // Initial date from state
-                mode="date" // The enum of date, datetime and time
-                placeholder="Date of Birth"
-                format="DD-MM-YYYY"
-                minDate="01-01-2016"
-                maxDate="01-01-2019"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                customStyles={{
-                dateIcon: {
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                bottom: 0,
-                marginLeft: 0,
-                },
-                dateInput: {
-                marginLeft: 36,
-                },
-                }}
-                onDateChange={(date) => {
-                            setDob(date);
-                }}
-            />
-                <Text style={styles.textInput}>Gender
-                 <Picker gender={gender} style={{ height: 130, width: 160 }} 
-                 onValueChange={(itemValue) => setGender(itemValue)}>
-                        <Picker.Item label="Men" value="men" />
-                        <Picker.Item label="Women" value="women" />
-                        <Picker.Item label="Other" value="other" />
-                </Picker>
-                </Text>
+     <TextInput style={styles.textInput} typep="email" placeholder="New email" autoCapitalize="none"  onChangeText={(text) => setEmail(text)}
+                    value={email} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>                
+    
+    <View style={{
+                    paddingVertical: 0,
+                    paddingHorizontal: 0,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                }}>
+                <Text style={{
+                            fontSize: 16,
+                            color: "black",
+                            alignContent: "flex-start",
+                            paddingLeft: 0
+                }}>Date of Birth:</Text>
+                <TouchableOpacity style={styles.button} onPress={() => { showDatePicker();}}>  
+                <DateTimePickerModal
+                    isVisible={dateVisi}
+                    value={date}
+                    mode="date"
+                    onConfirm={handleConfirm}
+                    onCancel={hideDatePicker}
+                    onChange={onChange}
+                    maximumDate={new Date()}
                 
-                <TouchableOpacity style={styles.button} onPress={() => { onEditUser(); simpleAlertHandler(); }}>  
-                    <Image source={require('../assets/android/drawable-mdpi/g-login-arrow.png')} />
-                </TouchableOpacity>
-                <View style={styles.whitePadding}/>
-                <Text style={styles.descriptionFont}></Text>
+                />
+                <View style={styles.calendar}>
+                    <MaterialCommunityIcons name="calendar-blank" size={30} color="#000" style={styles.calendarIcon} style={{
+                        paddingRight: 475, top: -16
+                }}/>
                 </View>
-           </Animatable.View>
-           </KeyboardAvoidingView>
+                </TouchableOpacity>
+        </View>
+        
+        <View style={{
+                    paddingVertical: 0,
+                    paddingHorizontal: 0,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                }}>
+                <Text style={{
+                            fontSize: 16,
+                            color: "black",
+                            alignContent: "flex-start",
+                            paddingLeft: 0
+                }}>Gender:</Text>
+                <View style={{paddingRight: 180}}>
+                <RNPickerSelect
+                onValueChange={gender => setGender(gender)}
+                styles={{paddingLeft: 1000}}
+                items={[
+                { label: 'Men', value: 'men' },
+                { label: 'Women', value: 'women' },
+                { label: 'Others', value: 'other' },
+            ]}/>
+                </View>
+               
+        </View>
+     
+        <TouchableOpacity style={styles.button} onPress={() => { onEditUser(); simpleAlertHandler(); }}>  
+            <EntryIcon />
+        </TouchableOpacity>
+                    
+      <View style={styles.whitePadding}/>
+            </Animatable.View>
+        </View>
     )
 }
-
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 100,
-        alignItems: "center"
-      },
-    background: {
-        flex: 10,
-        backgroundColor: '#42C86A',
-    },
-    menuButton:{
-        position: 'absolute',
-        right: 30,
-        top: 40 
-    },
-    Picker:{
-        position: 'absolute',
-        right: 30,
-        top: 40 
+        justifyContent: 'center',
     },
     heading: {
-        flex: 10, 
-        justifyContent: 'flex-end', 
-        paddingHorizontal: 20, 
+        flex: 1,
+        justifyContent: 'flex-end',
+        paddingHorizontal: 20,
         paddingBottom: 5
     },
     headerFont: {
         fontFamily: 'roboto-regular',
         fontSize: 28,
         fontWeight: "100", 
-        left: screenWidth/3.25, 
-        top: screenHeight * 0.07,
-        paddingBottom: 30
-    },
-    headerImage: {
-        position: 'absolute', 
-        left: screenWidth/80, 
-        top: screenHeight * 0.07
     },
     whitePadding: {
-        height: screenHeight/8
+        height: screenHeight / 8
     },
     textInput: {
-        borderBottomColor: 'rgba(112, 112, 112, 0.7)', 
+        borderBottomColor: 'rgba(112, 112, 112, 0.7)',
         borderBottomWidth: 1.5,
-        fontSize: 16, 
+        fontSize: 16,
         paddingTop: 8
     },
     descriptionFont: {
         fontFamily: 'roboto-regular', 
-        fontSize: 12, 
-        color: 'rgba(0, 0, 0, 0.38)'
+        fontSize: 14, 
+        textAlign: 'center',
+        color: 'rgba(0, 0, 0, 0.7)'
     },
     clickableFont: {
         fontFamily: 'roboto-medium',
-        fontSize: 14, 
+        fontSize: 14,
     },
-    button: { 
-        paddingRight: 100,
-        marginTop: 100
-    }, 
+    button: {
+        marginTop: 30,
+        alignSelf: 'flex-start'
+    },
+    menuButton: {
+        position: 'absolute',
+        right: 30,
+        top: 40
+    },
+    calendar: {
+        position: 'relative',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 30,
+        height: 30, 
+      },
+      calendarIcon: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      },
+      date: {
+        fontSize: 2,
+        marginTop: 9,
+        top: 10
+      },
     drawer: {
         flex: 4,
-        backgroundColor: '#fff', 
-        borderTopLeftRadius: 40, 
-        borderTopRightRadius: 30, 
-        paddingVertical: 50, 
-        paddingHorizontal: 30, 
+        backgroundColor: '#fff',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        paddingVertical: 50,
+        paddingHorizontal: 30,
         position: 'absolute',
         width: screenWidth,
         height: screenHeight * 0.85,
-        top: screenHeight * 0.20
+        top: screenHeight * 0.15
     }
 });
 
