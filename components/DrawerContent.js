@@ -54,6 +54,10 @@ function DrawerContent(props) {
                     label="Medication Summary"
                     onPress={()=> {props.navigation.navigate('MedicationSummary')}}
                 />
+                <DrawerItem
+                    label="Home (Health Professional)"
+                    onPress={()=> { props.navigation.navigate('HomeScreenHP')}}
+                />
             </Drawer.Section>
             <Drawer.Section style={styles.bottomDrawerSection}>
                 <DrawerItem
