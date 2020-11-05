@@ -26,7 +26,13 @@ import MedicationDetailScreen from '../screens/MedicationDetailScreen';
 import HealthProfessionalScreen from '../screens/HealthProfessionalScreen';
 import SymptomChecklistScreen from '../screens/SymptomChecklistScreen';
 import NotificationScreen from '../screens/NotificationScreen';
+<<<<<<< HEAD
 import UserProfileScreen from '../screens/UserProfileScreen';
+=======
+import MedicationSummaryScreen from '../screens/MedicationSummaryScreen';
+import HomeScreenHP from '../screens/HomeScreenHP';
+
+>>>>>>> 409e0d66f827bc217e9c2e2e2168a7314e973811
 // Navigation modules
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, TransitionSpecs } from '@react-navigation/stack';
@@ -58,7 +64,13 @@ const AppNavigation = () => {
                 <Drawer.Screen name="HealthProfessional" component={HealthProfessionalScreen} />
                 <Drawer.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen} />
                 <Drawer.Screen name="NotificationScreen" component={NotificationScreen}/>
+<<<<<<< HEAD
                 <Drawer.Screen name="UserProfileScreen" component={UserProfileScreen}/>
+=======
+                <Drawer.Screen name="EditMedication" component={EditMedicationScreen}/>
+                <Drawer.Screen name="MedicationSummary" component={MedicationSummaryScreen}/>
+                <Drawer.Screen name="HomeScreenHP" component={HomeScreenHP} />
+>>>>>>> 409e0d66f827bc217e9c2e2e2168a7314e973811
             </Drawer.Navigator>
         );
     }
