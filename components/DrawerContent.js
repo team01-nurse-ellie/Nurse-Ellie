@@ -50,6 +50,10 @@ function DrawerContent(props) {
                     label="Alarm"
                     onPress={() => { props.navigation.navigate('NotificationScreen') }}
                 />
+                <DrawerItem
+                    label="Medication Summary"
+                    onPress={()=> {props.navigation.navigate('MedicationSummary')}}
+                />
             </Drawer.Section>
             <Drawer.Section style={styles.bottomDrawerSection}>
                 <DrawerItem

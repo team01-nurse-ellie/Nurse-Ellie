@@ -26,6 +26,7 @@ import MedicationDetailScreen from '../screens/MedicationDetailScreen';
 import HealthProfessionalScreen from '../screens/HealthProfessionalScreen';
 import SymptomChecklistScreen from '../screens/SymptomChecklistScreen';
 import NotificationScreen from '../screens/NotificationScreen';
+import MedicationSummaryScreen from '../screens/MedicationSummaryScreen';
 
 // Navigation modules
 import { NavigationContainer } from '@react-navigation/native';
@@ -59,6 +60,7 @@ const AppNavigation = () => {
                 <Drawer.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen} />
                 <Drawer.Screen name="NotificationScreen" component={NotificationScreen}/>
                 <Drawer.Screen name="EditMedication" component={EditMedicationScreen}/>
+                <Drawer.Screen name="MedicationSummary" component={MedicationSummaryScreen}/>
             </Drawer.Navigator>
         );
     }
