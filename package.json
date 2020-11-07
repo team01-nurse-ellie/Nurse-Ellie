@@ -22,7 +22,7 @@
     "expo-camera": "~8.3.1",
     "expo-permissions": "~9.0.1",
     "expo-status-bar": "^1.0.2",
-    "firebase": "7.9.0",
+    "firebase": "7.9.1",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "prop-types": "^15.7.2",
@@ -65,13 +65,20 @@
   },
   "jest": {
     "preset": "jest-expo",
-    "coveragePathIgnorePatterns":["/node_modules/", ".*.png", ".*.svg"],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      ".*.png",
+      ".*.svg"
+    ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*)"
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*|victory-*)"
     ],
     "transform": {
       "^.+\\.svg$": "jest-svg-transformer"
-    }
+    },
+    "setupFiles": [
+      "./tests/setup.js"
+    ]
   },
   "private": true
 }

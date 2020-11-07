@@ -8,26 +8,26 @@ import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 
 test('Patient background component renders correctly', ()=>{
-    const wrapper = renderer.create(<Background/>).toJSON();
-    expect(wrapper).toMatchSnapshot();
+    const wrapper = renderer.create(<Background/>);
+    expect(wrapper.toJSON()).toMatchSnapshot();
 });
 
 test('Health Professional background component renders correctly', ()=>{
-    const wrapper = renderer.create(<BackgroundHP/>).toJSON();
-    expect(wrapper).toMatchSnapshot();
+    const wrapper = renderer.create(<BackgroundHP/>);
+    expect(wrapper.toJSON()).toMatchSnapshot();
 });
 
 test('Splash Screen renders correctly', ()=>{
     const wrapper = renderer.create(<SplashScreen/>);
-    expect(wrapper).toMatchSnapshot();
+    expect(wrapper.toJSON()).toMatchSnapshot();
 });
 
 test('Sign In Screen renders correctly', ()=>{
     const wrapper = renderer.create(<SignInScreen/>);
-    expect(wrapper).toMatchSnapshot();
+    expect(wrapper.toJSON()).toMatchSnapshot();
 });
 
 test('Sign Up Screen renders correctly', ()=>{
     const wrapper = renderer.create(<SignUpScreen/>);
-    expect(wrapper).toMatchSnapshot();
+    expect(wrapper.toJSON()).toMatchSnapshot();
 })
