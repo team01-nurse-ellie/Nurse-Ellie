@@ -15,10 +15,16 @@ jest.mock('react-native-reanimated', () => {
 // Silence the warning: Animated: `useNativeDriver` is not supported because the native animated module is missing
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
 
+const authMock = {
+  signInWithEmailAndPassword: jest.fn().mockResolvedValue({ user: { uid: 'test' } }),
+}
+
+jest.spyOn(firebase, 'auth').mockImplementation(() => authMock);
+
 const firestoreMock = {
   collection: jest.fn().mockReturnThis(),
   doc: jest.fn().mockReturnThis(),
-  set: jest.fn().mockResolvedValueOnce(),
+  set: jest.fn().mockResolvedValue(),
   onSnapshot: jest.fn().mockImplementation(cb => cb([])),
 };
 
