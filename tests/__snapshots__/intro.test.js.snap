@@ -1,0 +1,157 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Health Professional background component renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#4285C8",
+      "flex": 1,
+      "justifyContent": "center",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(51, 112, 172, 0.8)",
+        "borderRadius": 250,
+        "height": 500,
+        "position": "absolute",
+        "right": -375,
+        "top": 667,
+        "width": 500,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 30,
+        "height": 60,
+        "left": 10,
+        "position": "absolute",
+        "top": 30,
+        "width": 60,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 125,
+        "height": 250,
+        "left": 150,
+        "position": "absolute",
+        "top": 222.33333333333334,
+        "width": 250,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 300,
+        "height": 600,
+        "left": 300,
+        "position": "absolute",
+        "top": -333.5,
+        "width": 600,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 175,
+        "height": 350,
+        "left": -250,
+        "position": "absolute",
+        "top": 667,
+        "width": 350,
+      }
+    }
+  />
+</View>
+`;
+
+exports[`Patient background component renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#42C86A",
+      "flex": 1,
+      "justifyContent": "center",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(62, 185, 99, 0.8)",
+        "borderRadius": 250,
+        "height": 500,
+        "position": "absolute",
+        "right": -375,
+        "top": 667,
+        "width": 500,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 30,
+        "height": 60,
+        "left": 10,
+        "position": "absolute",
+        "top": 30,
+        "width": 60,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 125,
+        "height": 250,
+        "left": 150,
+        "position": "absolute",
+        "top": 222.33333333333334,
+        "width": 250,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 300,
+        "height": 600,
+        "left": 300,
+        "position": "absolute",
+        "top": -333.5,
+        "width": 600,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 175,
+        "height": 350,
+        "left": -250,
+        "position": "absolute",
+        "top": 667,
+        "width": 350,
+      }
+    }
+  />
+</View>
+`;

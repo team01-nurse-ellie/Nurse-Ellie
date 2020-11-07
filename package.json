@@ -6,7 +6,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest"
+    "test": "jest",
+    "updateSnapshots": "jest -u --coverage=false"
   },
   "dependencies": {
     "@react-native-community/checkbox": "^0.5.5",
@@ -52,17 +53,24 @@
     "babel-jest": "^26.6.3",
     "babel-preset-expo": "~8.1.0",
     "enzyme": "^3.11.0",
-    "enzyme-adapter-react-15": "^1.4.2",
     "enzyme-adapter-react-16": "^1.15.5",
     "jest": "^26.6.3",
+    "jest-expo": "^39.0.0",
     "jest-serializer-enzyme": "^1.0.0",
     "jest-styled-components": "^7.0.3",
+    "jest-svg-transformer": "^1.0.0",
     "react-addons-test-utils": "^15.6.2",
     "react-dom": "^16.14.0",
     "react-test-renderer": "^17.0.1"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*)"
+    ],
+    "transform": {
+      "^.+\\.svg$": "jest-svg-transformer"
+    }
   },
   "private": true
 }

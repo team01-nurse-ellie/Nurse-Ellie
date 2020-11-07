@@ -2,8 +2,7 @@ import React from 'react';
 import Enzyme, {shallow} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
-import IconPicker from '../../components/IconPicker';
-import MedIconIndex from '../../components/MedicationImages';
+import IconPicker from '../components/IconPicker';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -21,8 +20,7 @@ describe('IconPicker', () => {
         renderIconPicker();
     });
     it('should be set to index of 1 by default', () => {
-        expect(instance.onModalOpen()).toBe(1);
-        instance.onModalOpen()
+        expect(wrapper.state('selected')).toBe('1');
     });
 
 });
