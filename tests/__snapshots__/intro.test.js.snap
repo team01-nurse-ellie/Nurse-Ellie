@@ -1,0 +1,833 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Health Professional background component renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#4285C8",
+      "flex": 1,
+      "justifyContent": "center",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(51, 112, 172, 0.8)",
+        "borderRadius": 250,
+        "height": 500,
+        "position": "absolute",
+        "right": -375,
+        "top": 667,
+        "width": 500,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 30,
+        "height": 60,
+        "left": 10,
+        "position": "absolute",
+        "top": 30,
+        "width": 60,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 125,
+        "height": 250,
+        "left": 150,
+        "position": "absolute",
+        "top": 222.33333333333334,
+        "width": 250,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 300,
+        "height": 600,
+        "left": 300,
+        "position": "absolute",
+        "top": -333.5,
+        "width": 600,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 175,
+        "height": 350,
+        "left": -250,
+        "position": "absolute",
+        "top": 667,
+        "width": 350,
+      }
+    }
+  />
+</View>
+`;
+
+exports[`Patient background component renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#42C86A",
+      "flex": 1,
+      "justifyContent": "center",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(62, 185, 99, 0.8)",
+        "borderRadius": 250,
+        "height": 500,
+        "position": "absolute",
+        "right": -375,
+        "top": 667,
+        "width": 500,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 30,
+        "height": 60,
+        "left": 10,
+        "position": "absolute",
+        "top": 30,
+        "width": 60,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 125,
+        "height": 250,
+        "left": 150,
+        "position": "absolute",
+        "top": 222.33333333333334,
+        "width": 250,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 300,
+        "height": 600,
+        "left": 300,
+        "position": "absolute",
+        "top": -333.5,
+        "width": 600,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.3)",
+        "borderRadius": 175,
+        "height": 350,
+        "left": -250,
+        "position": "absolute",
+        "top": 667,
+        "width": 350,
+      }
+    }
+  />
+</View>
+`;
+
+exports[`Sign In Screen renders correctly 1`] = `
+<View
+  behaviour="padding"
+  onLayout={[Function]}
+  style={
+    Object {
+      "backgroundColor": "#42C86A",
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#42C86A",
+        "flex": 1,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(62, 185, 99, 0.8)",
+          "borderRadius": 250,
+          "height": 500,
+          "position": "absolute",
+          "right": -375,
+          "top": 667,
+          "width": 500,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 30,
+          "height": 60,
+          "left": 10,
+          "position": "absolute",
+          "top": 30,
+          "width": 60,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 125,
+          "height": 250,
+          "left": 150,
+          "position": "absolute",
+          "top": 222.33333333333334,
+          "width": 250,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 300,
+          "height": 600,
+          "left": 300,
+          "position": "absolute",
+          "top": -333.5,
+          "width": 600,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 175,
+          "height": 350,
+          "left": -250,
+          "position": "absolute",
+          "top": 667,
+          "width": 350,
+        }
+      }
+    />
+  </View>
+  <View
+    forwardedRef={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#fff",
+        "borderTopLeftRadius": 30,
+        "borderTopRightRadius": 30,
+        "flex": 4,
+        "height": 1133.8999999999999,
+        "opacity": 0,
+        "paddingHorizontal": 30,
+        "paddingVertical": 50,
+        "position": "absolute",
+        "top": 200.1,
+        "transform": Array [
+          Object {
+            "translateY": 500,
+          },
+        ],
+        "width": 750,
+      }
+    }
+  >
+    <Image
+      source={1}
+      style={
+        Object {
+          "left": 37.5,
+          "position": "absolute",
+          "top": 93.38000000000001,
+        }
+      }
+    />
+    <Text
+      style={
+        Object {
+          "fontFamily": "roboto-regular",
+          "fontSize": 32,
+          "fontWeight": "100",
+          "left": 214.28571428571428,
+          "paddingBottom": 30,
+          "top": 93.38000000000001,
+        }
+      }
+    >
+       Sign-In 
+    </Text>
+    <View
+      style={
+        Object {
+          "height": 166.75,
+        }
+      }
+    />
+    <TextInput
+      allowFontScaling={true}
+      autoCapitalize="none"
+      onChangeText={[Function]}
+      onSubmitEditing={[Function]}
+      placeholder="Email Address"
+      rejectResponderTermination={true}
+      returnKeyType="done"
+      style={
+        Object {
+          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+          "borderBottomWidth": 1.5,
+          "fontSize": 16,
+          "paddingTop": 8,
+        }
+      }
+      underlineColorAndroid="transparent"
+      value=""
+    />
+    <TextInput
+      allowFontScaling={true}
+      onChangeText={[Function]}
+      onSubmitEditing={[Function]}
+      placeholder="Password"
+      rejectResponderTermination={true}
+      returnKeyType="done"
+      secureTextEntry={true}
+      style={
+        Object {
+          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+          "borderBottomWidth": 1.5,
+          "fontSize": 16,
+          "paddingTop": 8,
+        }
+      }
+      underlineColorAndroid="transparent"
+      value=""
+    />
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "marginTop": 30,
+          "opacity": 1,
+          "paddingRight": 30,
+        }
+      }
+    >
+      <Image
+        source={1}
+      />
+    </View>
+    <View
+      style={
+        Object {
+          "height": 166.75,
+        }
+      }
+    />
+    <Text
+      style={
+        Object {
+          "color": "rgba(0, 0, 0, 0.38)",
+          "fontFamily": "roboto-regular",
+          "fontSize": 12,
+        }
+      }
+    >
+       Don't have an account yet? 
+    </Text>
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "fontFamily": "roboto-medium",
+            "fontSize": 14,
+          }
+        }
+      >
+         SIGN UP 
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Sign Up Screen renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+      "justifyContent": "center",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#42C86A",
+        "flex": 1,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(62, 185, 99, 0.8)",
+          "borderRadius": 250,
+          "height": 500,
+          "position": "absolute",
+          "right": -375,
+          "top": 667,
+          "width": 500,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 30,
+          "height": 60,
+          "left": 10,
+          "position": "absolute",
+          "top": 30,
+          "width": 60,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 125,
+          "height": 250,
+          "left": 150,
+          "position": "absolute",
+          "top": 222.33333333333334,
+          "width": 250,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 300,
+          "height": 600,
+          "left": 300,
+          "position": "absolute",
+          "top": -333.5,
+          "width": 600,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 175,
+          "height": 350,
+          "left": -250,
+          "position": "absolute",
+          "top": 667,
+          "width": 350,
+        }
+      }
+    />
+  </View>
+  <View
+    forwardedRef={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#fff",
+        "borderTopLeftRadius": 30,
+        "borderTopRightRadius": 30,
+        "flex": 4,
+        "height": 1133.8999999999999,
+        "opacity": 0,
+        "paddingHorizontal": 30,
+        "paddingVertical": 50,
+        "position": "absolute",
+        "top": 200.1,
+        "transform": Array [
+          Object {
+            "translateY": 500,
+          },
+        ],
+        "width": 750,
+      }
+    }
+  >
+    <Image
+      source={1}
+      style={
+        Object {
+          "left": 37.5,
+          "position": "absolute",
+          "top": 93.38000000000001,
+        }
+      }
+    />
+    <Text
+      style={
+        Object {
+          "fontFamily": "roboto-regular",
+          "fontSize": 32,
+          "fontWeight": "100",
+          "left": 214.28571428571428,
+          "paddingBottom": 30,
+          "top": 93.38000000000001,
+        }
+      }
+    >
+       Sign-Up 
+    </Text>
+    <View
+      style={
+        Object {
+          "height": 166.75,
+        }
+      }
+    />
+    <TextInput
+      allowFontScaling={true}
+      autoCapitalize="none"
+      onChangeText={[Function]}
+      onSubmitEditing={[Function]}
+      placeholder="Full Name"
+      rejectResponderTermination={true}
+      returnKeyType="done"
+      style={
+        Object {
+          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+          "borderBottomWidth": 1.5,
+          "fontSize": 16,
+          "paddingTop": 8,
+        }
+      }
+      underlineColorAndroid="transparent"
+      value=""
+    />
+    <TextInput
+      allowFontScaling={true}
+      autoCapitalize="none"
+      onChangeText={[Function]}
+      onSubmitEditing={[Function]}
+      placeholder="Email Address"
+      rejectResponderTermination={true}
+      returnKeyType="done"
+      style={
+        Object {
+          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+          "borderBottomWidth": 1.5,
+          "fontSize": 16,
+          "paddingTop": 8,
+        }
+      }
+      underlineColorAndroid="transparent"
+      value=""
+    />
+    <TextInput
+      allowFontScaling={true}
+      autoCapitalize="none"
+      onChangeText={[Function]}
+      onSubmitEditing={[Function]}
+      placeholder="Password"
+      rejectResponderTermination={true}
+      returnKeyType="done"
+      secureTextEntry={true}
+      style={
+        Object {
+          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+          "borderBottomWidth": 1.5,
+          "fontSize": 16,
+          "paddingTop": 8,
+        }
+      }
+      underlineColorAndroid="transparent"
+      value=""
+    />
+    <TextInput
+      allowFontScaling={true}
+      autoCapitalize="none"
+      onChangeText={[Function]}
+      onSubmitEditing={[Function]}
+      placeholder="Confirm Password"
+      rejectResponderTermination={true}
+      returnKeyType="done"
+      secureTextEntry={true}
+      style={
+        Object {
+          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+          "borderBottomWidth": 1.5,
+          "fontSize": 16,
+          "paddingTop": 8,
+        }
+      }
+      underlineColorAndroid="transparent"
+    />
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "marginTop": 30,
+          "opacity": 1,
+          "paddingRight": 30,
+        }
+      }
+    >
+      <Image
+        source={1}
+      />
+    </View>
+    <View
+      style={
+        Object {
+          "height": 166.75,
+        }
+      }
+    />
+    <Text
+      style={
+        Object {
+          "color": "rgba(0, 0, 0, 0.38)",
+          "fontFamily": "roboto-regular",
+          "fontSize": 12,
+        }
+      }
+    >
+       Already have an account? 
+    </Text>
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "fontFamily": "roboto-medium",
+            "fontSize": 14,
+          }
+        }
+      >
+         SIGN IN 
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Splash Screen renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#42C86A",
+      "flex": 1,
+      "justifyContent": "center",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#42C86A",
+        "flex": 1,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(62, 185, 99, 0.8)",
+          "borderRadius": 250,
+          "height": 500,
+          "position": "absolute",
+          "right": -375,
+          "top": 667,
+          "width": 500,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 30,
+          "height": 60,
+          "left": 10,
+          "position": "absolute",
+          "top": 30,
+          "width": 60,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 125,
+          "height": 250,
+          "left": 150,
+          "position": "absolute",
+          "top": 222.33333333333334,
+          "width": 250,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 300,
+          "height": 600,
+          "left": 300,
+          "position": "absolute",
+          "top": -333.5,
+          "width": 600,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 175,
+          "height": 350,
+          "left": -250,
+          "position": "absolute",
+          "top": 667,
+          "width": 350,
+        }
+      }
+    />
+  </View>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "rgba(255, 255, 255, 1)",
+        "borderRadius": 150,
+        "height": 300,
+        "justifyContent": "center",
+        "left": 225,
+        "position": "absolute",
+        "width": 300,
+      }
+    }
+  >
+    <svg
+      data-file-name="SvgNurseEllieLogo"
+      style={
+        Object {
+          "height": 260,
+          "left": 15,
+          "width": 260,
+        }
+      }
+    />
+  </View>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "bottom": 296.44444444444446,
+        "opacity": 1,
+        "position": "absolute",
+        "right": 93.75,
+      }
+    }
+  >
+    <Image
+      source={1}
+      style={
+        Object {
+          "height": 120.06,
+        }
+      }
+    />
+  </View>
+</View>
+`;

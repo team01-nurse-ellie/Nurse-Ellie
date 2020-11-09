@@ -8,9 +8,9 @@ import MedIconIndex from '../components/MedicationImages';
 
 import Background from '../components/background';
 import MedicationCard from '../components/MedicationCard';
-import MenuIcon from '../assets/images/menu-icon';
-import MedicationsIcon from '../assets/images/medications-icon';
-import SearchIcon from '../assets/images/search-icon';
+import MenuIcon from '../assets/images/menu-icon.svg';
+import MedicationsIcon from '../assets/images/medications-icon.svg';
+import SearchIcon from '../assets/images/search-icon.svg';
 
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
 import * as fsFn  from '../utils/firestore';
