@@ -11,6 +11,7 @@ import DissatisfiedIcon from '../assets/images/scale-dissatisfied-icon.svg';
 import NeutralIcon from '../assets/images/scale-neutral-icon.svg';
 import SatisfiedIcon from '../assets/images/scale-satisfied-icon.svg';
 import VerySatisfiedIcon from '../assets/images/scale-very-satisified-icon.svg';
+import { firebase } from '../components/Firebase/config';
 
 
 const SymptomChecklistScreen = ({ navigation }) => {
@@ -48,10 +49,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
     const [stomachSelected, setStomachSelection] = useState(false);
     const [backSelected, setBackSelection] = useState(false);
     const [otherSelected, setOtherSelection] = useState(false);
-    const [inputLineOneText, getLineOneText] = useState('');
-    const setLineOneText = (enteredText) => {
-        getLineOneText(enteredText);
-    }
+    const [inputLineOneText, setLineOneText] = useState('');
 
     const [achySelected, setAchySelection] = useState(false);
     const [burningSelected, setBurningSelection] = useState(false);
@@ -60,35 +58,80 @@ const SymptomChecklistScreen = ({ navigation }) => {
     const [squeezingSelected, setSqueezingSelection] = useState(false);
     const [sharpSelected, setSharpSelection] = useState(false);
     const [other2Selected, setOther2Selection] = useState(false);
-    const [inputLine2Text, getLine2Text] = useState('');
-    const setLine2Text = (enteredText) => {
-        getLine2Text(enteredText);
-    }
+    const [inputLineTwoText, setLineTwoText] = useState('');
 
     /**Additional Detail value */
-    const [additionalText, getAdditionalText] = useState('');
-    const setAdditionalText = (enteredText) => {
-        getAdditionalText(enteredText);
+    const [additionalText, setAdditionalText] = useState('');
 
-    }
-
+    /** Button Clicked Function */
     
-        /** Button Clicked Function */
+    
+    const symptomRef = firebase.firestore().collection('symptom')
+
     const getFormValue = async(res) => {
-        var userDoc = firebase.firestore().collection("users").doc(data).update({
-            'inputLine2Text':''
+        let current_date = new Date();
+
+        const data = await firebase.auth().currentUser.uid
+        
+        
+        var userDoc = firebase.firestore().collection("symptom").doc(data).set({
+            'current_date' : '',
+            'emotions_icon_value' : '',
+            'pain_Discomfort' : '',
+    
+            'headSelected' : '',
+            'chestSelected' : '',
+            'stomachSelected' : '',
+            'backSelected' : '',
+            'otherSelected' : '',
+            'inputLineOneText' : '',
+    
+            'achySelected' : '',
+            'burningSelected' : '',
+            'suddenSelected' : '',
+            'severeSelected' : '',
+            'squeezingSelected' : '',
+            'sharpSelected' : '',
+            'other2Selected' : '',
+            'inputLineTwoText' : '',
+    
+            'additionalText' : ''
         })
 
         const obj = {
-            inputLine2Text
+            current_date,
+            emotions_icon_value,
+            pain_Discomfort,
+    
+            headSelected,
+            chestSelected,
+            stomachSelected,
+            backSelected,
+            otherSelected,
+            inputLineOneText,
+    
+            achySelected,
+            burningSelected,
+            suddenSelected,
+            severeSelected,
+            squeezingSelected,
+            sharpSelected,
+            other2Selected,
+            inputLineTwoText,
+    
+            additionalText,
         };
-        const usersRef = firebase.firestore().collection('users')
-        usersRef.doc(data).update(obj)
+
+        const usersRef = firebase.firestore().collection('symptom')
+        symptomRef
+            .doc(data)
+            .set(obj)
+
     
 
-        /** printing codes */
-        current_date = new Date();
 
+        /** printing codes */
+        console.log("\n------------------\n");
         console.log("Date: " + current_date);
         console.log('Emotion Icons Value: ' + emotions_icon_value);
         console.log('Having Pain or Discomfort: ' + pain_Discomfort);
@@ -107,7 +150,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
         squeezingSelected == true ? console.log('Squeezing YES') : console.log('Squeezing NO');
         sharpSelected == true ? console.log('Sharp YES') : console.log('Sharp NO');
         other2Selected == true ? console.log('Other2 YES') : console.log('Other2 NO');
-        console.log("Input 02: " + inputLine2Text)
+        console.log("Input 02: " + inputLineTwoText)
 
         console.log("Additional Value: " + additionalText);
 
@@ -232,8 +275,8 @@ const SymptomChecklistScreen = ({ navigation }) => {
 
                         <TextInput style = { styles.inputText2 }
                             numberOfLines = { 1 }
-                            onChangeText = { setLineOneText }
-                            value = { inputLineOneText }
+                            onChangeText={(text) => setLineOneText(text)}
+                            value={ inputLineOneText }
                         /> 
                     </View>
 
@@ -302,11 +345,11 @@ const SymptomChecklistScreen = ({ navigation }) => {
                             </View>
                         </View>
 
-                        <TextInput value = { inputLine2Text }
+                        <TextInput
                             style = { styles.inputText2 }
                             multiline = { true }
-                            numberOfLines = { 1 }
-                            onChangeText = { setLine2Text }
+                            onChangeText={(text) => setLineTwoText(text)}
+                            value={ inputLineTwoText }
                         /> 
                     </View>
 
@@ -317,15 +360,16 @@ const SymptomChecklistScreen = ({ navigation }) => {
                     <TextInput style = { styles.inputText }
                         multiline = { true }
                         numberOfLines = { 5 }
-                        onChangeText = { setAdditionalText }
-                        value = { additionalText }
+                        onChangeText={(text) => setAdditionalText(text)}
+                        value={ additionalText }
                     />
 
                     <Button title = "SUBMIT"
                         color = "#42C86A"
                         style = { styles.lastButton }
                         onPress = {
-                            () => getFormValue() }
+                            getFormValue
+                        }
                     />
 
                 </ScrollView>
