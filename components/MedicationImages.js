@@ -1,15 +1,15 @@
 import React from 'react';
-import PinkMedication from '../assets/images/pink-medication-icon';
-import BlueMedication from '../assets/images/blue-medication-icon';
-import GreenMedication from '../assets/images/green-medication-icon';
-import GreenRoundMedication from '../assets/images/green-round-medication-icon';
-import OrangeOblongMedication from '../assets/images/orange-oblong-medication-icon';
-import OrangeRoundMedication from '../assets/images/orange-round-medication-icon';
-import PurpleMedication from '../assets/images/purple-medication-icon';
-import PurpleRoundMedication from '../assets/images/purple-round-medication-icon';
-import RedMedication from '../assets/images/red-medication-icon';
-import YellowOblongMedication from '../assets/images/yellow-oblong-medication-icon';
-import YellowPillMedication from '../assets/images/yellow-pill-medication-icon';
+import PinkMedication from '../assets/images/pink-medication-icon.svg';
+import BlueMedication from '../assets/images/blue-medication-icon.svg';
+import GreenMedication from '../assets/images/green-medication-icon.svg';
+import GreenRoundMedication from '../assets/images/green-round-medication-icon.svg';
+import OrangeOblongMedication from '../assets/images/orange-oblong-medication-icon.svg';
+import OrangeRoundMedication from '../assets/images/orange-round-medication-icon.svg';
+import PurpleMedication from '../assets/images/purple-medication-icon.svg';
+import PurpleRoundMedication from '../assets/images/purple-round-medication-icon.svg';
+import RedMedication from '../assets/images/red-medication-icon.svg';
+import YellowOblongMedication from '../assets/images/yellow-oblong-medication-icon.svg';
+import YellowPillMedication from '../assets/images/yellow-pill-medication-icon.svg';
 
 const MedicationImages = {
     index: {

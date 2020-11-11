@@ -7,8 +7,8 @@ import { VictoryBar, VictoryLabel, VictoryAxis, VictoryLine, VictoryChart } from
 import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import Card from '../components/MedicationCard';
-import MenuIcon from '../assets/images/menu-icon';
-import EntryTriangle from '../assets/images/entry-triangle-icon';
+import MenuIcon from '../assets/images/menu-icon.svg';
+import EntryTriangle from '../assets/images/entry-triangle-icon.svg';
 
 const MedicationSummary = ({ navigation }) => {
 

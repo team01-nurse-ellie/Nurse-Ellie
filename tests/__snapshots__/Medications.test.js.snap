@@ -1,0 +1,2898 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Medication Detail Screen renders correctly 1`] = `
+<View
+  behaviour="padding"
+  onLayout={[Function]}
+  style={
+    Object {
+      "backgroundColor": "#42C86A",
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#42C86A",
+        "flex": 1,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(62, 185, 99, 0.8)",
+          "borderRadius": 250,
+          "height": 500,
+          "position": "absolute",
+          "right": -375,
+          "top": 667,
+          "width": 500,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 30,
+          "height": 60,
+          "left": 10,
+          "position": "absolute",
+          "top": 30,
+          "width": 60,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 125,
+          "height": 250,
+          "left": 150,
+          "position": "absolute",
+          "top": 222.33333333333334,
+          "width": 250,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 300,
+          "height": 600,
+          "left": 300,
+          "position": "absolute",
+          "top": -333.5,
+          "width": 600,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 175,
+          "height": 350,
+          "left": -250,
+          "position": "absolute",
+          "top": 667,
+          "width": 350,
+        }
+      }
+    />
+  </View>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+        "position": "absolute",
+        "right": 30,
+        "top": 40,
+      }
+    }
+  >
+    <svg
+      data-file-name="SvgMenuIcon"
+    />
+  </View>
+  <View
+    forwardedRef={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#fff",
+        "borderTopLeftRadius": 30,
+        "borderTopRightRadius": 30,
+        "flex": 4,
+        "height": 1133.8999999999999,
+        "opacity": 0,
+        "paddingHorizontal": 30,
+        "paddingVertical": 50,
+        "position": "absolute",
+        "top": 200.1,
+        "transform": Array [
+          Object {
+            "translateY": 500,
+          },
+        ],
+        "width": 750,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "paddingVertical": 7,
+        }
+      }
+    >
+      <View
+        accessible={true}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <svg
+          data-file-name="SvgReturnArrowIcon"
+        />
+      </View>
+      <Text
+        style={
+          Object {
+            "fontFamily": "roboto-regular",
+            "fontSize": 26,
+            "fontWeight": "100",
+            "paddingHorizontal": 20,
+            "paddingVertical": 0,
+            "position": "absolute",
+          }
+        }
+      />
+      <View
+        accessible={true}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <svg
+          data-file-name="SvgEditIcon"
+        />
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "paddingVertical": 15,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "rgba(0, 0, 0, 0.85)",
+            "fontFamily": "roboto-regular",
+            "fontSize": 18,
+          }
+        }
+      >
+         10:00AM 
+      </Text>
+    </View>
+    <Text
+      style={
+        Object {
+          "color": "rgba(0, 0, 0, 0.85)",
+          "fontFamily": "roboto-regular",
+          "fontSize": 24,
+        }
+      }
+    >
+      Prescription
+    </Text>
+    <View
+      style={
+        Object {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            undefined,
+            Object {
+              "color": undefined,
+            },
+          ]
+        }
+      >
+        ‣
+      </Text>
+      <View
+        style={
+          Object {
+            "flex": 1,
+            "paddingLeft": 5,
+          }
+        }
+      >
+        <Text
+          unorderedListLevel={1}
+        >
+          40 mg (1 pill) daily
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            undefined,
+            Object {
+              "color": undefined,
+            },
+          ]
+        }
+      >
+        ‣
+      </Text>
+      <View
+        style={
+          Object {
+            "flex": 1,
+            "paddingLeft": 5,
+          }
+        }
+      >
+        <Text
+          unorderedListLevel={1}
+        >
+          can be taken with or without food
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "paddingVertical": 10,
+        }
+      }
+    />
+    <Text
+      style={
+        Object {
+          "color": "rgba(0, 0, 0, 0.85)",
+          "fontFamily": "roboto-regular",
+          "fontSize": 24,
+        }
+      }
+    >
+      Information
+    </Text>
+    <Text>
+       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.  
+    </Text>
+    <View
+      style={
+        Object {
+          "paddingVertical": 10,
+        }
+      }
+    />
+    <Text
+      style={
+        Object {
+          "color": "rgba(0, 0, 0, 0.85)",
+          "fontFamily": "roboto-regular",
+          "fontSize": 24,
+        }
+      }
+    >
+      Possible Side Effects
+    </Text>
+    <View
+      style={
+        Object {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            undefined,
+            Object {
+              "color": undefined,
+            },
+          ]
+        }
+      >
+        •
+      </Text>
+      <View
+        style={
+          Object {
+            "flex": 1,
+            "paddingLeft": 5,
+          }
+        }
+      >
+        <Text
+          unorderedListLevel={1}
+        >
+          dry cough
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            undefined,
+            Object {
+              "color": undefined,
+            },
+          ]
+        }
+      >
+        •
+      </Text>
+      <View
+        style={
+          Object {
+            "flex": 1,
+            "paddingLeft": 5,
+          }
+        }
+      >
+        <Text
+          unorderedListLevel={1}
+        >
+          vomiting
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            undefined,
+            Object {
+              "color": undefined,
+            },
+          ]
+        }
+      >
+        •
+      </Text>
+      <View
+        style={
+          Object {
+            "flex": 1,
+            "paddingLeft": 5,
+          }
+        }
+      >
+        <Text
+          unorderedListLevel={1}
+        >
+          tired feeling
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            undefined,
+            Object {
+              "color": undefined,
+            },
+          ]
+        }
+      >
+        •
+      </Text>
+      <View
+        style={
+          Object {
+            "flex": 1,
+            "paddingLeft": 5,
+          }
+        }
+      >
+        <Text
+          unorderedListLevel={1}
+        >
+          runny or stuffy nose
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            undefined,
+            Object {
+              "color": undefined,
+            },
+          ]
+        }
+      >
+        •
+      </Text>
+      <View
+        style={
+          Object {
+            "flex": 1,
+            "paddingLeft": 5,
+          }
+        }
+      >
+        <Text
+          unorderedListLevel={1}
+        >
+          headache
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            undefined,
+            Object {
+              "color": undefined,
+            },
+          ]
+        }
+      >
+        •
+      </Text>
+      <View
+        style={
+          Object {
+            "flex": 1,
+            "paddingLeft": 5,
+          }
+        }
+      >
+        <Text
+          unorderedListLevel={1}
+        >
+          nausea
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "paddingVertical": 10,
+        }
+      }
+    />
+    <Text
+      style={
+        Object {
+          "color": "rgba(0, 0, 0, 0.38)",
+          "fontFamily": "roboto-regular",
+          "fontSize": 12,
+        }
+      }
+    >
+      Not feeling well after taking this medication?
+    </Text>
+    <Text
+      style={
+        Object {
+          "color": "rgba(0, 0, 0, 0.38)",
+          "fontFamily": "roboto-regular",
+          "fontSize": 12,
+        }
+      }
+    >
+      Report it to your Health Professional
+    </Text>
+    <View
+      accessible={true}
+      focusable={false}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "fontFamily": "roboto-medium",
+            "fontSize": 14,
+          }
+        }
+      >
+        SYMPTOM CHECKLIST
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Medication List Screen renders correctly 1`] = `
+<View
+  behaviour="padding"
+  onLayout={[Function]}
+  style={
+    Object {
+      "backgroundColor": "#42C86A",
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#42C86A",
+        "flex": 1,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(62, 185, 99, 0.8)",
+          "borderRadius": 250,
+          "height": 500,
+          "position": "absolute",
+          "right": -375,
+          "top": 667,
+          "width": 500,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 30,
+          "height": 60,
+          "left": 10,
+          "position": "absolute",
+          "top": 30,
+          "width": 60,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 125,
+          "height": 250,
+          "left": 150,
+          "position": "absolute",
+          "top": 222.33333333333334,
+          "width": 250,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 300,
+          "height": 600,
+          "left": 300,
+          "position": "absolute",
+          "top": -333.5,
+          "width": 600,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 175,
+          "height": 350,
+          "left": -250,
+          "position": "absolute",
+          "top": 667,
+          "width": 350,
+        }
+      }
+    />
+  </View>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+        "position": "absolute",
+        "right": 30,
+        "top": 40,
+      }
+    }
+  >
+    <svg
+      data-file-name="SvgMenuIcon"
+    />
+  </View>
+  <View
+    forwardedRef={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#fff",
+        "borderTopLeftRadius": 30,
+        "borderTopRightRadius": 30,
+        "flex": 4,
+        "height": 1133.8999999999999,
+        "opacity": 0,
+        "paddingHorizontal": 30,
+        "paddingVertical": 50,
+        "position": "absolute",
+        "top": 200.1,
+        "transform": Array [
+          Object {
+            "translateY": 500,
+          },
+        ],
+        "width": 750,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "paddingBottom": 10,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "fontFamily": "roboto-regular",
+            "fontSize": 24,
+            "fontWeight": "100",
+          }
+        }
+      >
+        Medications
+      </Text>
+      <svg
+        data-file-name="SvgMedicationsIcon"
+      />
+    </View>
+    <View
+      style={
+        Object {
+          "borderBottomColor": "rgba(0, 0, 0, 0.6)",
+          "borderBottomWidth": 1,
+          "flexDirection": "row",
+          "marginVertical": 10,
+          "minWidth": 600,
+        }
+      }
+    >
+      <TextInput
+        allowFontScaling={true}
+        placeholder="Search Medication..."
+        rejectResponderTermination={true}
+        style={
+          Object {
+            "minWidth": 600,
+          }
+        }
+        underlineColorAndroid="transparent"
+      />
+      <View
+        accessible={true}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <svg
+          data-file-name="SvgSearchIcon"
+        />
+      </View>
+    </View>
+    <RCTScrollView
+      data={Array []}
+      disableVirtualization={false}
+      getItem={[Function]}
+      getItemCount={[Function]}
+      horizontal={false}
+      initialNumToRender={10}
+      keyExtractor={[Function]}
+      maxToRenderPerBatch={10}
+      onContentSizeChange={[Function]}
+      onEndReachedThreshold={2}
+      onLayout={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      removeClippedSubviews={false}
+      renderItem={[Function]}
+      scrollEventThrottle={50}
+      stickyHeaderIndices={Array []}
+      updateCellsBatchingPeriod={50}
+      viewabilityConfigCallbackPairs={Array []}
+      windowSize={21}
+    >
+      <View />
+    </RCTScrollView>
+    <View
+      accessibilityRole="button"
+      accessibilityState={Object {}}
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {},
+          ]
+        }
+      >
+        <Text
+          style={
+            Array [
+              Object {
+                "color": "#007AFF",
+                "fontSize": 18,
+                "margin": 8,
+                "textAlign": "center",
+              },
+              Object {
+                "color": "#42C86A",
+              },
+            ]
+          }
+        >
+          ADD NEW MEDICATION
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Medication Summary Screen render correctly 1`] = `
+<View
+  behaviour="padding"
+  onLayout={[Function]}
+  style={
+    Object {
+      "backgroundColor": "#42C86A",
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#42C86A",
+        "flex": 1,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(62, 185, 99, 0.8)",
+          "borderRadius": 250,
+          "height": 500,
+          "position": "absolute",
+          "right": -375,
+          "top": 667,
+          "width": 500,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 30,
+          "height": 60,
+          "left": 10,
+          "position": "absolute",
+          "top": 30,
+          "width": 60,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 125,
+          "height": 250,
+          "left": 150,
+          "position": "absolute",
+          "top": 222.33333333333334,
+          "width": 250,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 300,
+          "height": 600,
+          "left": 300,
+          "position": "absolute",
+          "top": -333.5,
+          "width": 600,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 175,
+          "height": 350,
+          "left": -250,
+          "position": "absolute",
+          "top": 667,
+          "width": 350,
+        }
+      }
+    />
+  </View>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+        "position": "absolute",
+        "right": 30,
+        "top": 40,
+      }
+    }
+  >
+    <svg
+      data-file-name="SvgMenuIcon"
+    />
+  </View>
+  <View
+    forwardedRef={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#fff",
+        "borderTopLeftRadius": 30,
+        "borderTopRightRadius": 30,
+        "flex": 4,
+        "height": 1133.8999999999999,
+        "opacity": 0,
+        "paddingHorizontal": 30,
+        "paddingVertical": 50,
+        "position": "absolute",
+        "top": 200.1,
+        "transform": Array [
+          Object {
+            "translateY": 500,
+          },
+        ],
+        "width": 750,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "paddingBottom": 10,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "fontFamily": "roboto-regular",
+            "fontSize": 24,
+            "fontWeight": "100",
+          }
+        }
+      >
+        Medication Summary
+      </Text>
+    </View>
+    <View
+      className="VictoryContainer"
+      onMoveShouldSetResponder={[Function]}
+      onMoveShouldSetResponderCapture={[Function]}
+      onResponderEnd={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderReject={[Function]}
+      onResponderRelease={[Function]}
+      onResponderStart={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onStartShouldSetResponderCapture={[Function]}
+      pointerEvents="box-none"
+      style={
+        Object {
+          "position": "relative",
+        }
+      }
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={230}
+        bbWidth={350}
+        focusable={false}
+        height={230}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        role="img"
+        style={
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            Object {
+              "height": "100%",
+              "width": "100%",
+            },
+            Object {
+              "flex": 0,
+              "height": 230,
+              "width": 350,
+            },
+          ]
+        }
+        vbHeight={230}
+        vbWidth={350}
+        width={350}
+      >
+        <RNSVGGroup>
+          <RNSVGGroup>
+            <RNSVGPath
+              d="M 47.22222222222222, 180 
+A 10 10 0 0 1, 37.22222222222222, 170 
+L 37.22222222222222, 125 
+A 10 10 0 0 1, 47.22222222222222, 115 
+L 52.77777777777778, 115 
+A 10 10 0 0 1, 62.77777777777778, 125 
+L 62.77777777777778, 170 
+A 10 10 0 0 1, 52.77777777777778, 180 
+ z"
+              fill={4282566762}
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              stroke={4282566762}
+              strokeWidth={0}
+            />
+            <RNSVGPath
+              d="M 88.88888888888889, 180 
+A 10 10 0 0 1, 78.88888888888889, 170 
+L 78.88888888888889, 92.5 
+A 10 10 0 0 1, 88.88888888888889, 82.5 
+L 94.44444444444446, 82.5 
+A 10 10 0 0 1, 104.44444444444446, 92.5 
+L 104.44444444444446, 170 
+A 10 10 0 0 1, 94.44444444444446, 180 
+ z"
+              fill={4282566762}
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              stroke={4282566762}
+              strokeWidth={0}
+            />
+            <RNSVGPath
+              d="M 130.55555555555557, 180 
+A 10 10 0 0 1, 120.55555555555557, 170 
+L 120.55555555555557, 157.5 
+A 10 10 0 0 1, 130.55555555555557, 147.5 
+L 136.11111111111111, 147.5 
+A 10 10 0 0 1, 146.11111111111111, 157.5 
+L 146.11111111111111, 170 
+A 10 10 0 0 1, 136.11111111111111, 180 
+ z"
+              fill={4282566762}
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              stroke={4282566762}
+              strokeWidth={0}
+            />
+            <RNSVGPath
+              d="M 172.22222222222223, 180 
+A 10 10 0 0 1, 162.22222222222223, 170 
+L 162.22222222222223, 92.5 
+A 10 10 0 0 1, 172.22222222222223, 82.5 
+L 177.77777777777777, 82.5 
+A 10 10 0 0 1, 187.77777777777777, 92.5 
+L 187.77777777777777, 170 
+A 10 10 0 0 1, 177.77777777777777, 180 
+ z"
+              fill={4282566762}
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              stroke={4282566762}
+              strokeWidth={0}
+            />
+            <RNSVGPath
+              d="M 213.88888888888889, 180 
+A 10 10 0 0 1, 203.88888888888889, 170 
+L 203.88888888888889, 92.5 
+A 10 10 0 0 1, 213.88888888888889, 82.5 
+L 219.44444444444443, 82.5 
+A 10 10 0 0 1, 229.44444444444443, 92.5 
+L 229.44444444444443, 170 
+A 10 10 0 0 1, 219.44444444444443, 180 
+ z"
+              fill={4282566762}
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              stroke={4282566762}
+              strokeWidth={0}
+            />
+            <RNSVGPath
+              d="M 255.55555555555554, 180 
+A 10 10 0 0 1, 245.55555555555554, 170 
+L 245.55555555555554, 157.5 
+A 10 10 0 0 1, 255.55555555555554, 147.5 
+L 261.1111111111111, 147.5 
+A 10 10 0 0 1, 271.1111111111111, 157.5 
+L 271.1111111111111, 170 
+A 10 10 0 0 1, 261.1111111111111, 180 
+ z"
+              fill={4282566762}
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              stroke={4282566762}
+              strokeWidth={0}
+            />
+            <RNSVGPath
+              d="M 297.22222222222223, 180 
+A 10 10 0 0 1, 287.22222222222223, 170 
+L 287.22222222222223, 92.5 
+A 10 10 0 0 1, 297.22222222222223, 82.5 
+L 302.77777777777777, 82.5 
+A 10 10 0 0 1, 312.77777777777777, 92.5 
+L 312.77777777777777, 170 
+A 10 10 0 0 1, 302.77777777777777, 180 
+ z"
+              fill={4282566762}
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              stroke={4282566762}
+              strokeWidth={0}
+            />
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  0,
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="chart-bar-0-labels-0"
+              rotate={Array []}
+              x={
+                Array [
+                  50,
+                ]
+              }
+              y={
+                Array [
+                  102.97,
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="2"
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={
+                  Array [
+                    0,
+                  ]
+                }
+                fill={4280624421}
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": 14,
+                    "letterSpacing": "normal",
+                    "textAnchor": "middle",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    50,
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  0,
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="chart-bar-0-labels-1"
+              rotate={Array []}
+              x={
+                Array [
+                  91.66666666666667,
+                ]
+              }
+              y={
+                Array [
+                  70.47,
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="3"
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={
+                  Array [
+                    0,
+                  ]
+                }
+                fill={4280624421}
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": 14,
+                    "letterSpacing": "normal",
+                    "textAnchor": "middle",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    91.66666666666667,
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  0,
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="chart-bar-0-labels-2"
+              rotate={Array []}
+              x={
+                Array [
+                  133.33333333333334,
+                ]
+              }
+              y={
+                Array [
+                  135.47,
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="1"
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={
+                  Array [
+                    0,
+                  ]
+                }
+                fill={4280624421}
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": 14,
+                    "letterSpacing": "normal",
+                    "textAnchor": "middle",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    133.33333333333334,
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  0,
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="chart-bar-0-labels-3"
+              rotate={Array []}
+              x={
+                Array [
+                  175,
+                ]
+              }
+              y={
+                Array [
+                  70.47,
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="3"
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={
+                  Array [
+                    0,
+                  ]
+                }
+                fill={4280624421}
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": 14,
+                    "letterSpacing": "normal",
+                    "textAnchor": "middle",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    175,
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  0,
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="chart-bar-0-labels-4"
+              rotate={Array []}
+              x={
+                Array [
+                  216.66666666666666,
+                ]
+              }
+              y={
+                Array [
+                  70.47,
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="3"
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={
+                  Array [
+                    0,
+                  ]
+                }
+                fill={4280624421}
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": 14,
+                    "letterSpacing": "normal",
+                    "textAnchor": "middle",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    216.66666666666666,
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  0,
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="chart-bar-0-labels-5"
+              rotate={Array []}
+              x={
+                Array [
+                  258.3333333333333,
+                ]
+              }
+              y={
+                Array [
+                  135.47,
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="1"
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={
+                  Array [
+                    0,
+                  ]
+                }
+                fill={4280624421}
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": 14,
+                    "letterSpacing": "normal",
+                    "textAnchor": "middle",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    258.3333333333333,
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  0,
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="chart-bar-0-labels-6"
+              rotate={Array []}
+              x={
+                Array [
+                  300,
+                ]
+              }
+              y={
+                Array [
+                  70.47,
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="3"
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={
+                  Array [
+                    0,
+                  ]
+                }
+                fill={4280624421}
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": 14,
+                    "letterSpacing": "normal",
+                    "textAnchor": "middle",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    300,
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+          </RNSVGGroup>
+          <RNSVGGroup
+            clipPath="victory-clip-2"
+          >
+            <RNSVGGroup>
+              <RNSVGDefs>
+                <RNSVGClipPath
+                  name="victory-clip-2"
+                >
+                  <RNSVGRect
+                    height={130}
+                    vectorEffect={1}
+                    width={250}
+                    x={50}
+                    y={50}
+                  />
+                </RNSVGClipPath>
+              </RNSVGDefs>
+            </RNSVGGroup>
+            <RNSVGPath
+              d="M50,115L91.66666666666667,82.5L133.33333333333334,115L175,82.5L216.66666666666666,50L258.3333333333333,115L300,115"
+              fill={0}
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                ]
+              }
+              stroke={4280624421}
+              strokeWidth={2}
+            />
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  0,
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="chart-line-1-labels-0"
+              rotate={Array []}
+              x={
+                Array [
+                  50,
+                ]
+              }
+              y={
+                Array [
+                  102.97,
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="2"
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={
+                  Array [
+                    0,
+                  ]
+                }
+                fill={4280624421}
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": 14,
+                    "letterSpacing": "normal",
+                    "textAnchor": "middle",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    50,
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  0,
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="chart-line-1-labels-1"
+              rotate={Array []}
+              x={
+                Array [
+                  91.66666666666667,
+                ]
+              }
+              y={
+                Array [
+                  70.47,
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="3"
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={
+                  Array [
+                    0,
+                  ]
+                }
+                fill={4280624421}
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": 14,
+                    "letterSpacing": "normal",
+                    "textAnchor": "middle",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    91.66666666666667,
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  0,
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="chart-line-1-labels-2"
+              rotate={Array []}
+              x={
+                Array [
+                  133.33333333333334,
+                ]
+              }
+              y={
+                Array [
+                  102.97,
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="1"
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={
+                  Array [
+                    0,
+                  ]
+                }
+                fill={4280624421}
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": 14,
+                    "letterSpacing": "normal",
+                    "textAnchor": "middle",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    133.33333333333334,
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  0,
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="chart-line-1-labels-3"
+              rotate={Array []}
+              x={
+                Array [
+                  175,
+                ]
+              }
+              y={
+                Array [
+                  70.47,
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="3"
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={
+                  Array [
+                    0,
+                  ]
+                }
+                fill={4280624421}
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": 14,
+                    "letterSpacing": "normal",
+                    "textAnchor": "middle",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    175,
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  0,
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="chart-line-1-labels-4"
+              rotate={Array []}
+              x={
+                Array [
+                  216.66666666666666,
+                ]
+              }
+              y={
+                Array [
+                  37.97,
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="3"
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={
+                  Array [
+                    0,
+                  ]
+                }
+                fill={4280624421}
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": 14,
+                    "letterSpacing": "normal",
+                    "textAnchor": "middle",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    216.66666666666666,
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  0,
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="chart-line-1-labels-5"
+              rotate={Array []}
+              x={
+                Array [
+                  258.3333333333333,
+                ]
+              }
+              y={
+                Array [
+                  102.97,
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="1"
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={
+                  Array [
+                    0,
+                  ]
+                }
+                fill={4280624421}
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": 14,
+                    "letterSpacing": "normal",
+                    "textAnchor": "middle",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    258.3333333333333,
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+            <RNSVGText
+              content={null}
+              dx={
+                Array [
+                  0,
+                ]
+              }
+              dy={Array []}
+              font={Object {}}
+              name="chart-line-1-labels-6"
+              rotate={Array []}
+              x={
+                Array [
+                  300,
+                ]
+              }
+              y={
+                Array [
+                  102.97,
+                ]
+              }
+            >
+              <RNSVGTSpan
+                content="3"
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={
+                  Array [
+                    0,
+                  ]
+                }
+                fill={4280624421}
+                font={
+                  Object {
+                    "fontFamily": "Gill Sans",
+                    "fontSize": 14,
+                    "letterSpacing": "normal",
+                    "textAnchor": "middle",
+                  }
+                }
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                rotate={Array []}
+                x={
+                  Array [
+                    300,
+                  ]
+                }
+                y={Array []}
+              />
+            </RNSVGText>
+          </RNSVGGroup>
+          <RNSVGGroup>
+            <RNSVGLine
+              fill={0}
+              propList={
+                Array [
+                  "fill",
+                  "stroke",
+                  "strokeWidth",
+                  "strokeLinecap",
+                  "strokeLinejoin",
+                ]
+              }
+              stroke={4280624421}
+              strokeLinecap={1}
+              strokeLinejoin={1}
+              strokeWidth={1}
+              vectorEffect={1}
+              x1={50}
+              x2={300}
+              y1={180}
+              y2={180}
+            />
+            <RNSVGGroup>
+              <RNSVGText
+                content={null}
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={Array []}
+                font={Object {}}
+                name="chart-axis-2-tickLabels-0"
+                rotate={Array []}
+                x={
+                  Array [
+                    50,
+                  ]
+                }
+                y={
+                  Array [
+                    202.97,
+                  ]
+                }
+              >
+                <RNSVGTSpan
+                  content="Sun"
+                  dx={
+                    Array [
+                      0,
+                    ]
+                  }
+                  dy={
+                    Array [
+                      0,
+                    ]
+                  }
+                  fill={4280624421}
+                  font={
+                    Object {
+                      "fontFamily": "Gill Sans",
+                      "fontSize": 14,
+                      "letterSpacing": "normal",
+                      "textAnchor": "middle",
+                    }
+                  }
+                  propList={
+                    Array [
+                      "fill",
+                    ]
+                  }
+                  rotate={Array []}
+                  x={
+                    Array [
+                      50,
+                    ]
+                  }
+                  y={Array []}
+                />
+              </RNSVGText>
+            </RNSVGGroup>
+            <RNSVGGroup>
+              <RNSVGText
+                content={null}
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={Array []}
+                font={Object {}}
+                name="chart-axis-2-tickLabels-1"
+                rotate={Array []}
+                x={
+                  Array [
+                    91.66666666666667,
+                  ]
+                }
+                y={
+                  Array [
+                    202.97,
+                  ]
+                }
+              >
+                <RNSVGTSpan
+                  content="Mon"
+                  dx={
+                    Array [
+                      0,
+                    ]
+                  }
+                  dy={
+                    Array [
+                      0,
+                    ]
+                  }
+                  fill={4280624421}
+                  font={
+                    Object {
+                      "fontFamily": "Gill Sans",
+                      "fontSize": 14,
+                      "letterSpacing": "normal",
+                      "textAnchor": "middle",
+                    }
+                  }
+                  propList={
+                    Array [
+                      "fill",
+                    ]
+                  }
+                  rotate={Array []}
+                  x={
+                    Array [
+                      91.66666666666667,
+                    ]
+                  }
+                  y={Array []}
+                />
+              </RNSVGText>
+            </RNSVGGroup>
+            <RNSVGGroup>
+              <RNSVGText
+                content={null}
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={Array []}
+                font={Object {}}
+                name="chart-axis-2-tickLabels-2"
+                rotate={Array []}
+                x={
+                  Array [
+                    133.33333333333334,
+                  ]
+                }
+                y={
+                  Array [
+                    202.97,
+                  ]
+                }
+              >
+                <RNSVGTSpan
+                  content="Tue"
+                  dx={
+                    Array [
+                      0,
+                    ]
+                  }
+                  dy={
+                    Array [
+                      0,
+                    ]
+                  }
+                  fill={4280624421}
+                  font={
+                    Object {
+                      "fontFamily": "Gill Sans",
+                      "fontSize": 14,
+                      "letterSpacing": "normal",
+                      "textAnchor": "middle",
+                    }
+                  }
+                  propList={
+                    Array [
+                      "fill",
+                    ]
+                  }
+                  rotate={Array []}
+                  x={
+                    Array [
+                      133.33333333333334,
+                    ]
+                  }
+                  y={Array []}
+                />
+              </RNSVGText>
+            </RNSVGGroup>
+            <RNSVGGroup>
+              <RNSVGText
+                content={null}
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={Array []}
+                font={Object {}}
+                name="chart-axis-2-tickLabels-3"
+                rotate={Array []}
+                x={
+                  Array [
+                    175,
+                  ]
+                }
+                y={
+                  Array [
+                    202.97,
+                  ]
+                }
+              >
+                <RNSVGTSpan
+                  content="Wed"
+                  dx={
+                    Array [
+                      0,
+                    ]
+                  }
+                  dy={
+                    Array [
+                      0,
+                    ]
+                  }
+                  fill={4280624421}
+                  font={
+                    Object {
+                      "fontFamily": "Gill Sans",
+                      "fontSize": 14,
+                      "letterSpacing": "normal",
+                      "textAnchor": "middle",
+                    }
+                  }
+                  propList={
+                    Array [
+                      "fill",
+                    ]
+                  }
+                  rotate={Array []}
+                  x={
+                    Array [
+                      175,
+                    ]
+                  }
+                  y={Array []}
+                />
+              </RNSVGText>
+            </RNSVGGroup>
+            <RNSVGGroup>
+              <RNSVGText
+                content={null}
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={Array []}
+                font={Object {}}
+                name="chart-axis-2-tickLabels-4"
+                rotate={Array []}
+                x={
+                  Array [
+                    216.66666666666666,
+                  ]
+                }
+                y={
+                  Array [
+                    202.97,
+                  ]
+                }
+              >
+                <RNSVGTSpan
+                  content="Thr"
+                  dx={
+                    Array [
+                      0,
+                    ]
+                  }
+                  dy={
+                    Array [
+                      0,
+                    ]
+                  }
+                  fill={4280624421}
+                  font={
+                    Object {
+                      "fontFamily": "Gill Sans",
+                      "fontSize": 14,
+                      "letterSpacing": "normal",
+                      "textAnchor": "middle",
+                    }
+                  }
+                  propList={
+                    Array [
+                      "fill",
+                    ]
+                  }
+                  rotate={Array []}
+                  x={
+                    Array [
+                      216.66666666666666,
+                    ]
+                  }
+                  y={Array []}
+                />
+              </RNSVGText>
+            </RNSVGGroup>
+            <RNSVGGroup>
+              <RNSVGText
+                content={null}
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={Array []}
+                font={Object {}}
+                name="chart-axis-2-tickLabels-5"
+                rotate={Array []}
+                x={
+                  Array [
+                    258.3333333333333,
+                  ]
+                }
+                y={
+                  Array [
+                    202.97,
+                  ]
+                }
+              >
+                <RNSVGTSpan
+                  content="Fri"
+                  dx={
+                    Array [
+                      0,
+                    ]
+                  }
+                  dy={
+                    Array [
+                      0,
+                    ]
+                  }
+                  fill={4280624421}
+                  font={
+                    Object {
+                      "fontFamily": "Gill Sans",
+                      "fontSize": 14,
+                      "letterSpacing": "normal",
+                      "textAnchor": "middle",
+                    }
+                  }
+                  propList={
+                    Array [
+                      "fill",
+                    ]
+                  }
+                  rotate={Array []}
+                  x={
+                    Array [
+                      258.3333333333333,
+                    ]
+                  }
+                  y={Array []}
+                />
+              </RNSVGText>
+            </RNSVGGroup>
+            <RNSVGGroup>
+              <RNSVGText
+                content={null}
+                dx={
+                  Array [
+                    0,
+                  ]
+                }
+                dy={Array []}
+                font={Object {}}
+                name="chart-axis-2-tickLabels-6"
+                rotate={Array []}
+                x={
+                  Array [
+                    300,
+                  ]
+                }
+                y={
+                  Array [
+                    202.97,
+                  ]
+                }
+              >
+                <RNSVGTSpan
+                  content="Sat"
+                  dx={
+                    Array [
+                      0,
+                    ]
+                  }
+                  dy={
+                    Array [
+                      0,
+                    ]
+                  }
+                  fill={4280624421}
+                  font={
+                    Object {
+                      "fontFamily": "Gill Sans",
+                      "fontSize": 14,
+                      "letterSpacing": "normal",
+                      "textAnchor": "middle",
+                    }
+                  }
+                  propList={
+                    Array [
+                      "fill",
+                    ]
+                  }
+                  rotate={Array []}
+                  x={
+                    Array [
+                      300,
+                    ]
+                  }
+                  y={Array []}
+                />
+              </RNSVGText>
+            </RNSVGGroup>
+          </RNSVGGroup>
+        </RNSVGGroup>
+      </RNSVGSvgView>
+      <View
+        pointerEvents="box-none"
+        style={
+          Object {
+            "left": 0,
+            "position": "absolute",
+            "top": 0,
+            "zIndex": 99,
+          }
+        }
+      >
+        <RNSVGSvgView
+          align="xMidYMid"
+          bbHeight={230}
+          bbWidth={350}
+          focusable={false}
+          height={230}
+          meetOrSlice={0}
+          minX={0}
+          minY={0}
+          style={
+            Array [
+              Object {
+                "backgroundColor": "transparent",
+                "borderWidth": 0,
+              },
+              Object {
+                "height": "100%",
+                "overflow": "visible",
+                "width": "100%",
+              },
+              Object {
+                "flex": 0,
+                "height": 230,
+                "width": 350,
+              },
+            ]
+          }
+          vbHeight={230}
+          vbWidth={350}
+          width={350}
+        >
+          <RNSVGGroup />
+        </RNSVGSvgView>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "backgroundColor": "#FFF",
+          "borderRadius": 10,
+          "elevation": 3,
+          "marginHorizontal": 4,
+          "marginVertical": 6,
+          "paddingVertical": 3,
+          "shadowColor": "#333",
+          "shadowOffset": Object {
+            "height": 1,
+            "width": 1,
+          },
+          "shadowOpacity": 0.3,
+          "shadowRadius": 2,
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "marginHorizontal": 18,
+            "marginVertical": 10,
+          }
+        }
+      >
+        <View>
+          <Text
+            style={
+              Object {
+                "color": "rgba(0, 0, 0, 1)",
+                "fontFamily": "roboto-regular",
+                "fontSize": 18,
+              }
+            }
+          >
+             Medication Intake 
+          </Text>
+          <Text
+            style={
+              Object {
+                "color": "rgba(0, 0, 0, 0.7)",
+                "fontFamily": "roboto-regular",
+                "fontSize": 14,
+              }
+            }
+          >
+             Yesterday: Completed 
+          </Text>
+          <Text
+            style={
+              Object {
+                "color": "rgba(0, 0, 0, 0.7)",
+                "fontFamily": "roboto-regular",
+                "fontSize": 14,
+              }
+            }
+          >
+             Today: 3 Medications left
+          </Text>
+          <Text
+            style={
+              Object {
+                "color": "rgba(0, 0, 0, 0.7)",
+                "fontFamily": "roboto-regular",
+                "fontSize": 14,
+              }
+            }
+          >
+             Tomorrow: 4 Medications 
+          </Text>
+          <View
+            style={
+              Object {
+                "padding": 5,
+              }
+            }
+          />
+          <View
+            accessible={true}
+            focusable={false}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "opacity": 1,
+                "paddingHorizontal": 5,
+              }
+            }
+          >
+            <Text
+              style={
+                Object {
+                  "fontFamily": "roboto-medium",
+                  "fontSize": 15,
+                  "fontWeight": "100",
+                }
+              }
+            >
+              DETAILS
+            </Text>
+            <svg
+              data-file-name="SvgEntryTriangleIcon"
+              style={
+                Object {
+                  "paddingHorizontal": 7,
+                }
+              }
+            />
+          </View>
+        </View>
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "borderLeftColor": "rgba(0, 0, 0, 0.33)",
+              "borderLeftWidth": 1,
+              "justifyContent": "center",
+              "paddingHorizontal": 15,
+              "width": 100,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#42C86A",
+                "fontFamily": "roboto-regular",
+                "fontSize": 18,
+              }
+            }
+          >
+            Excellent
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "paddingVertical": 4,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "#FFF",
+          "borderRadius": 10,
+          "elevation": 3,
+          "marginHorizontal": 4,
+          "marginVertical": 6,
+          "paddingVertical": 3,
+          "shadowColor": "#333",
+          "shadowOffset": Object {
+            "height": 1,
+            "width": 1,
+          },
+          "shadowOpacity": 0.3,
+          "shadowRadius": 2,
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "marginHorizontal": 18,
+            "marginVertical": 10,
+          }
+        }
+      >
+        <View>
+          <Text
+            style={
+              Object {
+                "color": "rgba(0, 0, 0, 1)",
+                "fontFamily": "roboto-regular",
+                "fontSize": 18,
+              }
+            }
+          >
+             Blood Glucose Level 
+          </Text>
+          <Text
+            style={
+              Object {
+                "color": "rgba(0, 0, 0, 0.7)",
+                "fontFamily": "roboto-regular",
+                "fontSize": 14,
+              }
+            }
+          >
+             Last Recorded: 
+          </Text>
+          <Text
+            style={
+              Object {
+                "color": "rgba(0, 0, 0, 0.7)",
+                "fontFamily": "roboto-regular",
+                "fontSize": 14,
+              }
+            }
+          >
+             Monday, July 27 at 2:00PM 
+          </Text>
+          <View
+            style={
+              Object {
+                "padding": 5,
+              }
+            }
+          />
+          <View
+            accessible={true}
+            focusable={false}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "opacity": 1,
+                "paddingHorizontal": 5,
+              }
+            }
+          >
+            <Text
+              style={
+                Object {
+                  "fontFamily": "roboto-medium",
+                  "fontSize": 15,
+                  "fontWeight": "100",
+                }
+              }
+            >
+              DETAILS
+            </Text>
+            <svg
+              data-file-name="SvgEntryTriangleIcon"
+              style={
+                Object {
+                  "paddingHorizontal": 7,
+                }
+              }
+            />
+          </View>
+        </View>
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "borderLeftColor": "rgba(0, 0, 0, 0.33)",
+              "borderLeftWidth": 1,
+              "justifyContent": "center",
+              "paddingHorizontal": 15,
+              "width": 100,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "fontFamily": "roboto-regular",
+                "fontSize": 17,
+              }
+            }
+          >
+            140mg/dl
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "paddingVertical": 4,
+        }
+      }
+    />
+    <View
+      accessibilityRole="button"
+      accessibilityState={Object {}}
+      accessible={true}
+      focusable={false}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {},
+          ]
+        }
+      >
+        <Text
+          style={
+            Array [
+              Object {
+                "color": "#007AFF",
+                "fontSize": 18,
+                "margin": 8,
+                "textAlign": "center",
+              },
+              Object {
+                "color": "#42C86A",
+              },
+            ]
+          }
+        >
+          Share Results
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
