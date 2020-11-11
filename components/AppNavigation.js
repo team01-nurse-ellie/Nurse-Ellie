@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Platform, SafeAreaView, StatusBar } from 'react-native';
 // Styling
-import { patient_styles, hp_styles } from '../general-stylesheet';
-
+import PatientStyles from '../styles/PatientStyleSheet';
+import HealthProStyles from '../styles/HealthProfessionalStyleSheet';
 // Auth Context
 import { FirebaseAuthContext } from './Firebase/FirebaseAuthContext';
 
@@ -69,7 +69,7 @@ const AppNavigation = () => {
 
     return (
         <>
-            <StatusBar backgroundColor={(accountType == "patient") ? patient_styles.background.backgroundColor : hp_styles.background.backgroundColor} />
+            <StatusBar backgroundColor={(accountType == "patient") ? PatientStyles.background.backgroundColor : HealthProStyles.background.backgroundColor} />
             <SafeAreaView style={{
                 flex: 1,
                 // marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
@@ -92,7 +92,7 @@ const AppNavigation = () => {
                                         close: TransitionSpecs.TransitionIOSSpec   
                                     },
                                     // Color of header depending on account type.
-                                    headerStyle: { backgroundColor: (accountType == "patient") ? patient_styles.background.backgroundColor : hp_styles.background.backgroundColor}, title: "Scan" }} />
+                                    headerStyle: { backgroundColor: (accountType == "patient") ? PatientStyles.background.backgroundColor : HealthProStyles.background.backgroundColor}, title: "Scan" }} />
                             </>
                         ) : (
                                 <>

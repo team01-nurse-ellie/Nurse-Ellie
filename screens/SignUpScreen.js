@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
-import { firebase } from '../components/Firebase/config'
+import { firebase } from '../components/Firebase/config';
 
+import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import { generateCode } from '../utils/codeGenerator';
 
@@ -79,7 +80,7 @@ const SignUpScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Background />
-            <Animatable.View style={styles.drawer} animation="fadeInUpBig">
+            <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig">
                 <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} />
                 <Text style={styles.headerFont}> Sign-Up </Text>
                 <View style={styles.whitePadding} />
@@ -96,9 +97,9 @@ const SignUpScreen = ({ navigation }) => {
                     <Image source={require('../assets/android/drawable-mdpi/g-login-arrow.png')} />
                 </TouchableOpacity>
                 <View style={styles.whitePadding} />
-                <Text style={styles.descriptionFont}> Already have an account? </Text>
+                <Text style={PatientStyles.descriptionFont}> Already have an account? </Text>
                 <TouchableOpacity onPress={() => navigation.push('SignInScreen')}>
-                    <Text style={styles.clickableFont}> SIGN IN </Text>
+                    <Text style={PatientStyles.clickableFont}> SIGN IN </Text>
                 </TouchableOpacity>
             </Animatable.View>
         </View>
@@ -139,31 +140,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         paddingTop: 8
     },
-    descriptionFont: {
-        fontFamily: 'roboto-regular',
-        fontSize: 12,
-        color: 'rgba(0, 0, 0, 0.38)'
-    },
-    clickableFont: {
-        fontFamily: 'roboto-medium',
-        fontSize: 14,
-    },
     button: {
         paddingRight: 30,
         marginTop: 30
     },
-    drawer: {
-        flex: 4,
-        backgroundColor: '#fff',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        paddingVertical: 50,
-        paddingHorizontal: 30,
-        position: 'absolute',
-        width: screenWidth,
-        height: screenHeight * 0.85,
-        top: screenHeight * 0.15
-    }
+
 });
 
 export default SignUpScreen;

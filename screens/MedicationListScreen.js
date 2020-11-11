@@ -6,6 +6,7 @@ import * as Animatable from 'react-native-animatable';
 
 import MedIconIndex from '../components/MedicationImages';
 
+import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import MedicationCard from '../components/MedicationCard';
 import MenuIcon from '../assets/images/menu-icon';
@@ -25,8 +26,6 @@ const MedicationListScreen = ({navigation}) => {
     ])
     const [newMedications, setNewMedications] = useState([]);
     const [loading,setLoading] = useState(true);
-
-
 
     useEffect(() => {
         //collection listener, initializes local state with all user medication
@@ -53,14 +52,14 @@ const MedicationListScreen = ({navigation}) => {
 
 
     return (
-        <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+        <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
             <Background/>
-            <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
+            <TouchableOpacity style={PatientStyles.menuButton} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
             </TouchableOpacity>
-            <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
-                <View style={styles.header}>
-                    <Text style={styles.title}>
+            <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig"> 
+                <View style={PatientStyles.header}>
+                    <Text style={PatientStyles.title}>
                         Medications
                     </Text>
                     <MedicationsIcon/>
@@ -109,20 +108,6 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        backgroundColor: '#42C86A',
-    }, 
-    header:{
-        flexDirection:'row', 
-        justifyContent: 'space-between', 
-        paddingBottom: 10
-    },
-    title: {
-        fontFamily: 'roboto-regular',
-        fontSize: 24,
-        fontWeight: "100",
-    }, 
     medicationFont: {
         fontFamily: 'roboto-regular', 
         fontSize: 20, 
@@ -143,11 +128,6 @@ const styles = StyleSheet.create({
         fontSize: 18, 
         color: 'rgba(0, 0, 0, 0.85)'
     },
-    descriptionFont: {
-        fontFamily: 'roboto-regular', 
-        fontSize: 12, 
-        color: 'rgba(0, 0, 0, 0.38)', 
-    },
     medicationInfoView: {
         width: 170,
         paddingHorizontal: 10
@@ -159,11 +139,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center', 
         width: 100
     },
-    menuButton:{
-        position: 'absolute',
-        right: 30,
-        top: 40 
-    },
     searchInput:{
         flexDirection: 'row',
         borderBottomColor: 'rgba(0, 0, 0, 0.6)',
@@ -174,18 +149,6 @@ const styles = StyleSheet.create({
     searchButton:{
         right: 5
     },
-    drawer: {
-        flex: 4,
-        backgroundColor: '#fff', 
-        borderTopLeftRadius: 30, 
-        borderTopRightRadius: 30, 
-        paddingVertical: 50, 
-        paddingHorizontal: 30, 
-        position: 'absolute',
-        width: screenWidth,
-        height: screenHeight * 0.85,
-        top: screenHeight * 0.15
-    }
 });
 
 export default MedicationListScreen;

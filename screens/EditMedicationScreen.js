@@ -3,6 +3,7 @@ import { View, Text, Switch, Modal, KeyboardAvoidingView, TouchableOpacity,Dimen
 
 import * as Animatable from 'react-native-animatable';
 
+import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import DayOfWeekPicker from '../components/DayOfWeekPicker';
 import DatePicker from '../components/DatePicker';
@@ -23,12 +24,12 @@ const EditMedicationScreen = ({ navigation }) => {
   const [alarm, setAlarm] = useState('false');
   const toggleSwitch = () => setAlarm(previousState => !previousState);
     return (
-        <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+        <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
             <Background/>
-            <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
+            <TouchableOpacity style={PatientStyles.menuButton} onPress={() => navigation.openDrawer()}>
                 <MenuIcon />
             </TouchableOpacity>
-            <Animatable.View style={styles.drawer} animation="fadeInUpBig">
+            <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig">
                 <View style={styles.rowContainer}>
                     <View style={{flexDirection:'row', alignItems:'center'}}>
                         <TouchableOpacity onPress={()=> navigation.goBack()}>
@@ -85,27 +86,7 @@ var screenHeight = Dimensions.get('window').height;
 var screenWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
-    background: {
-      flex: 1,
-      backgroundColor: '#42C86A',
-    },
-    drawer: {
-        flex: 4,
-        backgroundColor: '#fff',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        paddingVertical: 50,
-        paddingHorizontal: 30,
-        position: 'absolute',
-        width: screenWidth,
-        height: screenHeight * 0.85,
-        top: screenHeight * 0.15,
-    },
-    menuButton:{
-        position: 'absolute',
-        right: 30,
-        top: 40 
-    },
+
     rowContainer: {
         flexDirection: 'row', 
         justifyContent: 'space-between', 
