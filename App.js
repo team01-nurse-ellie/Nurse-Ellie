@@ -9,6 +9,12 @@ import AppNavigation from './components/AppNavigation';
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 
+// fix for [Unhandled promise rejection: ReferenceError: Can't find variable: atob]
+import {decode, encode} from 'base-64'
+if (!global.btoa) {  global.btoa = encode }
+if (!global.atob) { global.atob = decode }
+
+
 // Fetch roboto fonts. 
 const getFonts = () => Font.loadAsync({
   'roboto-regular': require('./assets/fonts/Roboto-Regular.ttf'),

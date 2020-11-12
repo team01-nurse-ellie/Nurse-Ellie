@@ -13,7 +13,7 @@ class Component extends React.Component {
       super(props);
       this.state = {
         isModalOpen: false,
-        value: props.value,
+        value: null,
       };
     }
 
@@ -70,7 +70,7 @@ class Component extends React.Component {
     }
 
     getValueFormatted() {
-      const { value } = this.props;
+      const value = this.state.value;
       const hourValue = HOURS_DATA[this.getIndexForHourPicker(value)];
       const minuteValue = MINUTES_DATA[this.getIndexForMinutePicker(value)];
       const ampmValue = AMPM_DATA[this.getIndexForAMPMPicker(value)];
@@ -78,7 +78,8 @@ class Component extends React.Component {
     }
 
     onSelect() {
-      this.props.onSelect(this.state.value);
+      const formatted = this.getValueFormatted();
+      this.props.onSelect(formatted);
       this.onModalClose();
     }
     
