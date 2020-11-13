@@ -234,11 +234,6 @@ const AddMedicationScreen = ({ navigation }) => {
                     value={drugFunction} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
           <TextInput style={styles.textInput} placeholder="Directions for use" autoCapitalize="none"  onChangeText={(text) => setDirections(text)}
            value={directions} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-          <View style={styles.bottomCard}>
-            <View>
-              <Text style={styles.fieldText}> Reminder Times </Text>
-            </View>
-          </View>
           <View style={{ paddingBottom: 14 }} />
           <View style={styles.bottomCard}>
             <View>
