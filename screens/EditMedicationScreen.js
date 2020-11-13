@@ -26,29 +26,45 @@ const EditMedicationScreen = ({route, navigation }) => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [alarm, setAlarm] = useState('false');
-  const [drugFunction, setDrugFunction] = useState();
-  const [directions, setDirections] = useState();
+  const [drugFunction, setDrugFunction] = useState('');
+  const [directions, setDirections] = useState('');
   const toggleSwitch = () => setAlarm(previousState => !previousState);
 
    
   // Add medication with user settings to user collection
   const updateMedication = async () => {
     // Check that there is start date, end date, day(s) of week, start dateand medication object
+    // if (startDate == undefined || endDate == undefined) {
+    //   Alert.alert('', '\nPlease select a start and end date');
+    //   return;
+    // } else if (selectDoW.length == 0) {
+    //   Alert.alert('', '\nPlease select days of week medication will be taken');
+    //   return;
+    // } else if(moment(endDate) < moment(startDate) || moment(endDate) < moment(currentTime)){
+    //     Alert.alert('', '\nPlease select a valid end date');
+    //     return;
+    // } else if(!drugFunction.length > 0) {
+    // Alert.alert('', '\nPlease fill in function of the medication');
+    // return;
+    // } else if(!directions.length > 0) {
+    // Alert.alert('', '\nPlease fill in directions for intake');
+    // return;
+    // }
     if (startDate == undefined || endDate == undefined) {
-      Alert.alert('', '\nPlease select a start and end date');
-      return;
+        Alert.alert('', '\nPlease select a start and end date');
+        return;
     } else if (selectDoW.length == 0) {
-      Alert.alert('', '\nPlease select days of week medication will be taken');
-      return;
+        Alert.alert('', '\nPlease select days of week medication will be taken');
+        return;
     } else if(moment(endDate) < moment(startDate) || moment(endDate) < moment(currentTime)){
         Alert.alert('', '\nPlease select a valid end date');
         return;
     } else if(!drugFunction.length > 0) {
-    Alert.alert('', '\nPlease fill in function of the medication');
-    return;
+        Alert.alert('', '\nPlease fill in function of the medication');
+        return;
     } else if(!directions.length > 0) {
-    Alert.alert('', '\nPlease fill in directions for intake');
-    return;
+        Alert.alert('', '\nPlease fill in directions for intake');
+        return;
     }
     var medSettings = {
       'medIcon': medIcon,

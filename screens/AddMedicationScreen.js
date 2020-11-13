@@ -47,8 +47,8 @@ const AddMedicationScreen = ({ navigation }) => {
   const [endDate, setEndDate] = useState();
   const [alarm, setAlarm] = useState('false');
   const [showModal, setShowModal] = useState(false);
-  const [drugFunction, setDrugFunction] = useState();
-  const [directions, setDirections] = useState();
+  const [drugFunction, setDrugFunction] = useState('');
+  const [directions, setDirections] = useState('');
   const toggleSwitch = () => setAlarm(previousState => !previousState);
   const [loading, setLoading] = useState();
   const [masterRxcui, setMasterRxcui] = useState([]);
@@ -124,20 +124,23 @@ const AddMedicationScreen = ({ navigation }) => {
   // Add medication with user settings to user collection
   const addMedicationToDB = async () => {
     // Check that there is start date, end date, day(s) of week, start dateand medication object
-    if (startDate == undefined || endDate == undefined) {
+    if (medicationToAdd !== Object(medicationToAdd)) {
+      Alert.alert('', '\nPlease find medication to add');
+      return;
+    } else if (startDate == undefined || endDate == undefined) {
       Alert.alert('', '\nPlease select a start and end date');
       return;
     } else if (selectDoW.length == 0) {
       Alert.alert('', '\nPlease select days of week medication will be taken');
       return;
-    } else if (medicationToAdd !== Object(medicationToAdd)) {
-      Alert.alert('', '\nPlease find medication to add');
-      return;
     } else if(moment(endDate) < moment(startDate) || moment(endDate) < moment(currentTime)){
       Alert.alert('', '\nPlease select a valid end date');
       return;
-    } else if(!drugFunction.length > 0 || !directions.length > 0) {
-      Alert.alert('', '\nPlease fill in function and direcion');
+    } else if(!drugFunction.length > 0) {
+      Alert.alert('', '\nPlease fill in function of the medication');
+      return;
+    } else if(!directions.length > 0) {
+      Alert.alert('', '\nPlease fill in directions for intake');
       return;
     }
     var medSettings = {
