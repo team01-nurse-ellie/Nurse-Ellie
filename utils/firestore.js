@@ -26,7 +26,6 @@ export async function addMedication (userId, medObj){
     }
     // Checks passed, ready to add medication to user collection
     await userCollection.doc(userId).collection("medications").add(medObj
-        ).then(console.log('medication added')
         ).catch(error => {
             alert("Failed to add medication!");
         });

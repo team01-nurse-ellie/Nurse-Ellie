@@ -136,10 +136,10 @@ const AddMedicationScreen = ({ navigation }) => {
     } else if(moment(endDate) < moment(startDate) || moment(endDate) < moment(currentTime)){
       Alert.alert('', '\nPlease select a valid end date');
       return;
-    } else if(!drugFunction.length > 0) {
+    } else if(drugFunction == undefined || !drugFunction.trim().length > 0 ) {
       Alert.alert('', '\nPlease fill in function of the medication');
       return;
-    } else if(!directions.length > 0) {
+    } else if(directions == undefined || !directions.trim().length > 0 ) {
       Alert.alert('', '\nPlease fill in directions for intake');
       return;
     }
