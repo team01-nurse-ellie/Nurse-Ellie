@@ -11,7 +11,7 @@ import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import RNPickerSelect from 'react-native-picker-select';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
+import DatePicker from '../components/DatePicker';
 const UserProfileScreen = ({navigation}) => {
     //state declare
     const [fullName, setFullName] = useState('')
@@ -19,7 +19,7 @@ const UserProfileScreen = ({navigation}) => {
     const usersRef = firebase.firestore().collection('users')
     const [gender, setGender] = useState('none')
     const [dateVisi, setDateVisi] = useState(false);
-    const [date, setDate] = useState(new Date(1598051730000));
+    const [bdate, setDate] = useState(new Date(1598051730000));
 
 
     //update user profile to firebase
@@ -30,14 +30,14 @@ const UserProfileScreen = ({navigation}) => {
         'fullName':'',
         'email': '',
         'gender': '',
-        'date': ''
+        'bdate': ''
     })
 
     const obj = {
         fullName,
         email,
         gender,
-        date
+        bdate
     };
     usersRef.doc(data).update(obj)
     navigation.navigate('HomeScreen')
@@ -110,23 +110,7 @@ return (
                             alignContent: "flex-start",
                             paddingLeft: 0
                 }}>Date of Birth:</Text>
-                <TouchableOpacity style={styles.button} onPress={() => { showDatePicker();}}>  
-                <DateTimePickerModal
-                    isVisible={dateVisi}
-                    value={date}
-                    mode="date"
-                    onConfirm={handleConfirm}
-                    onCancel={hideDatePicker}
-                    onChange={onChange}
-                    maximumDate={new Date()}
-                
-                />
-                <View style={styles.calendar}>
-                    <MaterialCommunityIcons name="calendar-blank" size={30} color="#000" style={styles.calendarIcon} style={{
-                        paddingRight: 475, top: -16
-                }}/>
-                </View>
-                </TouchableOpacity>
+                <DatePicker selected={bdate} onSelect={setDate} placeholder="Select Date" />
         </View>
         
         <View style={{
