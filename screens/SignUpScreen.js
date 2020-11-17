@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, Sty
 
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
+import { usersRef, patientsRef, } from '../utils/databaseRefs';
 
 import Background from '../components/background';
 import { generateCode } from '../utils/codeGenerator';
@@ -31,15 +32,17 @@ const SignUpScreen = ({ navigation }) => {
             .auth()
             .createUserWithEmailAndPassword(email, password)
             .then(async (response) => {
-                const uid = response.user.uid
-                const usersRef = firebase.firestore().collection('users')
-                let code = generateCode();
-                console.log(code)
-                // if (usersRef.where("connectCode", "==", code).get().length == 0) {
-                //     console.log("none found")
-                // }
 
+                const uid = response.user.uid
+                // const usersRef = firebase.firestore().collection('users')
+                // const patientsRef = firebase.firestore().collection('patients')
+                
+                // if (usersRef.where("connectCode", "==", code).get().length == 0) {
+                    //     console.log("none found")
+                    // }
+                    
                 // Ensures the code is not the same as any other user. 
+                let code = generateCode();
                 await usersRef.where("connectCode", "==", code).get().then((querySnapshot) => {
                     querySnapshot.forEach(e => {
                         console.log("querying foreach");
@@ -50,30 +53,51 @@ const SignUpScreen = ({ navigation }) => {
                     });
                 })
 
-                console.log(code)
-
-                const data = {
-                    id: uid,
-                    email,
-                    fullName,
-                    connectCode: code,
-                    // Holds the reference ids to userlink table  
-                    userLinks: []
+                // patient's data
+                const patientData = {
+                    healthProfessionals: [],
+                    medicationRegimes: [],
+                    symptomChecklists: [],
+                    permissions: {
+                        allowMedicationEdit: true,
+                        
+                    },
+                    userRef: uid                      
                 };
 
-                usersRef
-                    .doc(uid)
-                    .set(data)
-                    .then(() => {
-                        navigation.navigate('HomeScreen')
-                    })
-                    .catch((error) => {
-                        alert(error)
-                    });
-            })
-            .catch((error) => {
-                alert(error)
-            });
+                // create patient document and then create user document.
+                await patientsRef
+                    .add(patientData)
+                    .then(async (docRef) => { 
+
+                        // user data.
+                        const userData = {
+                            id: uid,
+                            // PATIENT account type by default, can change to HEALTH_PROFESSIONAL if user registers themselves.
+                            accountType: "PATIENT",
+                            // reference to the patient data in the user document
+                            account: docRef.id,
+                            // verify status of HP account change             
+                            verifiedHP: false,  
+                            email,   
+                            fullName,
+                            connectCode: code,
+                            // Holds the reference ids to userlink table  
+                            userLinks: [], 
+                        };
+
+                        // create user document and navigate to homescreen
+                        await usersRef
+                            .doc(uid)
+                            .set(userData)
+                            .then(() => {
+                                navigation.navigate('HomeScreen');
+                            })
+                            .catch((error) => { alert(error) });
+
+                    }).catch(error => { alert(error); });
+
+            }).catch((error) => { alert(error) });
     }
 
     return (

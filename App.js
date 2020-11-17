@@ -3,6 +3,8 @@ import { YellowBox } from 'react-native';
 import { StyleSheet, } from 'react-native';
 // Firebase Authentication
 import { FirebaseAuthProvider } from './components/Firebase/FirebaseAuthProvider';
+// Current user's data (Retrieves the accountType so far.)
+import { UserProvider } from './components/UserProvider/UserProvider';
 // Components
 import AppNavigation from './components/AppNavigation';
 // Expo's splashscreen and font module
@@ -29,7 +31,9 @@ const App = () => {
   if (fontsLoaded) {
     return (
       <FirebaseAuthProvider>
-        <AppNavigation />
+        <UserProvider>
+          <AppNavigation />
+        </UserProvider>
       </FirebaseAuthProvider>
     );
   } else {

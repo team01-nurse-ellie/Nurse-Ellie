@@ -33,6 +33,7 @@ import HomeScreenHP from '../screens/HomeScreenHP';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, TransitionSpecs } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { UserContext } from './UserProvider/UserContext';
 const RootStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -40,43 +41,46 @@ const AppNavigation = () => {
 
     const [isSignedIn, setIsSignedIn] = useState(false);
     const { currentUser } = useContext(FirebaseAuthContext);
-    const [accountType, setAccountType] = useState("patient");
-
+    const { accountType } = useContext(UserContext);
+    
     useEffect(() => {
         setIsSignedIn(Boolean(currentUser));
     }, []);
 
     const DrawerRoutes = () => {
         return (
-            <Drawer.Navigator drawerPosition='right' drawerContent={props => <DrawerContent {...props} />}>
-                <Drawer.Screen name="Home" component={HomeScreen} />
-                <Drawer.Screen name="Medications" component={MedicationListScreen} />
-                <Drawer.Screen name="AddMedication" component={AddMedicationScreen} />
-                <Drawer.Screen name="Medication" component={MedicationDetailScreen} />
-                <Drawer.Screen name="Patients" component={PatientListScreen} />
-                <Drawer.Screen name="Patient" component={PatientDetailScreen} />
-                <Drawer.Screen name="Settings" component={SettingsScreen} />
-                <Drawer.Screen name="UserLinkScreen" component={UserLinkScreen} />
-                <Drawer.Screen name="HealthProfessional" component={HealthProfessionalScreen} />
-                <Drawer.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen} />
-                <Drawer.Screen name="NotificationScreen" component={NotificationScreen}/>
-                <Drawer.Screen name="EditMedication" component={EditMedicationScreen}/>
-                <Drawer.Screen name="MedicationSummary" component={MedicationSummaryScreen}/>
-                <Drawer.Screen name="HomeScreenHP" component={HomeScreenHP} />
+            <Drawer.Navigator drawerPosition='right' drawerContent={props => <DrawerContent {...props} />}>   
+                    {(accountType == "PATIENT") ?
+                        <Drawer.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+                        :
+                        <Drawer.Screen name="HomeScreenHP" component={HomeScreenHP} options={{ headerShown: false }} />
+                    }
+                    <Drawer.Screen name="Medications" component={MedicationListScreen} options={{ headerShown: false }} />
+                    <Drawer.Screen name="AddMedication" component={AddMedicationScreen} options={{ headerShown: false }} />
+                    <Drawer.Screen name="Medication" component={MedicationDetailScreen} options={{ headerShown: false }} />
+                    <Drawer.Screen name="Patients" component={PatientListScreen} options={{ headerShown: false }} />
+                    <Drawer.Screen name="Patient" component={PatientDetailScreen} options={{ headerShown: false }} />
+                    <Drawer.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
+                    <Drawer.Screen name="UserLinkScreen" component={UserLinkScreen} options={{ headerShown: false }} />
+                    <Drawer.Screen name="HealthProfessional" component={HealthProfessionalScreen} options={{ headerShown: false }} />
+                    <Drawer.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen} options={{ headerShown: false }} />
+                    <Drawer.Screen name="NotificationScreen" component={NotificationScreen} options={{ headerShown: false }} />
+                    <Drawer.Screen name="EditMedication" component={EditMedicationScreen} options={{ headerShown: false }} />
+                    <Drawer.Screen name="MedicationSummary" component={MedicationSummaryScreen} options={{ headerShown: false }} />
             </Drawer.Navigator>
         );
     }
 
     return (
         <>
-            <StatusBar backgroundColor={(accountType == "patient") ? patient_styles.background.backgroundColor : hp_styles.background.backgroundColor} />
+            <StatusBar backgroundColor={(accountType == "PATIENT") ? patient_styles.background.backgroundColor : hp_styles.background.backgroundColor} />
             <SafeAreaView style={{
                 flex: 1,
                 // marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
             }}>
                 <NavigationContainer>
                     <RootStack.Navigator>
-                        {currentUser ? (
+                        {(currentUser && accountType) ? (
                             <>
                                 <RootStack.Screen name="HomeScreen" component={DrawerRoutes} options={{ headerShown: false }} />
                                 <RootStack.Screen name="QRScreen" component={QRScreen} options={{ 
@@ -92,7 +96,7 @@ const AppNavigation = () => {
                                         close: TransitionSpecs.TransitionIOSSpec   
                                     },
                                     // Color of header depending on account type.
-                                    headerStyle: { backgroundColor: (accountType == "patient") ? patient_styles.background.backgroundColor : hp_styles.background.backgroundColor}, title: "Scan" }} />
+                                    headerStyle: { backgroundColor: (accountType == "PATIENT") ? patient_styles.background.backgroundColor : hp_styles.background.backgroundColor}, title: "Scan" }} />
                             </>
                         ) : (
                                 <>

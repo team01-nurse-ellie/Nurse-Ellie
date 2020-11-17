@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { firebase } from "./Firebase/config.js";
 
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 
 import { Text, Drawer } from 'react-native-paper';
-
+import { UserContext } from './UserProvider/UserContext';
 
 function DrawerContent(props) {
+
+    const { accountType } = useContext(UserContext);
+
     return (
         <View>
             <DrawerContentScrollView {...props}>
@@ -18,7 +21,7 @@ function DrawerContent(props) {
             <Drawer.Section style={styles.drawerSection}>
                 <DrawerItem
                     label="Home"
-                    onPress={() => { props.navigation.navigate('Home') }}
+                    onPress={() => { props.navigation.navigate((accountType == 'PATIENT') ? 'Home' : 'HomeScreenHP') }}
                 />
                 <Drawer.Section style={styles.bottomDrawerSection}>
                     <DrawerItem

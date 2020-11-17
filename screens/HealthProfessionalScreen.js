@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Dimensions, StyleSheet, Keyboard } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
-import { firebase } from '../components/Firebase/config';
+// import { firebase } from '../components/Firebase/config';
+import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
+import { usersRef, accrediationsRef, healthprofsRef } from '../utils/databaseRefs';
+import { UserContext } from '../components/UserProvider/UserContext';
 
 import Background from '../components/BackgroundHP';
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
@@ -14,53 +17,118 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const HealthProfessionalScreen = ({ navigation }) => {
-    const [fullName, setFullName] = useState('')
-    const [email, setEmail] = useState('')
-    const [FieldofPractice, setFieldofPractice] = useState('')
-    const [LicenseNumber, setLicenseNumber] = useState('')
-    const [RegulatoryBody, setRegulatoryBody] = useState('')
-    const usersRef = firebase.firestore().collection('users')
 
-    /*const onHealthPress = async () => {
-        const data = await firebase.auth().currentUser.uid
-        console.log(data);
+    const { currentUser } = useContext(FirebaseAuthContext);
+    const { verifiedHP } = useContext(UserContext);
+    const [FieldofPractice, setFieldofPractice] = useState('');
+    const [LicenseNumber, setLicenseNumber] = useState('');
+    const [RegulatoryBody, setRegulatoryBody] = useState('');
+    const [requestedChange, setRequestedChange] = useState(false);
+    // const [fieldsFilled, setFilled] = useState(false);
+ 
+    useEffect(()=> {
+        
+        (async () => {
 
-        var userDoc = firebase.firestore().collection("users").doc(data).update({
-            'FieldofPractice':'',
-            'LicenseNumber': '',
-            'RegulatoryBody': ''
-        })
-     }*/
-
-
-    // const onHealthPress = async (res) => {
-    //     const data = await firebase.auth().currentUser.uid
-    //     var userDoc = firebase.firestore().collection("users").doc(data).update({
-    //         'FieldofPractice': '',
-    //         'LicenseNumber': '',
-    //         'RegulatoryBody': ''
-    //     })
-
-    //     const obj = {
+            await healthprofsRef.where("userRef", "==", currentUser.uid)
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        // console.log(doc.exists);
+                        setRequestedChange(true);
+                        // console.log(doc.id, " => ", (doc.data()));
+                    });
+                })
+                .catch((error) => {
+                    console.log("Error getting documents: ", error);
+                });
 
 
-   const onHealthPress = async (res) => {
-   const data = await firebase.auth().currentUser.uid
-        var userDoc = firebase.firestore().collection("users").doc(data).update({
-            'FieldofPractice':'',
-            'LicenseNumber': '',
-            'RegulatoryBody': ''
-        })
-        const obj = {
-            FieldofPractice,
-            LicenseNumber,
-            RegulatoryBody,
-        };
-        const usersRef = firebase.firestore().collection('users')
-        usersRef
-            .doc(data)
-            .update(obj)
+        })();
 
+        console.log(requestedChange);  
+
+    }, [requestedChange]);
+    // const [fullName, setFullName] = useState('')
+    // const [email, setEmail] = useState('')
+    
+    const onHealthPress = async (res) => {
+
+        if (FieldofPractice.length > 0 &&
+            LicenseNumber.length > 0 &&
+            RegulatoryBody.length > 0) {
+            // setFilled(true);
+          
+            // clear input fields
+            setFieldofPractice("");
+            setLicenseNumber("");
+            setRegulatoryBody("");
+
+            // setFilled(false);
+            if (verifiedHP == false && requestedChange == false) {
+                console.log("register")
+                setRequestedChange(true);
+                alert("Your account will be verified in the next 2-3 business days. Thank you");
+
+                // Add new accreditation to DB.
+                // await accrediationsRef.add({
+                //     fieldOfPractice: FieldofPractice,
+                //     licenseNumber: LicenseNumber, 
+                //     regulatoryBody: RegulatoryBody,
+                //     specialization: "",
+                //     userRef: currentUser.uid
+                // }).then(async docRef => {
+                //     console.log(`added new accreditation for user: ${currentUser.uid}`)
+                //     // Once an accreditation is made, create a new HP account and add that new accreditation to that HP account.   
+                //     await healthprofsRef.add({
+                //         accreditations: [docRef.id],
+                //         patients: [],
+                //         permissions: {},
+                //         userRef: currentUser.uid  
+                //     }).then(docRef => {
+                //         console.log(`added new HP for user: ${currentUser.uid}`)
+                //     }).catch(error => {
+                //         console.log(error)
+                //     })
+
+                // }).catch(error => {
+                //     console.log(error);
+                // });
+            } else if (verifiedHP == false && requestedChange == true) {
+                console.log("pending");
+                alert("Your account still needs to be verified.");
+            } else if (verifiedHP == true) {
+                alert("Account has been verified.")
+            }
+
+
+            // usersRef.doc(currentUser.uid).update({
+            //     'FieldofPractice': '',
+            //     'LicenseNumber': '', 
+            //     'RegulatoryBody': ''
+            // })
+
+            // // accreditation 
+            // const obj = {
+            //     FieldofPractice,
+            //     LicenseNumber,
+            //     RegulatoryBody,
+            // };
+
+            // usersRef.doc(currentUser.uid).update(obj)
+        } else {
+
+            if (FieldofPractice.length == 0) {
+                alert(`Please fill in Field of Practice`);
+            } else if (LicenseNumber.length == 0) {
+
+                alert(`Please fill in License Number`);
+            } else if (RegulatoryBody.length == 0) {
+
+                alert(`Please fill in Regulatory Body`);
+            }
+
+        }
     }
 
     return (
@@ -76,16 +144,24 @@ const HealthProfessionalScreen = ({ navigation }) => {
                 <Text style={{ fontFamily: 'roboto-regular', fontSize: 25, }}> {`Account Change:\n Health Professional`}</Text>
             </View>
 
-                <TextInput style={styles.textInput} placeholder="Field of Practice" autoCapitalize="none"  onChangeText={(text) => setFieldofPractice(text)}
+                <TextInput style={styles.textInput} placeholder="Field of Practice" autoCapitalize="none"  onChangeText={(text) => setFieldofPractice(text.trim())}
                     value={FieldofPractice} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <TextInput style={styles.textInput}  placeholder="License Number" autoCapitalize="none" onChangeText={(text) => setLicenseNumber(text)} 
+                <TextInput style={styles.textInput}  placeholder="License Number" autoCapitalize="none" onChangeText={(text) => setLicenseNumber(text.trim())} 
                  value={LicenseNumber} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <TextInput style={styles.textInput} placeholder="Regulatory Body" autoCapitalize="none"  onChangeText={(text) => setRegulatoryBody(text)}
+                <TextInput style={styles.textInput} placeholder="Regulatory Body" autoCapitalize="none"  onChangeText={(text) => setRegulatoryBody(text.trim())}
                     value={RegulatoryBody} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
 
-                <Text style={{marginBottom: 15}}>Status: Will be loaded from firebase db</Text>
+                <Text style={{ marginVertical: '2%' }}>Status: <Text style={{
+                    color: (verifiedHP) ? 'green' : 'orange',
+                    fontWeight: 'bold'
+                }}>
+                    {verifiedHP ?
+                        'Verified'
+                        : 'Pending'} </Text>
+                </Text>
+              
            
-                <Text style={styles.descriptionFont}>Your account will be verified in the next  2-3 business days. Thank you</Text>
+                {/* <Text style={styles.descriptionFont}></Text> */}
 
                 <TouchableOpacity style={styles.button} onPress={()=>onHealthPress()}>
                     <BlueAddIcon/>
