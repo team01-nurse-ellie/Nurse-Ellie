@@ -17,19 +17,20 @@ import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext'
 import * as fsFn  from '../utils/firestore';
 import { ActivityIndicator } from 'react-native-paper';
 
-const MedicationListScreen = ({navigation}) => {
+    const MedicationListScreen = ({navigation}) => {
     const { currentUser } = useContext(FirebaseAuthContext);
-    const [medications, setMedications] = useState ([
+    // Hard coded medication information
+/*     const [medications, setMedications] = useState ([
         {medicationName: 'Monopril', function: 'High Blood Pressure', frequency: '1x/day', alert: '10:00AM', key: '1'}, 
         {medicationName: 'Cymbalta', function: 'Joint Pain', frequency: '1x/day', alert: '9:00AM', key: '2'}, 
         {medicationName: 'Codeine', function: 'Cough & Cold', frequency: '15ml/day', alert: '10:00AM', key: '3'},
-    ])
+    ]) */
     const [newMedications, setNewMedications] = useState([]);
     const [loading,setLoading] = useState(true);
 
     useEffect(() => {
         //collection listener, initializes local state with all user medication
-        const listener = firebase.firestore()
+        firebase.firestore()
             .collection("users")
             .doc(currentUser.uid)
             .collection("medications")
@@ -46,8 +47,6 @@ const MedicationListScreen = ({navigation}) => {
                 setNewMedications(meds);
                 setLoading(false);
             });
-        // unsubscribe from events when no longer in use
-        //return () => listener();
     }, []);
 
 
@@ -65,7 +64,7 @@ const MedicationListScreen = ({navigation}) => {
                     <MedicationsIcon/>
                 </View>
                 <View style={styles.searchInput}>
-                    <TextInput style={{minWidth: screenWidth*0.8}}placeholder="Search Medication..."></TextInput>
+                    <TextInput style={{minWidth: screenWidth*0.8}}placeholder="Search Your Medications..."></TextInput>
                     <TouchableOpacity onPress={()=>Alert.alert('searching medication...')}>
                         <SearchIcon/>
                     </TouchableOpacity>
@@ -88,7 +87,7 @@ const MedicationListScreen = ({navigation}) => {
                                 </View>
                                 <View style={styles.medicationInfoView}>
                                 <Text style={styles.medicationFont}>{item.medication.nameDisplay}</Text>
-                                {/*  <Text style={styles.functionFont}>no simple function in db yet</Text> */}
+                                <Text style={styles.functionFont}>{item.medication.function}</Text>
                                 <Text style={styles.frequencyfont}>{item.medication.strength}</Text>
                                 </View>
                                 <View style={styles.timeView}>
@@ -98,7 +97,7 @@ const MedicationListScreen = ({navigation}) => {
                         </TouchableOpacity>
                     )}/>
                 )}
-                <Button title="ADD NEW MEDICATION" color='#42C86A' onPress={()=>{navigation.navigate('AddMedication'); console.log(JSON.stringify(newMedications[0]));}}/>
+                <Button title="ADD NEW MEDICATION" color='#42C86A' onPress={()=>{navigation.navigate('AddMedication')}}/>
             </Animatable.View>
         </KeyboardAvoidingView>
     )
@@ -125,7 +124,7 @@ const styles = StyleSheet.create({
     },
     timeFont: {
         fontFamily: 'roboto-regular', 
-        fontSize: 18, 
+        fontSize: 16, 
         color: 'rgba(0, 0, 0, 0.85)'
     },
     medicationInfoView: {
