@@ -30,7 +30,12 @@ class Component extends React.Component {
   onSelectDay = index => {
     this.setState(prevState => {
       if (prevState.selected.has(index)) {
-        return { selected: prevState.selected.remove(index) };
+        if (prevState.selected.delete(index)){
+          return { selected: prevState.selected }
+        } else {
+          console.log("error");
+          return { selected: prevState.selected}
+        }
       }
       return { selected: prevState.selected.add(index) };
     });
