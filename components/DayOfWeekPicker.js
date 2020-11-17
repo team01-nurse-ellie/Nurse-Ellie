@@ -4,7 +4,7 @@ import { Easing, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, V
 import Modal from 'react-native-modalbox';
 import CheckBox from '@react-native-community/checkbox';
 
-const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const DAYS_OF_WEEK = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 class Component extends React.Component {
   constructor(props) {
@@ -30,7 +30,12 @@ class Component extends React.Component {
   onSelectDay = index => {
     this.setState(prevState => {
       if (prevState.selected.has(index)) {
-        return { selected: prevState.selected.remove(index) };
+        if (prevState.selected.delete(index)){
+          return { selected: prevState.selected }
+        } else {
+          console.log("error");
+          return { selected: prevState.selected}
+        }
       }
       return { selected: prevState.selected.add(index) };
     });

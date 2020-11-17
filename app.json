@@ -34,6 +34,8 @@
         "ts",
         "tsx"
       ]
-    }
+    },
+    "description": "",
+    "githubUrl": "https://github.com/team01-nurse-ellie/Nurse-Ellie.git"
   }
 }

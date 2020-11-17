@@ -1,7 +1,4 @@
 // medication.js
-import {firebase} from '../components/Firebase/config';
-
-const rxCollection = firebase.firestore().collection('rxnormTerms');
 
 /* Drug (rxcui) With Info
    Example: Monopril 10mg
@@ -21,6 +18,47 @@ const rxCollection = firebase.firestore().collection('rxnormTerms');
         "tty": "SBD",
         }
 */
+/* Drug setting fields. See AddMedicationScreen.js addMedicationToDB()
+        'medIcon': medIcon,
+        'intakeTime' : selectTime,
+        'startDate' : startDate,
+        'endDate' : endDate,
+        'daysOfWeek' : selectDoW,
+        'alarm': alarm,
+        'function': drugFunction,
+        'directions': directions,
+*/
+
+    export const medObject = {
+        "adverseEvents":  [],
+        "doseForm": "",
+        "doseFormRxn": "",
+        "information": "",
+        "nameBrand": "",
+        "nameDisplay": "",
+        "nameFullGeneric": "",
+        "namePrescribe": "",
+        "route": "",
+        "rxcui": 0,
+        "rxcuiGeneric": 0,
+        "strength": "",
+        "tty": "",
+        'medIcon': 1,
+        'intakeTime' : '',
+        'startDate' : '',
+        'endDate' : '',
+        'daysOfWeek' : [],
+        'alarm': false,
+        'function': '',
+        'directions': '',
+    }
+
+
+import {firebase} from '../components/Firebase/config';
+
+const rxCollection = firebase.firestore().collection('rxnormTerms');
+
+
 /*********************RxNorm Prescribable/Terms API calls**********************/
 /*********************20 requests per second per IP address*******************/
 
@@ -28,7 +66,7 @@ const rxCollection = firebase.firestore().collection('rxnormTerms');
 export async function getDrugsByIngredientBrand(ingredientBrand) {
     try {
         if (ingredientBrand == undefined) {throw "search term undefined"};
-        console.log('get all drugs for: ' + ingredientBrand);
+        //console.log('get all drugs for: ' + ingredientBrand);
         // list of rxcui of drugs by ingredient or brand
         var rxcuis = await getRxcuisByIngredientBrand(ingredientBrand);
         // term info and adverse reaction for list of rxcuis
@@ -48,7 +86,7 @@ export async function getDrugsByIngredientBrand(ingredientBrand) {
 export async function getRxcuisByIngredientBrand(ingredientBrand) {
         var resource = 'https://rxnav.nlm.nih.gov/REST/Prescribe/drugs.json?name='
         resource += ingredientBrand;
-        console.log('resource is:' +resource);
+        //console.log('resource is:' +resource);
         var concepts = [];
         var scdSbd = [];
         var rxcuis = [];
@@ -202,7 +240,7 @@ export async function getIndUseByRxcui(rxcui){
     var resourceStart = 'https://api.fda.gov/drug/label.json?search=openfda.rxcui:';
     var resource = resourceStart + "%22" + rxcui + "%22";
     //console.log(resource);
-    console.log(rxcui + ' rxcui start');
+    //console.log(rxcui + ' rxcui start');
     try {
         const response = await fetch(resource);
         const body = await response.json();
@@ -247,7 +285,6 @@ export async function getIndUseByRxcui(rxcui){
                 //console.log(rxcui + ' sentence end check 2 ' + sentenceEnd);
                 //console.log(rxcui + ' 250 length: ' + indUsage.length);
                 var firstIndUsageSentence = indUsage.slice(sentenceStart, sentenceEnd);
-                //console.log(rxcui + ' final: ' + firstIndUsageSentence);
                 return firstIndUsageSentence
             } else {
                 await Promise.reject(new Error('label for given rxcui did not contain indications_and_usage information'));

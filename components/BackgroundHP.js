@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image, Dimensions, StyleSheet } from 'react-native';
 
-const hpBackground = () => {
+const BackgroundHP = () => {
     return (
         <View style={styles.container}>
             <View style={styles.circleBlue} />
@@ -69,4 +69,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default hpBackground;
+export default BackgroundHP;

@@ -4,7 +4,7 @@ import { View, Text, TextInput, TouchableOpacity, Dimensions, StyleSheet, Keyboa
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config';
 
-import Background from '../components/hpBackground';
+import Background from '../components/BackgroundHP';
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 
 import MenuIcon from '../assets/images/hp-menu-icon.svg';
