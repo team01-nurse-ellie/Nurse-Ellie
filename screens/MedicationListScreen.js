@@ -19,12 +19,6 @@ import { ActivityIndicator } from 'react-native-paper';
 
     const MedicationListScreen = ({navigation}) => {
     const { currentUser } = useContext(FirebaseAuthContext);
-    // Hard coded medication information
-/*     const [medications, setMedications] = useState ([
-        {medicationName: 'Monopril', function: 'High Blood Pressure', frequency: '1x/day', alert: '10:00AM', key: '1'}, 
-        {medicationName: 'Cymbalta', function: 'Joint Pain', frequency: '1x/day', alert: '9:00AM', key: '2'}, 
-        {medicationName: 'Codeine', function: 'Cough & Cold', frequency: '15ml/day', alert: '10:00AM', key: '3'},
-    ]) */
     const [newMedications, setNewMedications] = useState([]);
     const [loading,setLoading] = useState(true);
 

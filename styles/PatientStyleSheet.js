@@ -44,6 +44,49 @@ const PatientStyle = StyleSheet.create({
     fontSize: 12, 
     color: 'rgba(0, 0, 0, 0.38)', 
   },
+  doseFont: {
+    fontFamily: 'roboto-regular',
+    fontSize: 14,
+    color: 'rgba(0, 0, 0, 0.85)',
+    paddingTop: 5,
+  },
+  headerFont: {
+    fontFamily: 'roboto-regular',
+    fontSize: 32,
+    fontWeight: "100",
+  },
+  fieldText:{
+    fontFamily: 'roboto-regular',
+    fontSize: 14,
+    fontWeight: '100',
+    paddingBottom: 8,
+  },
+  card:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderRadius: 10,
+    elevation: 3,
+    backgroundColor: '#FFF',
+    shadowOffset: { width: 1, height: 1 },
+    shadowColor: '#333',
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    marginHorizontal: 4,
+    marginVertical: 6,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    paddingTop: 15,
+    paddingBottom: 7,
+  }, 
+  textInput: {
+    borderBottomColor: 'rgba(112, 112, 112, 0.7)',
+    borderBottomWidth: 1.5,
+    fontSize: 16,
+  },
+  // Auto-Complete Styling
+  
+  // Modal Styling
+
 });
 
 export default PatientStyle;

@@ -97,7 +97,6 @@ const styles = StyleSheet.create({
         fontFamily: 'roboto-regular',
         fontSize: 24,
         fontWeight: "100", 
-        //position: 'absolute', 
         paddingHorizontal: 5,
         paddingVertical: 0,
         flexWrap: 'wrap',

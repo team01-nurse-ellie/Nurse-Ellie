@@ -183,19 +183,19 @@ const AddMedicationScreen = ({ navigation }) => {
   }
   
   return (
-    <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+    <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
       <Background />
-      <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
+      <TouchableOpacity style={PatienStyles.menuButton} onPress={() => navigation.openDrawer()}>
         <MenuIcon />
       </TouchableOpacity>
-      <Animatable.View style={styles.drawer} animation="fadeInUpBig">
+      <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig">
         <View style={styles.header}>
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity style={{ paddingTop: 5, paddingRight: 10 }} onPress={() => navigation.goBack()}>
               <ReturnIcon />
             </TouchableOpacity>
             <Text 
-              style={styles.title}>
+              style={PatientStyles.title}>
                 {medicationToAdd != "Add Medication" && medicationToAdd!='' ? 
                 createMedicationHeader() : 
                 "Add Medication"}
@@ -230,17 +230,17 @@ const AddMedicationScreen = ({ navigation }) => {
             <IconPicker selected={medIcon} onSelect={setMedIcon} />
             <TimePicker value={selectTime} onSelect={setSelectTime} />
           </View>
-          <TextInput style={styles.textInput} placeholder="Function" autoCapitalize="none"  onChangeText={(text) => setDrugFunction(text)}
+          <TextInput style={[PatientStyles.textInput, {marginVertical: 10}]} placeholder="Function" autoCapitalize="none"  onChangeText={(text) => setDrugFunction(text)}
                     value={drugFunction} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-          <TextInput style={styles.textInput} placeholder="Directions for use" autoCapitalize="none"  onChangeText={(text) => setDirections(text)}
+          <TextInput style={[PatientStyles.textInput, {marginVertical: 10}]} placeholder="Directions for use" autoCapitalize="none"  onChangeText={(text) => setDirections(text)}
            value={directions} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
           <View style={{ paddingBottom: 14 }} />
-          <View style={styles.bottomCard}>
+          <View style={PatientStyles.card}>
             <View>
-              <Text style={styles.fieldText}> Start </Text>
-              <Text style={styles.fieldText}> Days </Text>
-              <Text style={styles.fieldText}> End </Text>
-              <Text style={styles.fieldText}> Alarm </Text>
+              <Text style={PatientStyles.fieldText}> Start </Text>
+              <Text style={PatientStyles.fieldText}> Days </Text>
+              <Text style={PatientStyles.fieldText}> End </Text>
+              <Text style={PatientStyles.fieldText}> Alarm </Text>
             </View>
             <View style={{ justifyContent: 'flex-end' }}>
               <View style={{ paddingBottom: 8 }}>
@@ -283,7 +283,7 @@ const AddMedicationScreen = ({ navigation }) => {
         ) : (
         <>
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>{searchResult}</Text>
+            <Text style={PatientStyles.title}>{searchResult}</Text>
           </View>
           <FlatList
             style={{ margin: 0 }}
@@ -298,7 +298,7 @@ const AddMedicationScreen = ({ navigation }) => {
                   </View>
                   <View style={styles.medicationInfoView}>
                     <Text style={styles.medicationFont}>{item.nameDisplay}</Text>
-                    <Text style={styles.doseFont}>{item.doseForm}</Text>
+                    <Text style={PatientStyles.doseFont}>{item.doseForm}</Text>
                   </View>
                   <View style={styles.strengthView}>
                     <Text style={styles.strengthFont}>{item.strength}</Text>
@@ -320,26 +320,11 @@ var screenHeight = Dimensions.get('window').height;
 var screenWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    backgroundColor: '#42C86A',
-  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingBottom: 20,
     marginRight: 15,
-  },
-  title: {
-    fontFamily: 'roboto-regular',
-    fontSize: 24,
-    fontWeight: '100',
-  },
-  fieldText: {
-    fontFamily: 'roboto-regular',
-    fontSize: 14,
-    fontWeight: '100',
-    paddingBottom: 8,
   },
   strengthFont: {
     fontFamily: 'roboto-regular',
@@ -352,35 +337,6 @@ const styles = StyleSheet.create({
   },
   strengthView: {
     flex: 2,
-  },
-  bottomCard: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderRadius: 10,
-    elevation: 3,
-    backgroundColor: '#FFF',
-    shadowOffset: { width: 1, height: 1 },
-    shadowColor: '#333',
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    marginHorizontal: 4,
-    marginVertical: 6,
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    paddingTop: 15,
-    paddingBottom: 7,
-  },
-  drawer: {
-    flex: 4,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingVertical: 50,
-    paddingHorizontal: 30,
-    position: 'absolute',
-    width: screenWidth,
-    height: screenHeight * 0.85,
-    top: screenHeight * 0.15,
   },
   modalDrawer: {
     backgroundColor: '#fff',
@@ -398,11 +354,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingBottom: 20,
-  },
-  modalTitle: {
-    fontFamily: 'roboto-regular',
-    fontSize: 24,
-    fontWeight: '100',
   },
   // view surrounding entire autocomplete component
   acView: {
@@ -437,8 +388,6 @@ const styles = StyleSheet.create({
     padding: 4,
     flex: 1,
   },
-  acListItem: {
-  },
   acListFont: {
     fontFamily: 'roboto-regular',
     fontSize: 18,
@@ -450,18 +399,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'rgba(0, 0, 0, 0.85)',
   },
-  doseFont: {
-    fontFamily: 'roboto-regular',
-    fontSize: 14,
-    color: 'rgba(0, 0, 0, 0.85)',
-    paddingTop: 5,
-  },
-  textInput: {
-    borderBottomColor: 'rgba(112, 112, 112, 0.7)',
-    borderBottomWidth: 1.5,
-    fontSize: 16,
-    marginVertical: 10,
-},
 });
 
 export default AddMedicationScreen;

@@ -82,17 +82,16 @@ const SignUpScreen = ({ navigation }) => {
             <Background />
             <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig">
                 <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} />
-                <Text style={styles.headerFont}> Sign-Up </Text>
+                <Text style={[PatientStyles.headerFont, {left: screenWidth/3.5, top: screenHeight * 0.07, paddingBottom: 30}]}> Sign-Up </Text>
                 <View style={styles.whitePadding} />
-                <TextInput style={styles.textInput} placeholder="Full Name" autoCapitalize="none" onChangeText={(text) => setFullName(text)}
+                <TextInput style={[PatientStyles.textInput, {marginBottom: 8}]} placeholder="Full Name" autoCapitalize="none" onChangeText={(text) => setFullName(text)}
                     value={fullName} returnKeyType='done' onSubmitEditing={Keyboard.dismiss} />
-                <TextInput style={styles.textInput} placeholder="Email Address" autoCapitalize="none" onChangeText={(text) => setEmail(text)}
+                <TextInput style={[PatientStyles.textInput, {marginBottom: 8}]} placeholder="Email Address" autoCapitalize="none" onChangeText={(text) => setEmail(text)}
                     value={email} returnKeyType='done' onSubmitEditing={Keyboard.dismiss} />
-                <TextInput style={styles.textInput} secureTextEntry placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)}
+                <TextInput style={[PatientStyles.textInput, {marginBottom: 8}]} secureTextEntry placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)}
                     value={password} returnKeyType='done' onSubmitEditing={Keyboard.dismiss} />
-                <TextInput style={styles.textInput} secureTextEntry placeholder="Confirm Password" autoCapitalize="none" placeholder='Confirm Password'
+                <TextInput style={[PatientStyles.textInput, {marginBottom: 8}]} secureTextEntry placeholder="Confirm Password" autoCapitalize="none" placeholder='Confirm Password'
                     onChangeText={(text) => setConfirmPassword(text)} returnKeyType='done' onSubmitEditing={Keyboard.dismiss} />
-
                 <TouchableOpacity style={styles.button} onPress={() => onRegisterPress()}>
                     <Image source={require('../assets/android/drawable-mdpi/g-login-arrow.png')} />
                 </TouchableOpacity>
@@ -118,14 +117,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingBottom: 5
     },
-    headerFont: {
-        fontFamily: 'roboto-regular',
-        fontSize: 32,
-        fontWeight: "100",
-        left: screenWidth / 3.5,
-        top: screenHeight * 0.07,
-        paddingBottom: 30
-    },
     headerImage: {
         position: 'absolute',
         left: screenWidth / 20,
@@ -133,12 +124,6 @@ const styles = StyleSheet.create({
     },
     whitePadding: {
         height: screenHeight / 8
-    },
-    textInput: {
-        borderBottomColor: 'rgba(112, 112, 112, 0.7)',
-        borderBottomWidth: 1.5,
-        fontSize: 16,
-        paddingTop: 8
     },
     button: {
         paddingRight: 30,

@@ -46,9 +46,9 @@ const SignInScreen = ({navigation}) => {
                 <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} />
                 <Text style={styles.headerFont}> Sign-In </Text>
                 <View style={styles.whitePadding}/>
-                <TextInput style={styles.textInput} placeholder="Email Address" autoCapitalize="none"  onChangeText={(text) => setEmail(text)}
+                <TextInput style={[PatientStyles.textInput, {marginBottom: 8}]} placeholder="Email Address" autoCapitalize="none"  onChangeText={(text) => setEmail(text)}
                     value={email} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>  
-                <TextInput style={styles.textInput} placeholder="Password" secureTextEntry onChangeText={(text) => setPassword(text)}
+                <TextInput style={[PatientStyles.textInput, {marginBottom: 8}]} placeholder="Password" secureTextEntry onChangeText={(text) => setPassword(text)}
                     value={password} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
                 <TouchableOpacity style={styles.button} onPress={()=>onLoginPress()}>
                     <Image source={require('../assets/android/drawable-mdpi/g-login-arrow.png')} />
@@ -69,12 +69,6 @@ var screenWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
     whitePadding: {
         height: screenHeight/8
-    },
-    textInput: {
-        borderBottomColor: 'rgba(112, 112, 112, 0.7)', 
-        borderBottomWidth: 1.5,
-        fontSize: 16, 
-        paddingTop: 8
     },
     heading: {
         flex: 1, 
