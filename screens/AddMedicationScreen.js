@@ -20,6 +20,7 @@ import Autocomplete from 'react-native-autocomplete-input';
 import Modal from 'react-native-modal';
 import moment from 'moment';
 
+import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import DatePicker from '../components/DatePicker';
 import TimePicker from '../components/TimePicker';
@@ -56,7 +57,6 @@ const AddMedicationScreen = ({ navigation }) => {
   const [drugList, setDrugList] = useState([]);
   const [searchResult, setSearchResult] = useState('');
   const [medicationToAdd, setMedicationToAdd] = useState("Add Medication");
-
 
   useEffect(() => {
     load();
@@ -185,7 +185,7 @@ const AddMedicationScreen = ({ navigation }) => {
   return (
     <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
       <Background />
-      <TouchableOpacity style={PatienStyles.menuButton} onPress={() => navigation.openDrawer()}>
+      <TouchableOpacity style={PatientStyles.menuButton} onPress={() => navigation.openDrawer()}>
         <MenuIcon />
       </TouchableOpacity>
       <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig">
@@ -291,7 +291,10 @@ const AddMedicationScreen = ({ navigation }) => {
             renderItem={({ item }) => (
               <TouchableOpacity 
                 style={styles.searchButton} 
-                onPress={()=>{setMedicationToAdd(item); setShowModal(false); setSearchResult('');}}>
+                onPress={()=>{
+                  setMedicationToAdd(item); 
+                  setShowModal(false); 
+                  setSearchResult('');}}>
                 <MedicationCard>
                   <View style={{ justifyContent: 'center', flex: 2 }}>
                     <PinkMedication />

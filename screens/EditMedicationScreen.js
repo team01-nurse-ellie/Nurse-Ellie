@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, Switch, Modal, KeyboardAvoidingView, TouchableOpacity,Dimensions, StyleSheet, TextInput, Keyboard, Alert } from 'react-native';
+import { View, Text, Switch, Modal, KeyboardAvoidingView, TouchableOpacity, StyleSheet, TextInput, Keyboard, Alert } from 'react-native';
 import {CommonActions}  from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import moment from 'moment';
