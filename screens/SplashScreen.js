@@ -6,7 +6,7 @@ import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 
 const SplashScreen = ({ navigation }) => {
     return (
-        <View style={[PatientStyles.container, {justifyContent: 'center'}]}>
+        <View style={[PatientStyles.background, {justifyContent: 'center'}]}>
             <Background />
             <View style={styles.logoCircle}>
                 <NurseEllieLogo style={styles.logo} />

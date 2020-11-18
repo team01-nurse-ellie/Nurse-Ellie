@@ -55,6 +55,11 @@ const PatientStyle = StyleSheet.create({
     fontSize: 32,
     fontWeight: "100",
   },
+  medicationFont:{
+    fontFamily: 'roboto-regular', 
+    fontSize: 20, 
+    color: 'rgba(0, 0, 0, 0.85)'
+  },
   fieldText:{
     fontFamily: 'roboto-regular',
     fontSize: 14,
@@ -84,7 +89,37 @@ const PatientStyle = StyleSheet.create({
     fontSize: 16,
   },
   // Auto-Complete Styling
-  
+  autoView: {
+    flex: 1,
+    marginBottom: 45,
+  },
+  autoContainer: {
+    flex: 1,
+    width: '100%',
+    position: 'absolute',
+  },
+  autoInputContainer: {
+    backgroundColor: 'rgba(246, 247, 120,1)', 
+    borderStartWidth: 0,
+    borderEndWidth: 0,
+    borderTopWidth: 0,
+    borderBottomWidth: 1,
+  },
+  autoListContainer: {
+    flex: 1,
+    height: screenHeight*0.55,
+  },
+  autoList: {
+    margin: 0,
+    padding: 4,
+    flex: 1,
+  },
+  autoListFont: {
+    fontFamily: 'roboto-regular',
+    fontSize: 18,
+    fontWeight: '100',
+    padding: 2,
+  },
   // Modal Styling
 
 });

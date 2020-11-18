@@ -80,7 +80,7 @@ import { ActivityIndicator } from 'react-native-paper';
                                     {MedIconIndex.index[item.medication.medIcon]}
                                 </View>
                                 <View style={styles.medicationInfoView}>
-                                <Text style={styles.medicationFont}>{item.medication.nameDisplay}</Text>
+                                <Text style={PatientStyles.medicationFont}>{item.medication.nameDisplay}</Text>
                                 <Text style={styles.functionFont}>{item.medication.function}</Text>
                                 <Text style={styles.frequencyfont}>{item.medication.strength}</Text>
                                 </View>
@@ -101,11 +101,6 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
-    medicationFont: {
-        fontFamily: 'roboto-regular', 
-        fontSize: 20, 
-        color: 'rgba(0, 0, 0, 0.85)'
-    },
     functionFont:{
         fontFamily: 'roboto-regular', 
         fontSize: 14, 

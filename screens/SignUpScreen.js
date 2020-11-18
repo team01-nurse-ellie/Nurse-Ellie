@@ -8,10 +8,8 @@ import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import { generateCode } from '../utils/codeGenerator';
 
-var screenHeight = Dimensions.get("window").height;
-var screenWidth = Dimensions.get("window").width;
-
 const SignUpScreen = ({ navigation }) => {
+
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -105,6 +103,8 @@ const SignUpScreen = ({ navigation }) => {
     )
 }
 
+var screenHeight = Dimensions.get("window").height;
+var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
     container: {

@@ -91,9 +91,9 @@ const AddMedicationScreen = ({ navigation }) => {
   // AutoComplete item based on user text input (by ingredients/brand name)
   const renderItem = ({ item }) => (
     <TouchableOpacity 
-      style={styles.acListItem} 
+      style={PatientStyles.autoListItem} 
       onPress={() => {renderDrugListModal(item.name); setSearchResult(item.name); setDrugList([]);}}>
-      <Text style={styles.acListFont} >
+      <Text style={PatientStyles.autoListFont} >
         {item.name}
       </Text>
     </TouchableOpacity>
@@ -202,14 +202,14 @@ const AddMedicationScreen = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <View style={styles.acView}>
+        <View style={PatientStyles.autoView}>
           <Autocomplete
             autoCapitalize="sentences"
             autoCorrect={false}
-            containerStyle={styles.acContainer}
-            inputContainerStyle={styles.acInputContainer}
-            listContainerStyle={styles.acListContainer}
-            listStyle={styles.acList}
+            containerStyle={PatientStyles.autoContainer}
+            inputContainerStyle={PatientStyles.autoInputContainer}
+            listContainerStyle={PatientStyles.autoListContainer}
+            listStyle={PatientStyles.autoList}
             data={filterRxcui}
             defaultValue={searchResult}
             onChangeText={text => {setFilterRxcui(filterByTerm(text));}}
@@ -297,7 +297,7 @@ const AddMedicationScreen = ({ navigation }) => {
                     <PinkMedication />
                   </View>
                   <View style={styles.medicationInfoView}>
-                    <Text style={styles.medicationFont}>{item.nameDisplay}</Text>
+                    <Text style={PatientStyles.medicationFont}>{item.nameDisplay}</Text>
                     <Text style={PatientStyles.doseFont}>{item.doseForm}</Text>
                   </View>
                   <View style={styles.strengthView}>
@@ -354,50 +354,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingBottom: 20,
-  },
-  // view surrounding entire autocomplete component
-  acView: {
-    flex: 1,
-    marginBottom: 45,
-  },
-  // container surround autocomplete input and list components
-  acContainer: {
-    //backgroundColor:'rgba(63, 116, 191,1)', // blue
-    flex: 1,
-    width: '100%',
-    position: 'absolute',
-  },
-  // container that surrounds textinput component
-  acInputContainer: {
-    backgroundColor: 'rgba(246, 247, 120,1)', // yellow
-    borderStartWidth: 0,
-    borderEndWidth: 0,
-    borderTopWidth: 0,
-    borderBottomWidth: 1,
-  },
-  // container that surrounds result list
-  acListContainer: {
-    //backgroundColor: 'rgba(204, 38, 9,1)', // red
-    flex: 1,
-    height: screenHeight*0.55,
-  },
-  // result list
-  acList: {
-    // backgroundColor: 'rgba(7, 204, 9,1)', // green
-    margin: 0,
-    padding: 4,
-    flex: 1,
-  },
-  acListFont: {
-    fontFamily: 'roboto-regular',
-    fontSize: 18,
-    fontWeight: '100',
-    padding: 2,
-  },
-  medicationFont: {
-    fontFamily: 'roboto-regular',
-    fontSize: 20,
-    color: 'rgba(0, 0, 0, 0.85)',
   },
 });
 
