@@ -5,6 +5,8 @@ import * as Animatable from 'react-native-animatable';
 import { useSelector } from 'react-redux'
 
 import MedIconIndex from '../components/MedicationImages';
+
+import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import MedicationCard from '../components/MedicationCard';
 import MenuIcon from '../assets/images/menu-icon.svg';
@@ -17,11 +19,8 @@ import { ActivityIndicator } from 'react-native-paper';
 
 const MedicationListScreen = ({navigation}) => {
     const { currentUser } = useContext(FirebaseAuthContext);
-    const [docid, setDocid ] = useState();
     const [newMedications, setNewMedications] = useState([]);
     const [loading,setLoading] = useState(true);
-
-    //useSelector(state => setDocid(state));
 
     useEffect(() => {
         // subscribe to user collection of medications
@@ -48,14 +47,14 @@ const MedicationListScreen = ({navigation}) => {
 
 
     return (
-        <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+        <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
             <Background/>
-            <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
+            <TouchableOpacity style={PatientStyles.menuButton} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
             </TouchableOpacity>
-            <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
-                <View style={styles.header}>
-                    <Text style={styles.title}>
+            <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig"> 
+                <View style={PatientStyles.header}>
+                    <Text style={PatientStyles.title}>
                         Medications
                     </Text>
                     <MedicationsIcon/>
@@ -83,7 +82,7 @@ const MedicationListScreen = ({navigation}) => {
                                     {MedIconIndex.index[item.medication.medIcon]}
                                 </View>
                                 <View style={styles.medicationInfoView}>
-                                <Text style={styles.medicationFont}>{item.medication.nameDisplay}</Text>
+                                <Text style={PatientStyles.medicationFont}>{item.medication.nameDisplay}</Text>
                                 <Text style={styles.functionFont}>{item.medication.function}</Text>
                                 <Text style={styles.frequencyfont}>{item.medication.strength}</Text>
                                 </View>
@@ -104,25 +103,6 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        backgroundColor: '#42C86A',
-    }, 
-    header:{
-        flexDirection:'row', 
-        justifyContent: 'space-between', 
-        paddingBottom: 10
-    },
-    title: {
-        fontFamily: 'roboto-regular',
-        fontSize: 24,
-        fontWeight: "100",
-    }, 
-    medicationFont: {
-        fontFamily: 'roboto-regular', 
-        fontSize: 20, 
-        color: 'rgba(0, 0, 0, 0.85)'
-    },
     functionFont:{
         fontFamily: 'roboto-regular', 
         fontSize: 14, 
@@ -138,11 +118,6 @@ const styles = StyleSheet.create({
         fontSize: 16, 
         color: 'rgba(0, 0, 0, 0.85)'
     },
-    descriptionFont: {
-        fontFamily: 'roboto-regular', 
-        fontSize: 12, 
-        color: 'rgba(0, 0, 0, 0.38)', 
-    },
     medicationInfoView: {
         width: 170,
         paddingHorizontal: 10
@@ -154,11 +129,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center', 
         width: 100
     },
-    menuButton:{
-        position: 'absolute',
-        right: 30,
-        top: 40 
-    },
     searchInput:{
         flexDirection: 'row',
         borderBottomColor: 'rgba(0, 0, 0, 0.6)',
@@ -169,18 +139,6 @@ const styles = StyleSheet.create({
     searchButton:{
         right: 5
     },
-    drawer: {
-        flex: 4,
-        backgroundColor: '#fff', 
-        borderTopLeftRadius: 30, 
-        borderTopRightRadius: 30, 
-        paddingVertical: 50, 
-        paddingHorizontal: 30, 
-        position: 'absolute',
-        width: screenWidth,
-        height: screenHeight * 0.85,
-        top: screenHeight * 0.15
-    }
 });
 
 export default MedicationListScreen;

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { YellowBox } from 'react-native';
-import { StyleSheet, } from 'react-native';
 // Firebase Authentication
 import { FirebaseAuthProvider } from './components/Firebase/FirebaseAuthProvider';
 // Components
@@ -53,9 +52,5 @@ const App = () => {
     )
   }
 }
-
-const styles = StyleSheet.create({
-
-});
 
 export default App;
