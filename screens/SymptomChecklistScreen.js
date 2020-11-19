@@ -64,8 +64,6 @@ const SymptomChecklistScreen = ({ navigation }) => {
     const [additionalText, setAdditionalText] = useState('');
 
     /** Button Clicked Function */
-    
-    
     const symptomRef = firebase.firestore().collection('symptom')
 
     const getFormValue = async(res) => {
@@ -73,33 +71,10 @@ const SymptomChecklistScreen = ({ navigation }) => {
 
         const data = await firebase.auth().currentUser.uid
         
-        
-        var userDoc = firebase.firestore().collection("symptom").doc(data).set({
-            'current_date' : '',
-            'emotions_icon_value' : '',
-            'pain_Discomfort' : '',
-    
-            'headSelected' : '',
-            'chestSelected' : '',
-            'stomachSelected' : '',
-            'backSelected' : '',
-            'otherSelected' : '',
-            'inputLineOneText' : '',
-    
-            'achySelected' : '',
-            'burningSelected' : '',
-            'suddenSelected' : '',
-            'severeSelected' : '',
-            'squeezingSelected' : '',
-            'sharpSelected' : '',
-            'other2Selected' : '',
-            'inputLineTwoText' : '',
-    
-            'additionalText' : ''
-        })
 
         const obj = {
             current_date,
+            data,
             emotions_icon_value,
             pain_Discomfort,
     
@@ -122,16 +97,13 @@ const SymptomChecklistScreen = ({ navigation }) => {
             additionalText,
         };
 
-        const usersRef = firebase.firestore().collection('symptom')
-        symptomRef
-            .doc(data)
-            .set(obj)
-
-    
+        const symptomRef = firebase.firestore().collection('symptom')
+        symptomRef.add(obj)
 
 
         /** printing codes */
         console.log("\n------------------\n");
+        console.log("its uid: " + data);
         console.log("Date: " + current_date);
         console.log('Emotion Icons Value: ' + emotions_icon_value);
         console.log('Having Pain or Discomfort: ' + pain_Discomfort);
