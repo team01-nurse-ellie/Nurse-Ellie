@@ -1,8 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext,useEffect } from 'react';
 import { View, Text, Switch, Modal, KeyboardAvoidingView, TouchableOpacity, StyleSheet, TextInput, Keyboard, Alert } from 'react-native';
 import {CommonActions}  from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import moment from 'moment';
+import { ActivityIndicator } from 'react-native-paper';
 
 import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
@@ -14,6 +15,7 @@ import TimePicker from '../components/TimePicker';
 import MenuIcon from '../assets/images/menu-icon.svg';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 
+import { firebase } from '../components/Firebase/config';
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
 import * as fsFn  from '../utils/firestore';
 
@@ -21,9 +23,11 @@ const EditMedicationScreen = ({route, navigation }) => {
   const { item } = route.params;
   const {currentUser} = useContext(FirebaseAuthContext);
   const currentTime = new Date();
+  const [loading, setLoading] = useState();
+  const [medication, setMedication] = useState();
   const [medIcon, setMedIcon] = useState('1');
   const [selectDoW, setSelectDoW] = useState([]);
-  const [selectTime, setSelectTime] = useState('12:00 AM');
+  const [intakeTime, setIntakeTime] = useState(43200);
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [alarm, setAlarm] = useState('false');
@@ -31,10 +35,37 @@ const EditMedicationScreen = ({route, navigation }) => {
   const [directions, setDirections] = useState('');
   const toggleSwitch = () => setAlarm(previousState => !previousState);
 
-   
+  useEffect(() => {
+    // subscribe to document of medication
+    setLoading(true);
+    const subscriber = firebase.firestore()
+        .collection("users")
+        .doc(currentUser.uid)
+        .collection("medications")
+        .doc(item.docId)
+        .onSnapshot(querySnapshot => {
+            if (querySnapshot.data() !== undefined) {
+                setMedication(querySnapshot.data());
+                setMedIcon(querySnapshot.data().medIcon);
+                setIntakeTime(querySnapshot.data().intakeTime);
+                setDrugFunction(querySnapshot.data().function);
+                setDirections(querySnapshot.data().directions);
+                setStartDate(querySnapshot.data().startDate.toDate());
+                setSelectDoW(querySnapshot.data().daysOfWeek);
+                setEndDate(querySnapshot.data().endDate.toDate());
+                setAlarm(querySnapshot.data().alarm);
+                setLoading(false);
+            }
+        },         
+        error => {
+            console.log(error)
+        });
+        // Unsubscribe from document when no longer in use
+        return () => subscriber();
+    }, [item]);
+
   // Add medication with user settings to user collection
   const updateMedication = async () => {
-
     if (startDate == undefined || endDate == undefined) {
         Alert.alert('', '\nPlease select a start and end date');
         return;
@@ -53,9 +84,9 @@ const EditMedicationScreen = ({route, navigation }) => {
     }
     var medSettings = {
       'medIcon': medIcon,
-      'intakeTime' : selectTime,
-      'startDate' : startDate,
-      'endDate' : endDate,
+      'intakeTime' : intakeTime,
+      'startDate' : new Date(startDate),
+      'endDate' : new Date(endDate),
       'daysOfWeek' : selectDoW,
       'alarm': alarm,
       'function': drugFunction,
@@ -66,7 +97,7 @@ const EditMedicationScreen = ({route, navigation }) => {
     await fsFn.updateMedication(currentUser.uid, item.docId,item.medication
       // Clear user input components if addition to DB successful
       ).then(() => {
-        resetUserInput();
+        // resetUserInput();
         Alert.alert('','\nMedication Updated!');
         navigation.navigate('Medication', {item:item});
       }
@@ -79,7 +110,7 @@ const EditMedicationScreen = ({route, navigation }) => {
 
   const resetUserInput = () => {
     setMedIcon('1');
-    setSelectTime('12:00 AM');
+    setIntakeTime(43200);
     setStartDate();
     setEndDate();
     setSelectDoW([]);
@@ -108,10 +139,18 @@ const EditMedicationScreen = ({route, navigation }) => {
                     </TouchableOpacity>
                 </View>
                 <View style={{ paddingBottom: 18 }} />
+                { loading ? (
+                <>
+                    <View style={{flex:1, justifyContent:'center'}}>
+                        <ActivityIndicator/>
+                    </View>
+                </>
+                ) : (
+                <>
                 <View style={{ alignItems: 'center', paddingVertical: 15 }}>
                     <IconPicker selected={medIcon} onSelect={setMedIcon} />
                     <View style={{ paddingBottom: 18 }} />
-                    <TimePicker value={selectTime} onSelect={setSelectTime} />
+                    <TimePicker value={intakeTime} onSelect={setIntakeTime} />
                 </View>
                 <TextInput style={[PatientStyles.textInput, {marginBottom: 8}]} placeholder="Function" autoCapitalize="none"  onChangeText={(text) => setDrugFunction(text)}
                     value={drugFunction} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
@@ -148,6 +187,8 @@ const EditMedicationScreen = ({route, navigation }) => {
                     }}>
                     <Text style={styles.deleteText}> DELETE MEDICATION </Text>
                 </TouchableOpacity>
+            </>
+            )}
             </Animatable.View>
         </KeyboardAvoidingView>
     )

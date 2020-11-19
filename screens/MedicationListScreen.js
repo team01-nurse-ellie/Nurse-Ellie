@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext} from 'react';
 import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, FlatList, Button, Dimensions, StyleSheet, Alert } from 'react-native';
 import { firebase } from '../components/Firebase/config';
-
 import * as Animatable from 'react-native-animatable';
+import { useSelector } from 'react-redux'
 
 import MedIconIndex from '../components/MedicationImages';
 
@@ -14,17 +14,17 @@ import MedicationsIcon from '../assets/images/medications-icon.svg';
 import SearchIcon from '../assets/images/search-icon.svg';
 
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
-import * as fsFn  from '../utils/firestore';
+import { getValueFormatted } from '../utils/timeConvert';
 import { ActivityIndicator } from 'react-native-paper';
 
-    const MedicationListScreen = ({navigation}) => {
+const MedicationListScreen = ({navigation}) => {
     const { currentUser } = useContext(FirebaseAuthContext);
     const [newMedications, setNewMedications] = useState([]);
     const [loading,setLoading] = useState(true);
 
     useEffect(() => {
-        //collection listener, initializes local state with all user medication
-        firebase.firestore()
+        // subscribe to user collection of medications
+        const subscriber = firebase.firestore()
             .collection("users")
             .doc(currentUser.uid)
             .collection("medications")
@@ -41,6 +41,8 @@ import { ActivityIndicator } from 'react-native-paper';
                 setNewMedications(meds);
                 setLoading(false);
             });
+        // Unsubscribe from document when no longer in use
+        return () => subscriber();
     }, []);
 
 
@@ -64,7 +66,7 @@ import { ActivityIndicator } from 'react-native-paper';
                     </TouchableOpacity>
                 </View>
                 { loading ? (
-                    <View style={{padding:screenHeight *.5}}>
+                    <View style={{flex:1, justifyContent:'center', padding:screenHeight *.5}}>
                         <ActivityIndicator/>
                     </View>
                 ) : (
@@ -85,7 +87,7 @@ import { ActivityIndicator } from 'react-native-paper';
                                 <Text style={styles.frequencyfont}>{item.medication.strength}</Text>
                                 </View>
                                 <View style={styles.timeView}>
-                                    <Text style={styles.timeFont}>{item.medication.intakeTime}</Text>
+                                    <Text style={styles.timeFont}>{getValueFormatted(item.medication.intakeTime)}</Text>
                                 </View>
                             </MedicationCard>
                         </TouchableOpacity>
