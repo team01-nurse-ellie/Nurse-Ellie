@@ -11,7 +11,7 @@ import MenuIcon from '../assets/images/menu-icon.svg';
 import EditIcon from '../assets/images/edit-icon.svg';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 import EntryIcon from '../assets/images/entry-triangle-icon.svg';
-import { medObject} from '../utils/medication';
+import { getValueFormatted } from '../utils/timeConvert';
 
 const MedicationDetailScreen = ({route, navigation}) => {
     const { item } = route.params;
@@ -39,7 +39,7 @@ const MedicationDetailScreen = ({route, navigation}) => {
                 {MedIconIndex.index[item.medication.medIcon]}
             </View>
             <View style={{alignItems: 'center', marginBottom: 7}}>
-                <Text style={styles.timeFont}> {item.medication.intakeTime} </Text>
+                <Text style={styles.timeFont}> {getValueFormatted(item.medication.intakeTime)} </Text>
             </View>
             <Text style={styles.subheadingFont}>Prescription</Text>
                 <Unorderedlist bulletUnicode={0x2023}> 

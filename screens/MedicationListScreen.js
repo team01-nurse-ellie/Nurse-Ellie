@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext} from 'react';
 import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, FlatList, Button, Dimensions, StyleSheet, Alert } from 'react-native';
 import { firebase } from '../components/Firebase/config';
-
 import * as Animatable from 'react-native-animatable';
+import { useSelector } from 'react-redux'
 
 import MedIconIndex from '../components/MedicationImages';
-
 import Background from '../components/background';
 import MedicationCard from '../components/MedicationCard';
 import MenuIcon from '../assets/images/menu-icon.svg';
@@ -14,22 +13,19 @@ import SearchIcon from '../assets/images/search-icon.svg';
 
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
 import * as fsFn  from '../utils/firestore';
+import { getValueFormatted } from '../utils/timeConvert';
 import { ActivityIndicator } from 'react-native-paper';
 
-    const MedicationListScreen = ({navigation}) => {
+const MedicationListScreen = ({navigation}) => {
     const { currentUser } = useContext(FirebaseAuthContext);
-    // Hard coded medication information
-/*     const [medications, setMedications] = useState ([
-        {medicationName: 'Monopril', function: 'High Blood Pressure', frequency: '1x/day', alert: '10:00AM', key: '1'}, 
-        {medicationName: 'Cymbalta', function: 'Joint Pain', frequency: '1x/day', alert: '9:00AM', key: '2'}, 
-        {medicationName: 'Codeine', function: 'Cough & Cold', frequency: '15ml/day', alert: '10:00AM', key: '3'},
-    ]) */
+    const [docid, setDocid ] = useState();
     const [newMedications, setNewMedications] = useState([]);
     const [loading,setLoading] = useState(true);
 
-
+    //useSelector(state => setDocid(state));
 
     useEffect(() => {
+        // Access Redux state
         //collection listener, initializes local state with all user medication
         firebase.firestore()
             .collection("users")
@@ -92,7 +88,7 @@ import { ActivityIndicator } from 'react-native-paper';
                                 <Text style={styles.frequencyfont}>{item.medication.strength}</Text>
                                 </View>
                                 <View style={styles.timeView}>
-                                    <Text style={styles.timeFont}>{item.medication.intakeTime}</Text>
+                                    <Text style={styles.timeFont}>{getValueFormatted(item.medication.intakeTime)}</Text>
                                 </View>
                             </MedicationCard>
                         </TouchableOpacity>

@@ -13,8 +13,16 @@ class Component extends React.Component {
       super(props);
       this.state = {
         isModalOpen: false,
-        value: null,
+        value: this.props.value,
       };
+    }
+
+    static getDerivedStateFromProps(newProps, prevState) {
+      if (newProps.value !== prevState.value) {
+        return { value: newProps.value, };
+      } else {
+        return { value: prevState.value,};
+      }
     }
 
     onModalClose = () => {
@@ -30,31 +38,25 @@ class Component extends React.Component {
     };
 
     calculateTimeFromHourPicker(selectedValue) {
-      this.setState(prevState => {
-        const stateMinutes = Math.floor((prevState.value % 3600) / 60);
-        const stateAMPM = Math.floor(prevState.value / 43200);
-        const nextValue = Number(selectedValue) * 3600 + stateMinutes * 60 + stateAMPM * 43200;
-        return { value: nextValue };
-      });
+      const stateMinutes = Math.floor((this.state.value % 3600) / 60);
+      const stateAMPM = Math.floor(this.state.value / 43200);
+      const nextValue = Number(selectedValue) * 3600 + stateMinutes * 60 + stateAMPM * 43200;
+      this.props.onSelect(nextValue);
     }
 
     calculateTimeFromMinutePicker(selectedValue) {
-      this.setState(prevState => {
-        const stateHours = Math.floor((prevState.value % 43200) / 3600);
-        const stateAMPM = Math.floor(prevState.value / 43200);
-        const nextValue = stateHours * 3600 + Number(selectedValue) * 60 + stateAMPM * 43200;
-        return { value: nextValue };
-      });
+      const stateHours = Math.floor((this.state.value % 43200) / 3600);
+      const stateAMPM = Math.floor(this.state.value / 43200);
+      const nextValue = stateHours * 3600 + Number(selectedValue) * 60 + stateAMPM * 43200;
+      this.props.onSelect(nextValue);
     }
 
     calculateTimeFromAMPMPicker(selectedValue) {
-      this.setState(prevState => {
-        const selectedAMPM = selectedValue === 'AM' ? 0 : 43200;
-        const stateHours = Math.floor((prevState.value % 43200) / 3600);
-        const stateMinutes = Math.floor((prevState.value % 3600) / 60);
-        const nextValue = stateHours * 3600 + stateMinutes * 60 + selectedAMPM;
-        return { value: nextValue };
-      });
+      const selectedAMPM = selectedValue === 'AM' ? 0 : 43200;
+      const stateHours = Math.floor((this.state.value % 43200) / 3600);
+      const stateMinutes = Math.floor((this.state.value % 3600) / 60);
+      const nextValue = stateHours * 3600 + stateMinutes * 60 + selectedAMPM;
+      this.props.onSelect(nextValue);
     }
 
     getIndexForHourPicker(value) {
@@ -78,8 +80,7 @@ class Component extends React.Component {
     }
 
     onSelect() {
-      const formatted = this.getValueFormatted();
-      this.props.onSelect(formatted);
+      this.props.onSelect(this.state.value);
       this.onModalClose();
     }
     
