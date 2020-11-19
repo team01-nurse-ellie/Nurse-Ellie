@@ -12,7 +12,6 @@ import MedicationsIcon from '../assets/images/medications-icon.svg';
 import SearchIcon from '../assets/images/search-icon.svg';
 
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
-import * as fsFn  from '../utils/firestore';
 import { getValueFormatted } from '../utils/timeConvert';
 import { ActivityIndicator } from 'react-native-paper';
 
@@ -25,9 +24,8 @@ const MedicationListScreen = ({navigation}) => {
     //useSelector(state => setDocid(state));
 
     useEffect(() => {
-        // Access Redux state
-        //collection listener, initializes local state with all user medication
-        firebase.firestore()
+        // subscribe to user collection of medications
+        const subscriber = firebase.firestore()
             .collection("users")
             .doc(currentUser.uid)
             .collection("medications")
@@ -44,6 +42,8 @@ const MedicationListScreen = ({navigation}) => {
                 setNewMedications(meds);
                 setLoading(false);
             });
+        // Unsubscribe from document when no longer in use
+        return () => subscriber();
     }, []);
 
 
@@ -67,7 +67,7 @@ const MedicationListScreen = ({navigation}) => {
                     </TouchableOpacity>
                 </View>
                 { loading ? (
-                    <View style={{padding:screenHeight *.5}}>
+                    <View style={{flex:1, justifyContent:'center', padding:screenHeight *.5}}>
                         <ActivityIndicator/>
                     </View>
                 ) : (

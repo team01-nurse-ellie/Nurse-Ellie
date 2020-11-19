@@ -3,6 +3,7 @@ import { View, Text, Switch, Modal, KeyboardAvoidingView, TouchableOpacity,Dimen
 import {CommonActions}  from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import moment from 'moment';
+import { ActivityIndicator } from 'react-native-paper';
 
 import Background from '../components/background';
 import DayOfWeekPicker from '../components/DayOfWeekPicker';
@@ -35,6 +36,7 @@ const EditMedicationScreen = ({route, navigation }) => {
 
   useEffect(() => {
     // subscribe to document of medication
+    setLoading(true);
     const subscriber = firebase.firestore()
         .collection("users")
         .doc(currentUser.uid)
@@ -47,9 +49,9 @@ const EditMedicationScreen = ({route, navigation }) => {
                 setIntakeTime(querySnapshot.data().intakeTime);
                 setDrugFunction(querySnapshot.data().function);
                 setDirections(querySnapshot.data().directions);
-                setStartDate(querySnapshot.data().startDate);
+                setStartDate(querySnapshot.data().startDate.toDate());
                 setSelectDoW(querySnapshot.data().daysOfWeek);
-                setEndDate(querySnapshot.data().endDate);
+                setEndDate(querySnapshot.data().endDate.toDate());
                 setAlarm(querySnapshot.data().alarm);
                 setLoading(false);
             }
@@ -82,8 +84,8 @@ const EditMedicationScreen = ({route, navigation }) => {
     var medSettings = {
       'medIcon': medIcon,
       'intakeTime' : intakeTime,
-      'startDate' : startDate,
-      'endDate' : endDate,
+      'startDate' : new Date(startDate),
+      'endDate' : new Date(endDate),
       'daysOfWeek' : selectDoW,
       'alarm': alarm,
       'function': drugFunction,
@@ -136,6 +138,14 @@ const EditMedicationScreen = ({route, navigation }) => {
                     </TouchableOpacity>
                 </View>
                 <View style={{ paddingBottom: 18 }} />
+                { loading ? (
+                <>
+                    <View style={{flex:1, justifyContent:'center'}}>
+                        <ActivityIndicator/>
+                    </View>
+                </>
+                ) : (
+                <>
                 <View style={{ alignItems: 'center', paddingVertical: 15 }}>
                     <IconPicker selected={medIcon} onSelect={setMedIcon} />
                     <View style={{ paddingBottom: 18 }} />
@@ -176,6 +186,8 @@ const EditMedicationScreen = ({route, navigation }) => {
                     }}>
                     <Text style={styles.deleteText}> DELETE MEDICATION </Text>
                 </TouchableOpacity>
+            </>
+            )}
             </Animatable.View>
         </KeyboardAvoidingView>
     )

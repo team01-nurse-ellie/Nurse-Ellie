@@ -145,8 +145,8 @@ const AddMedicationScreen = ({ navigation }) => {
     var medSettings = {
       'medIcon': medIcon,
       'intakeTime' : selectTime,
-      'startDate' : startDate,
-      'endDate' : endDate,
+      'startDate' : new Date(startDate),
+      'endDate' : new Date(endDate),
       'daysOfWeek' : selectDoW,
       'alarm': alarm,
       'function': drugFunction,
