@@ -1,9 +1,10 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, Switch, Modal, KeyboardAvoidingView, TouchableOpacity,Dimensions, StyleSheet, TextInput, Keyboard, Alert } from 'react-native';
+import { View, Text, Switch, Modal, KeyboardAvoidingView, TouchableOpacity, StyleSheet, TextInput, Keyboard, Alert } from 'react-native';
 import {CommonActions}  from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import moment from 'moment';
 
+import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import DayOfWeekPicker from '../components/DayOfWeekPicker';
 import DatePicker from '../components/DatePicker';
@@ -33,23 +34,7 @@ const EditMedicationScreen = ({route, navigation }) => {
    
   // Add medication with user settings to user collection
   const updateMedication = async () => {
-    // Check that there is start date, end date, day(s) of week, start dateand medication object
-    // if (startDate == undefined || endDate == undefined) {
-    //   Alert.alert('', '\nPlease select a start and end date');
-    //   return;
-    // } else if (selectDoW.length == 0) {
-    //   Alert.alert('', '\nPlease select days of week medication will be taken');
-    //   return;
-    // } else if(moment(endDate) < moment(startDate) || moment(endDate) < moment(currentTime)){
-    //     Alert.alert('', '\nPlease select a valid end date');
-    //     return;
-    // } else if(!drugFunction.length > 0) {
-    // Alert.alert('', '\nPlease fill in function of the medication');
-    // return;
-    // } else if(!directions.length > 0) {
-    // Alert.alert('', '\nPlease fill in directions for intake');
-    // return;
-    // }
+
     if (startDate == undefined || endDate == undefined) {
         Alert.alert('', '\nPlease select a start and end date');
         return;
@@ -103,18 +88,18 @@ const EditMedicationScreen = ({route, navigation }) => {
     setDirections();
   }
     return (
-        <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+        <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
             <Background/>
-            <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
+            <TouchableOpacity style={PatientStyles.menuButton} onPress={() => navigation.openDrawer()}>
                 <MenuIcon />
             </TouchableOpacity>
-            <Animatable.View style={styles.drawer} animation="fadeInUpBig">
+            <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig">
                 <View style={styles.rowContainer}>
                     <View style={{flexDirection:'row', alignItems:'center'}}>
                         <TouchableOpacity onPress={()=> navigation.goBack()}>
                             <ReturnIcon/>
                         </TouchableOpacity>
-                        <Text style={styles.title}>
+                        <Text style={[PatientStyles.title, {paddingHorizontal: 5}]}>
                             { item.medication ? item.medication.nameDisplay : ''}
                         </Text>
                     </View>
@@ -128,16 +113,16 @@ const EditMedicationScreen = ({route, navigation }) => {
                     <View style={{ paddingBottom: 18 }} />
                     <TimePicker value={selectTime} onSelect={setSelectTime} />
                 </View>
-                <TextInput style={styles.textInput} placeholder="Function" autoCapitalize="none"  onChangeText={(text) => setDrugFunction(text)}
+                <TextInput style={[PatientStyles.textInput, {marginBottom: 8}]} placeholder="Function" autoCapitalize="none"  onChangeText={(text) => setDrugFunction(text)}
                     value={drugFunction} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <TextInput style={styles.textInput} placeholder="Directions for use" autoCapitalize="none"  onChangeText={(text) => setDirections(text)}
+                <TextInput style={[PatientStyles.textInput, {marginBottom: 8}]} placeholder="Directions for use" autoCapitalize="none"  onChangeText={(text) => setDirections(text)}
                 value={directions} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <View style={styles.bottomCard}>
+                <View style={PatientStyles.card}>
                     <View>
-                    <Text style={styles.fieldText}> Start </Text>
-                    <Text style={styles.fieldText}> Days </Text>
-                    <Text style={styles.fieldText}> End </Text>
-                    <Text style={styles.fieldText}> Alarm </Text>
+                    <Text style={PatientStyles.fieldText}> Start </Text>
+                    <Text style={PatientStyles.fieldText}> Days </Text>
+                    <Text style={PatientStyles.fieldText}> End </Text>
+                    <Text style={PatientStyles.fieldText}> Alarm </Text>
                     </View>
                     <View style={{ justifyContent: 'flex-end' }}>
                     <View style={{ paddingBottom: 8 }}>
@@ -168,65 +153,12 @@ const EditMedicationScreen = ({route, navigation }) => {
     )
 };
 
-var screenHeight = Dimensions.get('window').height;
-var screenWidth = Dimensions.get('window').width;
-
 const styles = StyleSheet.create({
-    background: {
-      flex: 1,
-      backgroundColor: '#42C86A',
-    },
-    drawer: {
-        flex: 4,
-        backgroundColor: '#fff',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        paddingVertical: 50,
-        paddingHorizontal: 30,
-        position: 'absolute',
-        width: screenWidth,
-        height: screenHeight * 0.85,
-        top: screenHeight * 0.15,
-    },
-    menuButton:{
-        position: 'absolute',
-        right: 30,
-        top: 40 
-    },
     rowContainer: {
         flexDirection: 'row', 
         justifyContent: 'space-between', 
         alignItems:'center',
         paddingVertical: 7
-    },
-    title: {
-        fontFamily: 'roboto-regular',
-        fontSize: 24,
-        fontWeight: "100",
-        paddingHorizontal: 5
-    }, 
-    bottomCard: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderRadius: 10,
-        elevation: 3,
-        backgroundColor: '#FFF',
-        shadowOffset: { width: 1, height: 1 },
-        shadowColor: '#333',
-        shadowOpacity: 0.3,
-        shadowRadius: 2,
-        marginHorizontal: 4,
-        marginVertical: 6,
-        paddingHorizontal: 15,
-        paddingVertical: 15,
-        paddingTop: 15,
-        paddingBottom: 7,
-    },
-    fieldText: {
-        fontFamily: 'roboto-regular',
-        fontSize: 14,
-        fontWeight: '100',
-        paddingBottom: 8,
     },
     saveText: {
         fontFamily: 'roboto-medium', 
@@ -236,12 +168,6 @@ const styles = StyleSheet.create({
         color: '#E61616', 
         fontFamily: 'roboto-medium', 
         fontSize: 14
-    },
-    textInput: {
-        borderBottomColor: 'rgba(112, 112, 112, 0.7)',
-        borderBottomWidth: 1.5,
-        fontSize: 16,
-        marginBottom: 8,
     },
 });
 

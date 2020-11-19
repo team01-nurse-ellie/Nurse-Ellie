@@ -592,6 +592,8 @@ exports[`Medication Detail Screen renders correctly 1`] = `
       onStartShouldSetResponder={[Function]}
       style={
         Object {
+          "alignItems": "center",
+          "flexDirection": "row",
           "opacity": 1,
         }
       }
@@ -606,6 +608,14 @@ exports[`Medication Detail Screen renders correctly 1`] = `
       >
         SYMPTOM CHECKLIST
       </Text>
+      <svg
+        data-file-name="SvgEntryTriangleIcon"
+        style={
+          Object {
+            "paddingHorizontal": 8,
+          }
+        }
+      />
     </View>
   </View>
 </View>
@@ -2657,8 +2667,7 @@ A 10 10 0 0 1, 302.77777777777777, 180
               style={
                 Object {
                   "fontFamily": "roboto-medium",
-                  "fontSize": 15,
-                  "fontWeight": "100",
+                  "fontSize": 14,
                 }
               }
             >
@@ -2800,8 +2809,7 @@ A 10 10 0 0 1, 302.77777777777777, 180
               style={
                 Object {
                   "fontFamily": "roboto-medium",
-                  "fontSize": 15,
-                  "fontWeight": "100",
+                  "fontSize": 14,
                 }
               }
             >

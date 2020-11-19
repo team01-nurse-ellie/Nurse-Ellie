@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, FlatList, KeyboardAvoidingView, TouchableOpacity, Button, Dimensions, StyleSheet } from 'react-native';
+import { View, Text, FlatList, KeyboardAvoidingView, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import ProgressCircle from 'react-native-progress-circle';
 
 import * as Animatable from 'react-native-animatable';
 
+import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import MedicationCard from '../components/MedicationCard';
 import MenuIcon from '../assets/images/menu-icon.svg';
@@ -51,9 +52,9 @@ const HomeScreen = ({ navigation }) => {
     }
 
     return (
-        <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+        <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
             <Background />
-            <TouchableOpacity style={styles.button} onPress={()=> navigation.openDrawer()}>
+            <TouchableOpacity style={PatientStyles.menuButton} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
             </TouchableOpacity>
             <Text style={styles.time}> {greeting} </Text>
@@ -71,7 +72,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
             <View style={{flexDirection:'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 10}}>
-            <Text style={styles.title}> Medications </Text>
+            <Text style={PatientStyles.title}> Medications </Text>
             <MedicationsIcon />
             </View>
             <FlatList data={medications} renderItem={({item}) => (
@@ -99,10 +100,6 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        backgroundColor: '#42C86A'
-    }, 
     drawer: {
         flex: 4,
         backgroundColor: '#fff', 
@@ -114,17 +111,7 @@ const styles = StyleSheet.create({
         width: screenWidth,
         height: screenHeight * 0.85,
         top: screenHeight * 0.38
-    }, 
-    button: { 
-        position: 'absolute',
-        right: 30,
-        top: 40 
-    }, 
-    title: {
-        fontFamily: 'roboto-regular',
-        fontSize: 24,
-        fontWeight: "100",
-    }, 
+    },  
     time: {
         fontFamily: 'roboto-regular',
         fontSize: 24,
