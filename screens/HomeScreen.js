@@ -1,4 +1,4 @@
-import React, {useState, useEffect,useContext} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { View, Text, FlatList, KeyboardAvoidingView, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import ProgressCircle from 'react-native-progress-circle';
@@ -100,14 +100,17 @@ const HomeScreen = ({ navigation }) => {
             <MedicationsIcon />
             </View>
                 <FlatList 
-                data={medications} 
+                data={medications.sort((a,b)=>{
+                    return a.namePrescribe.localeCompare(b.namePrescribe);
+                })}
                 keyExtractor={(item) => item.rxcui.toString()}
                 renderItem={({item}) => (
-                    <Swipeable renderLeftActions={takenAction} renderRightActions={dismissAction}>
+                    <Swipeable 
+                    renderLeftActions={takenAction} 
+                    renderRightActions={dismissAction}>
                         <MedicationCard>
                             <View style={styles.medicationInfoView}>
                             <Text style={styles.medicationFont}>{item.nameDisplay}</Text>
-                            {/*  <Text style={styles.functionFont}>no simple function in db yet</Text> */}
                             <Text style={styles.frequencyfont}>{item.strength}</Text>
                             </View>
                             <View style={styles.timeView}>
@@ -136,7 +139,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30, 
         position: 'absolute',
         width: screenWidth,
-        height: screenHeight * 0.85,
+        height: screenHeight * 0.65,
         top: screenHeight * 0.38
     },  
     time: {
