@@ -19,15 +19,13 @@ const renderTimePicker = (props = defaultProps) => {
 describe('TimePicker', () => {
 
     beforeEach(()=>{
-        renderTimePicker();
+        renderTimePicker(value=0, onSelect=0);
     });
     it('should properly update time from hour picker', () => {
-        expect(wrapper.state('value')).toBe(0);
         instance.calculateTimeFromHourPicker('1');
         expect(wrapper.state('value')).toBe(3600);
     });
     it('should properly update time from minute picker', () => {
-        expect(wrapper.state('value')).toBe(0);
         instance.calculateTimeFromMinutePicker('25');
         expect(wrapper.state('value')).toBe(1500);
     });
