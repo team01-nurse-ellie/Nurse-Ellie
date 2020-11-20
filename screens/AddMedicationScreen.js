@@ -42,11 +42,10 @@ const AddMedicationScreen = ({ navigation }) => {
   const [medIcon, setMedIcon] = useState('1');
   const [scrollViewRef, setScrollViewRef] = useState();
   const [selectDoW, setSelectDoW] = useState([]);
-  // const [selectTime, setSelectTime] = useState(currentTime.getHours() * 3600 + currentTime.getMinutes() * 60);
-  const [selectTime, setSelectTime] = useState('12:00 AM');
+  const [selectTime, setSelectTime] = useState(43200);
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
-  const [alarm, setAlarm] = useState('false');
+  const [alarm, setAlarm] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [drugFunction, setDrugFunction] = useState('');
   const [directions, setDirections] = useState('');
@@ -146,8 +145,8 @@ const AddMedicationScreen = ({ navigation }) => {
     var medSettings = {
       'medIcon': medIcon,
       'intakeTime' : selectTime,
-      'startDate' : startDate,
-      'endDate' : endDate,
+      'startDate' : new Date(startDate),
+      'endDate' : new Date(endDate),
       'daysOfWeek' : selectDoW,
       'alarm': alarm,
       'function': drugFunction,
@@ -172,7 +171,7 @@ const AddMedicationScreen = ({ navigation }) => {
   // Reset user input components to default values
   const resetUserInput = () => {
     setMedIcon('1');
-    setSelectTime('12:00 AM');
+    setSelectTime(43200);
     setStartDate();
     setEndDate();
     setSelectDoW([]);
