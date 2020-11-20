@@ -15,14 +15,6 @@ class Component extends React.Component {
     };
   }
 
-  static getDerivedStateFromProps(newProps, prevState) {
-    if (newProps.selected !== prevState.selected) {
-      return {
-        selected: new Set(newProps.selected),
-      }
-    }
-  }
-
   onModalOpen = () => {
     if (!this.state.isModalOpen) {
       this.setState({ isModalOpen: true });
@@ -39,13 +31,15 @@ class Component extends React.Component {
     if (this.state.selected.has(index)) {
       if (this.state.selected.delete(index)){
         this.props.onSelect(Array.from(this.state.selected));
+        return;
       } else {
         console.log("error");
-        this.props.onSelect(Array.from(this.state.selected));
+        return;
       }
+    } else {
+      this.state.selected.add(index);
+      this.props.onSelect(Array.from(this.state.selected));
     }
-    this.state.selected.add(index);
-    this.props.onSelect(Array.from(this.state.selected));
   };
 
   onConfirm = () => {

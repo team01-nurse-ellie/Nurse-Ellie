@@ -72,8 +72,8 @@ const MedicationListScreen = ({navigation}) => {
                 ) : (
                     <FlatList 
                         data={newMedications.sort( (a,b) => {
-                            return a.medication.nameDisplay.localeCompare(b.medication.nameDisplay);
-                        })} 
+                            return a.medication.namePrescribe.localeCompare(b.medication.namePrescribe);
+                        })}
                         keyExtractor={(item) => item.docId}
                         renderItem={({item}) => (
                         <TouchableOpacity style={styles.searchButton} onPress={()=>navigation.navigate('Medication', {item: item})}>
