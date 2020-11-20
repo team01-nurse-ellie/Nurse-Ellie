@@ -790,7 +790,7 @@ exports[`Medication List Screen renders correctly 1`] = `
     >
       <TextInput
         allowFontScaling={true}
-        placeholder="Search Medication..."
+        placeholder="Search Your Medications..."
         rejectResponderTermination={true}
         style={
           Object {
