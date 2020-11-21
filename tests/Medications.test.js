@@ -5,6 +5,7 @@ import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext'
 import MedicationListScreen from '../screens/MedicationListScreen';
 import MedicationDetailScreen from '../screens/MedicationDetailScreen';
 import MedicationSummaryScreen from '../screens/MedicationSummaryScreen';
+import AddMedicationScreen from '../screens/MedicationSummaryScreen';
 
 const navigationProp = {
     navigate: jest.fn(),
@@ -37,6 +38,11 @@ test('Medication Detail Screen renders correctly', ()=>{
 });
 
 test('Medication Summary Screen render correctly', ()=>{
+    const wrapper = renderer.create(<MedicationSummaryScreen />);
+    expect(wrapper.toJSON()).toMatchSnapshot();
+});
+
+test('Medication Add Screen renders correctly', ()=>{
     const wrapper = renderer.create(<MedicationSummaryScreen />);
     expect(wrapper.toJSON()).toMatchSnapshot();
 });
