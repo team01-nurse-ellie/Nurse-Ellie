@@ -226,7 +226,7 @@ const AddMedicationScreen = ({ navigation }) => {
           </>
         ) : (
           <>
-          <View style={{ alignItems: 'center', paddingTop:35, paddingBtoom: 15 }}>
+          <View style={{ alignItems: 'center', paddingTop:35, paddingBottom: 15 }}>
             <IconPicker selected={medIcon} onSelect={setMedIcon} />
             <TimePicker value={selectTime} onSelect={setSelectTime} />
           </View>

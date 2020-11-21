@@ -13,12 +13,20 @@
     "androidStatusBar": {
       "translucent": true
     },
+    "notification": {
+      "icon": "./assets/android/drawable-mdpi/logo.png",
+      "color": "#D2691E",
+      "iosDisplayInForeground": true
+    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "useNextNotificationsApi": true
+    },
     "ios": {
       "supportsTablet": true
     },
