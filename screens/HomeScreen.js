@@ -102,7 +102,7 @@ const HomeScreen = ({ navigation }) => {
             {medications ? (
                 <FlatList 
                 data={medications.sort((a,b)=>{
-                    return a.namePrescribe.localeCompare(b.namePrescribe);
+                    return a.nameDisplay.localeCompare(b.nameDisplay);
                 })}
                 keyExtractor={(item) => item.rxcui.toString()}
                 renderItem={({item}) => (
