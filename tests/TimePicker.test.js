@@ -8,10 +8,12 @@ Enzyme.configure({ adapter: new Adapter() });
 
 jest.mock('react-native-wheel-scroll-picker', () => "ScrollPicker");
 
-let wrapper, instance;
+let wrapper, instance, onSelectValue;
 const defaultProps = {
     value: 0,
-    onSelect: () => {},
+    onSelect: value => {
+        onSelectValue = value;
+    },
 };
 
 const renderTimePicker = (props = defaultProps) => {
@@ -25,21 +27,20 @@ describe('TimePicker', () => {
         renderTimePicker();
     });
     it('should properly update time from hour picker', () => {
-        renderTimePicker({value: 3600, onSelect:()=>{}})
+        renderTimePicker({ ...defaultProps, value: 3600 })
         instance.calculateTimeFromHourPicker('1');
-        expect(wrapper.state('value')).toBe(3600);
+        expect(onSelectValue).toBe(3600);
     });
     it('should properly update time from minute picker', () => {
         instance.calculateTimeFromMinutePicker('25');
-        expect(wrapper.state('value')).toBe(0);
+        expect(onSelectValue).toBe(1500);
     });
     it('should properly update time from am/pm picker', () => {
         renderTimePicker({ ...defaultProps, value: 3600 });
         instance.calculateTimeFromAMPMPicker('AM');
-        expect(wrapper.state('value')).toBe(3600);
-        renderTimePicker({ ...defaultProps, value: 46800 });
+        expect(onSelectValue).toBe(3600);
         instance.calculateTimeFromAMPMPicker('PM');
-        expect(wrapper.state('value')).toBe(46800);
+        expect(onSelectValue).toBe(46800);
     });
     it('should properly display time from seconds', () => {
         renderTimePicker({ ...defaultProps, value: 3600 });
