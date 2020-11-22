@@ -14,7 +14,7 @@
       "translucent": true
     },
     "notification": {
-      "icon": "./assets/android/drawable-mdpi/logo.png",
+      "icon": "./assets/android/drawable-mdpi/test.png",  
       "color": "#D2691E",
       "iosDisplayInForeground": true
     },

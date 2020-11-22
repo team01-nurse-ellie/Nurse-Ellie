@@ -5,6 +5,7 @@ import React from 'react';
 import { Easing, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Modal from 'react-native-modalbox';
+import { calculateLocalTimezone } from '../utils/dateHelpers';
 
 const CALENDAR_THEME = {
   textSectionTitleColor: '#707070', 
@@ -32,6 +33,7 @@ class Component extends React.Component {
 
   UNSAFE_componentWillMount() {
     const { selected } = this.props;
+    console.log(selected, `will mount`)
     if (selected) {
       const dateString = moment(selected).format('YYYY-MM-DD');
       this.setState({
@@ -43,6 +45,7 @@ class Component extends React.Component {
 
   onDayPress = (day) => {
     this.setState({ selected: day.dateString });
+    this.setState({ dateTimestamp: calculateLocalTimezone(day.timestamp) });
   };
 
   onCancel = () => {
@@ -53,6 +56,9 @@ class Component extends React.Component {
 
   onSelect = () => {
     this.props.onSelect(moment(this.state.selected).toISOString());
+    console.log(this.props)
+    console.log(this.state.dateTimestamp)  
+    this.props.dateTimestamp(this.state.dateTimestamp);
     this.onModalClose();
   };
 
@@ -79,7 +85,7 @@ class Component extends React.Component {
   };
 
   render() {
-    const { current, isModalOpen, selected: marked } = this.state;
+    const { current, isModalOpen, selected: marked, dateTimestamp } = this.state;
     const { selected } = this.props;
     return (
       <React.Fragment>
@@ -196,6 +202,7 @@ const styles = StyleSheet.create({
 
 Component.propTypes = {
   onSelect: PropTypes.func,
+  dateTimestamp: PropTypes.func,
   placeholder: PropTypes.string,
   selected: PropTypes.string,
 };

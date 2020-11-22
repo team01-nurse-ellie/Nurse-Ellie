@@ -45,6 +45,10 @@ const AddMedicationScreen = ({ navigation }) => {
   const [selectTime, setSelectTime] = useState('12:00 AM');
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
+  const [timestamp, setTimestamp] = useState({
+    startDate: null,
+    endDate: null
+  });
   const [alarm, setAlarm] = useState('false');
   const [showModal, setShowModal] = useState(false);
   const [drugFunction, setDrugFunction] = useState('');
@@ -147,7 +151,9 @@ const AddMedicationScreen = ({ navigation }) => {
       'medIcon': medIcon,
       'intakeTime' : selectTime,
       'startDate' : startDate,
+      'startDateTimestamp': timestamp.startDate,
       'endDate' : endDate,
+      'endDateTimestamp': timestamp.endDate,
       'daysOfWeek' : selectDoW,
       'alarm': alarm,
       'function': drugFunction,
@@ -155,6 +161,7 @@ const AddMedicationScreen = ({ navigation }) => {
     }
     // Merge medication information from APIs and user specified medication settings
     Object.assign(medicationToAdd, medSettings);
+    console.log(medicationToAdd, "---MED BEFORE ADDING---");
     await fsFn.addMedication(currentUser.uid, medicationToAdd
       // Clear user input components if addition to DB successful
       ).then(() => {
@@ -169,6 +176,7 @@ const AddMedicationScreen = ({ navigation }) => {
         console.log(e);
       });
   }
+  
   // Reset user input components to default values
   const resetUserInput = () => {
     setMedIcon('1');
@@ -244,11 +252,21 @@ const AddMedicationScreen = ({ navigation }) => {
             </View>
             <View style={{ justifyContent: 'flex-end' }}>
               <View style={{ paddingBottom: 8 }}>
-                <DatePicker selected={startDate} onSelect={setStartDate} placeholder="Start Date" />
+                      <DatePicker
+                        selected={startDate}
+                        onSelect={setStartDate}
+                        dateTimestamp={(value) => setTimestamp(prev => ({ ...prev, startDate: value }))}
+                        placeholder="Start Date" 
+                      />
               </View>
               <DayOfWeekPicker selected={selectDoW} onSelect={setSelectDoW}/>
               <View style={{ paddingBottom: 8 }}>
-                <DatePicker selected={endDate} onSelect={setEndDate} placeholder="End Date" />
+                      <DatePicker
+                        selected={endDate}
+                        onSelect={setEndDate}
+                        dateTimestamp={(value) => setTimestamp(prev => ({ ...prev, endDate: value }))}
+                        placeholder="End Date"
+                      />
               </View>
               <Switch
                 trackColor={{ false: '#767577', true: '#42C86A' }}

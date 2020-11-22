@@ -17,17 +17,14 @@ import MedicationCard from '../components/MedicationCard';
 import MenuIcon from '../assets/images/menu-icon.svg';
 import MedicationsIcon from '../assets/images/medications-icon';
 
-
 Notifications.setNotificationHandler({
     handleNotification: async (notification) => {
-        console.log(notification)
-
+        console.log(notification, "gggggggggg") 
         return ({
             shouldShowAlert: true,
             shouldPlaySound: true,
             shouldSetBadge: false,
         })
-
 
     },
     handleSuccess: (id) => {
@@ -58,7 +55,8 @@ const HomeScreen = ({ navigation }) => {
 
     useEffect(()=> {
         (async ()=> {
-            
+            let time = calculateLocalTimezone(1606435200000);
+            console.log(time);
             await registerForPushNotificationsAsync()
             notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
                 console.log(`====ReceivedListener====`);
@@ -108,7 +106,8 @@ const HomeScreen = ({ navigation }) => {
      try {
          await Notifications.cancelAllScheduledNotificationsAsync().then(async () => {
 
-             console.log(Date.now());
+             console.log(`***SCHEDULING ALARMS***`);
+             let trigger = calculateLocalTimezone(2020, 11, 21, 10, 32, "PM");
              // let trig = calculateLocalTimezone(2020, 11, 19, 11, 0, "AM");
              // let trig2 = calculateLocalTimezone(2020, 11, 19, 12, 0, "AM")
 
@@ -118,7 +117,7 @@ const HomeScreen = ({ navigation }) => {
                   title: "Time's up!",
                   body: 'Change sides!',
                 },
-                trigger: {seconds: 2},
+                trigger
               });
 
            
@@ -228,7 +227,7 @@ const HomeScreen = ({ navigation }) => {
             setToken(token);
             // console.log("Got token.")
         } else {
-            alert('Must use physical device for Push Notifications');
+            console.log('Must use physical device for Push Notifications');
         }
 
         if (Platform.OS === 'android') {
