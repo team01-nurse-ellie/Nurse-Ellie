@@ -8,6 +8,9 @@ import AppNavigation from './components/AppNavigation';
 // Expo's splashscreen and font module
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
+// Redux to pass store down to all app components
+import { Provider as StateProvider } from 'react-redux'
+import store from './src/redux/store'
 
 // fix for [Unhandled promise rejection: ReferenceError: Can't find variable: atob]
 import {decode, encode} from 'base-64'
@@ -31,13 +34,21 @@ const App = () => {
     //YellowBox.ignoreWarnings(['Non-serializable values were found in the navigation state', 'Setting a timer']);
     LogBox.ignoreLogs(['Non-serializable values were found in the navigation state', 'Setting a timer']);
     
+    // YellowBox.ignoreWarnings(['Non-serializable values were found in the navigation state', 'Setting a timer',]);
+    LogBox.ignoreLogs(['Non-serializable values were found in the navigation state', 'Setting a timer',]);
+    // ScrollPicker in TimePicker warning, and IconPicker warning, respectively.
+    // YellowBox.ignoreWarnings(['Expected style', 'Failed prop type']);
+    LogBox.ignoreLogs(['Expected style', 'Failed prop type']);
+
   }, []);
 
   if (fontsLoaded) {
     return (
-      <FirebaseAuthProvider>
-        <AppNavigation />
-      </FirebaseAuthProvider>
+      <StateProvider store={store}>
+        <FirebaseAuthProvider>
+          <AppNavigation />
+        </FirebaseAuthProvider>
+      </StateProvider>
     );
   } else {
     return (
@@ -47,9 +58,5 @@ const App = () => {
     )
   }
 }
-
-const styles = StyleSheet.create({
-
-});
 
 export default App;

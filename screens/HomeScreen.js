@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useRef} from 'react';
-import { View, Text, KeyboardAvoidingView, TouchableOpacity, Button, Dimensions, StyleSheet, Platform, FlatList } from 'react-native';
+import React, {useState, useEffect, useRef, useContext} from 'react';
+import { View, Text, KeyboardAvoidingView, TouchableOpacity, Button, Dimensions, StyleSheet, Platform, FlatList, ActivityIndicator } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
@@ -12,10 +12,16 @@ import { calculateLocalTimezone } from '../utils/dateHelpers';
 
 import * as Animatable from 'react-native-animatable';
 
+import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import MedicationCard from '../components/MedicationCard';
 import MenuIcon from '../assets/images/menu-icon.svg';
 import MedicationsIcon from '../assets/images/medications-icon';
+import { firebase } from '../components/Firebase/config';
+import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
+import * as fsFn  from '../utils/firestore';
+import { getValueFormatted } from '../utils/timeConvert';
+
 
 Notifications.setNotificationHandler({
     handleNotification: async (notification) => {
@@ -42,17 +48,14 @@ const HomeScreen = ({ navigation }) => {
     
     const [pushToken, setToken] = useState('');
     const [count, setCount] = useState(0);
-    
+
+    const { currentUser } = useContext(FirebaseAuthContext);
     const [greeting, setGreeting] = useState('');
-
+    const [loading, setLoading] = useState();
     const [medicationTaken, setMedicationTaken] = useState(0);
-   
-    const [medications, setMedications] = useState ([
-        {medicationName: 'Monopril', function: 'High Blood Pressure', frequency: '1x/day', alert: '10:00AM', key: '1'}, 
-        {medicationName: 'Cymbalta', function: 'Joint Pain', frequency: '1x/day', alert: '9:00AM', key: '2'}, 
-        {medicationName: 'Codeine', function: 'Cough & Cold', frequency: '15ml/day', alert: '10:00AM', key: '3'},
-    ])
-
+    const [medications, setMedications] = useState ();
+    const [fullName, setfullName] = useState('');
+    
     useEffect(()=> {
         (async ()=> {
             let time = calculateLocalTimezone(1606435200000);
@@ -90,15 +93,30 @@ const HomeScreen = ({ navigation }) => {
         } else {
             setGreeting('Good evening');
         }
-
+       
+        const medSubscriber = firebase.firestore().collection("users").doc(currentUser.uid
+            ).collection("medications"
+            ).onSnapshot(function(querySnapshot) {
+                loadUserInfo();
+            }
+        );
+        const nameSubscriber = firebase.firestore().collection("users").doc(currentUser.uid
+            ).onSnapshot(function(querySnapshot) {
+                loadUserInfo();
+            }
+        );
+        
+        // Unsubscribe from listener when no longer in use
         return () => {
+            medSubscriber(); 
+            nameSubscriber();
             Notifications.removeNotificationSubscription(notificationListener);
             Notifications.removeNotificationSubscription(responseListener);
             // let alarmDate = new Date(Date.UTC(2020, 10, 18, 20, 41));
             // console.log(alarmDate.getTimezoneOffset());
             // console.log(new Date(Date.UTC(2020, 10, 18, 20, 41)))
             // console.log(Date.now() + 60 * 60 * 1000)
-        };
+        }
 
     }, []);
 
@@ -265,15 +283,23 @@ const HomeScreen = ({ navigation }) => {
             </View>
         )
     }
+    // Load user's full name and current medications
+    async function loadUserInfo() {
+        const user = await firebase.firestore().collection("users").doc(currentUser.uid).get();
+        setfullName(user.data().fullName);
+        let meds = await fsFn.getCurrentMedications(currentUser.uid);
+        setMedications(meds);
+    }
 
     return (
-        <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+        <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
             <Background />
             <TouchableOpacity style={styles.button} onPress={async () => await scheduleAlarms()}>
+            {/* <TouchableOpacity style={PatientStyles.menuButton} onPress={()=> navigation.openDrawer()}> */}
                 <MenuIcon/>
             </TouchableOpacity>
             <Text style={styles.time}> {greeting} </Text>
-            <Text style={styles.user}> Helen Smith </Text>
+            <Text style={styles.user}> {fullName} </Text>
             <View style={styles.progressCircle}>
                 <ProgressCircle
                     percent={medicationTaken}
@@ -286,24 +312,36 @@ const HomeScreen = ({ navigation }) => {
                 </ProgressCircle>
             </View>
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
-            <View style={{flexDirection:'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 10}}>
-            <Text style={styles.title}> Medications </Text>
-            <MedicationsIcon onPress={showNotifs}/>
-            </View>
-            <FlatList data={medications} renderItem={({item}) => (
-                <Swipeable renderLeftActions={takenAction} renderRightActions={dismissAction}>
-                    <MedicationCard>
-                        <View style={styles.medicationInfoView}>
-                        <Text style={styles.medicationFont}>{item.medicationName}</Text>
-                        {/*  <Text style={styles.functionFont}>no simple function in db yet</Text> */}
-                        <Text style={styles.frequencyfont}>{item.frequency}</Text>
-                        </View>
-                        <View style={styles.timeView}>
-                            <Text style={styles.timeFont}>{item.alert}</Text>
-                        </View>
-                    </MedicationCard>
-                </Swipeable>
-                )}/>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 10 }}>
+                    <Text style={PatientStyles.title}> Medications </Text>
+                    <MedicationsIcon />
+                </View>
+            {medications ? (
+                <FlatList 
+                data={medications.sort((a,b)=>{
+                    return a.namePrescribe.localeCompare(b.namePrescribe);
+                })}
+                keyExtractor={(item) => item.rxcui.toString()}
+                renderItem={({item}) => (
+                    <Swipeable 
+                    renderLeftActions={takenAction} 
+                    renderRightActions={dismissAction}>
+                        <MedicationCard>
+                            <View style={styles.medicationInfoView}>
+                            <Text style={styles.medicationFont}>{item.nameDisplay}</Text>
+                            <Text style={styles.frequencyfont}>{item.strength}</Text>
+                            </View>
+                            <View style={styles.timeView}>
+                                <Text style={styles.timeFont}>{getValueFormatted(item.intakeTime)}</Text>
+                            </View>
+                        </MedicationCard>
+                    </Swipeable>
+                    )}/>
+            ): (
+                <View style={{flex: 1, justifyContent:'center'}}>
+                    <ActivityIndicator/>
+                </View>
+            )}
             </Animatable.View>
         </KeyboardAvoidingView>
     )
@@ -315,10 +353,6 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        backgroundColor: '#42C86A'
-    }, 
     drawer: {
         flex: 4,
         backgroundColor: '#fff', 
@@ -328,19 +362,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30, 
         position: 'absolute',
         width: screenWidth,
-        height: screenHeight * 0.85,
+        height: screenHeight * 0.65,
         top: screenHeight * 0.38
-    }, 
-    button: { 
-        position: 'absolute',
-        right: 30,
-        top: 40 
-    }, 
-    title: {
-        fontFamily: 'roboto-regular',
-        fontSize: 24,
-        fontWeight: "100",
-    }, 
+    },  
     time: {
         fontFamily: 'roboto-regular',
         fontSize: 24,

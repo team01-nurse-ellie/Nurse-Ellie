@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext} from 'react';
 import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, FlatList, Button, Dimensions, StyleSheet, Alert } from 'react-native';
 import { firebase } from '../components/Firebase/config';
-
 import * as Animatable from 'react-native-animatable';
+import { useSelector } from 'react-redux'
 
 import MedIconIndex from '../components/MedicationImages';
 
+import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import MedicationCard from '../components/MedicationCard';
 import MenuIcon from '../assets/images/menu-icon.svg';
@@ -13,25 +14,17 @@ import MedicationsIcon from '../assets/images/medications-icon.svg';
 import SearchIcon from '../assets/images/search-icon.svg';
 
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
-import * as fsFn  from '../utils/firestore';
+import { getValueFormatted } from '../utils/timeConvert';
 import { ActivityIndicator } from 'react-native-paper';
 
-    const MedicationListScreen = ({navigation}) => {
+const MedicationListScreen = ({navigation}) => {
     const { currentUser } = useContext(FirebaseAuthContext);
-    // Hard coded medication information
-/*     const [medications, setMedications] = useState ([
-        {medicationName: 'Monopril', function: 'High Blood Pressure', frequency: '1x/day', alert: '10:00AM', key: '1'}, 
-        {medicationName: 'Cymbalta', function: 'Joint Pain', frequency: '1x/day', alert: '9:00AM', key: '2'}, 
-        {medicationName: 'Codeine', function: 'Cough & Cold', frequency: '15ml/day', alert: '10:00AM', key: '3'},
-    ]) */
     const [newMedications, setNewMedications] = useState([]);
     const [loading,setLoading] = useState(true);
 
-
-
     useEffect(() => {
-        //collection listener, initializes local state with all user medication
-        firebase.firestore()
+        // subscribe to user collection of medications
+        const subscriber = firebase.firestore()
             .collection("users")
             .doc(currentUser.uid)
             .collection("medications")
@@ -48,18 +41,20 @@ import { ActivityIndicator } from 'react-native-paper';
                 setNewMedications(meds);
                 setLoading(false);
             });
+        // Unsubscribe from document when no longer in use
+        return () => subscriber();
     }, []);
 
 
     return (
-        <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+        <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
             <Background/>
-            <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
+            <TouchableOpacity style={PatientStyles.menuButton} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
             </TouchableOpacity>
-            <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
-                <View style={styles.header}>
-                    <Text style={styles.title}>
+            <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig"> 
+                <View style={PatientStyles.header}>
+                    <Text style={PatientStyles.title}>
                         Medications
                     </Text>
                     <MedicationsIcon/>
@@ -71,14 +66,14 @@ import { ActivityIndicator } from 'react-native-paper';
                     </TouchableOpacity>
                 </View>
                 { loading ? (
-                    <View style={{padding:screenHeight *.5}}>
+                    <View style={{flex:1, justifyContent:'center', padding:screenHeight *.5}}>
                         <ActivityIndicator/>
                     </View>
                 ) : (
                     <FlatList 
                         data={newMedications.sort( (a,b) => {
-                            return a.medication.nameDisplay.localeCompare(b.medication.nameDisplay);
-                        })} 
+                            return a.medication.namePrescribe.localeCompare(b.medication.namePrescribe);
+                        })}
                         keyExtractor={(item) => item.docId}
                         renderItem={({item}) => (
                         <TouchableOpacity style={styles.searchButton} onPress={()=>navigation.navigate('Medication', {item: item})}>
@@ -87,12 +82,12 @@ import { ActivityIndicator } from 'react-native-paper';
                                     {MedIconIndex.index[item.medication.medIcon]}
                                 </View>
                                 <View style={styles.medicationInfoView}>
-                                <Text style={styles.medicationFont}>{item.medication.nameDisplay}</Text>
+                                <Text style={PatientStyles.medicationFont}>{item.medication.nameDisplay}</Text>
                                 <Text style={styles.functionFont}>{item.medication.function}</Text>
                                 <Text style={styles.frequencyfont}>{item.medication.strength}</Text>
                                 </View>
                                 <View style={styles.timeView}>
-                                    <Text style={styles.timeFont}>{item.medication.intakeTime}</Text>
+                                    <Text style={styles.timeFont}>{getValueFormatted(item.medication.intakeTime)}</Text>
                                 </View>
                             </MedicationCard>
                         </TouchableOpacity>
@@ -108,25 +103,6 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        backgroundColor: '#42C86A',
-    }, 
-    header:{
-        flexDirection:'row', 
-        justifyContent: 'space-between', 
-        paddingBottom: 10
-    },
-    title: {
-        fontFamily: 'roboto-regular',
-        fontSize: 24,
-        fontWeight: "100",
-    }, 
-    medicationFont: {
-        fontFamily: 'roboto-regular', 
-        fontSize: 20, 
-        color: 'rgba(0, 0, 0, 0.85)'
-    },
     functionFont:{
         fontFamily: 'roboto-regular', 
         fontSize: 14, 
@@ -142,11 +118,6 @@ const styles = StyleSheet.create({
         fontSize: 16, 
         color: 'rgba(0, 0, 0, 0.85)'
     },
-    descriptionFont: {
-        fontFamily: 'roboto-regular', 
-        fontSize: 12, 
-        color: 'rgba(0, 0, 0, 0.38)', 
-    },
     medicationInfoView: {
         width: 170,
         paddingHorizontal: 10
@@ -158,11 +129,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center', 
         width: 100
     },
-    menuButton:{
-        position: 'absolute',
-        right: 30,
-        top: 40 
-    },
     searchInput:{
         flexDirection: 'row',
         borderBottomColor: 'rgba(0, 0, 0, 0.6)',
@@ -173,18 +139,6 @@ const styles = StyleSheet.create({
     searchButton:{
         right: 5
     },
-    drawer: {
-        flex: 4,
-        backgroundColor: '#fff', 
-        borderTopLeftRadius: 30, 
-        borderTopRightRadius: 30, 
-        paddingVertical: 50, 
-        paddingHorizontal: 30, 
-        position: 'absolute',
-        width: screenWidth,
-        height: screenHeight * 0.85,
-        top: screenHeight * 0.15
-    }
 });
 
 export default MedicationListScreen;
