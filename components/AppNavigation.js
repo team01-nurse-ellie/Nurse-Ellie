@@ -27,6 +27,7 @@ import HealthProfessionalScreen from '../screens/HealthProfessionalScreen';
 import SymptomChecklistScreen from '../screens/SymptomChecklistScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
+import EditUserProfileScreen from '../screens/EditUserProfileScreen';
 // Navigation modules
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, TransitionSpecs } from '@react-navigation/stack';
@@ -58,7 +59,8 @@ const AppNavigation = () => {
                 <Drawer.Screen name="HealthProfessional" component={HealthProfessionalScreen} />
                 <Drawer.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen} />
                 <Drawer.Screen name="NotificationScreen" component={NotificationScreen}/>
-                <Drawer.Screen name="UserProfileScreen" component={UserProfileScreen}/>
+                <Drawer.Screen name="UserProfileScreen" component={UserProfileScreen} options={{unmountOnBlur:true}}/>
+                <Drawer.Screen name="EditUserProfileScreen" component={EditUserProfileScreen} options={{unmountOnBlur:true}}/>
             </Drawer.Navigator>
         );
     }

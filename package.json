@@ -8,10 +8,13 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@eva-design/eva": "^2.0.0",
     "@react-native-community/checkbox": "^0.5.5",
     "@react-native-community/datetimepicker": "2.4.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-firebase/app": "^8.4.7",
+    "@react-native-firebase/auth": "^9.3.5",
+    "@react-native-firebase/storage": "^10.0.0",
     "@react-navigation/drawer": "^5.9.2",
     "@react-navigation/native": "^5.7.5",
     "@react-navigation/stack": "^5.9.0",
@@ -34,11 +37,13 @@
     "react-native-datepicker": "^1.7.2",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-gesture-handler": "~1.6.0",
+    "react-native-image-picker": "file:node_modules/react-native-image-picker",
     "react-native-modal": "^11.5.6",
     "react-native-modal-datetime-picker": "^9.0.0",
     "react-native-modalbox": "^2.0.2",
     "react-native-paper": "^4.2.0",
     "react-native-picker-select": "^8.0.2",
+    "react-native-progress": "^4.1.2",
     "react-native-progress-circle": "^2.1.0",
     "react-native-qrcode-svg": "^6.0.6",
     "react-native-reanimated": "~1.9.0",
@@ -46,6 +51,7 @@
     "react-native-screens": "~2.9.0",
     "react-native-svg": "^12.1.0",
     "react-native-svg-transformer": "^0.14.3",
+    "react-native-ui-kitten": "^4.4.1",
     "react-native-unordered-list": "^1.0.4",
     "react-native-web": "~0.11.7",
     "react-native-wheel-scroll-picker": "^0.2.4",
@@ -55,6 +61,12 @@
   "devDependencies": {
     "@babel/core": "^7.8.6",
     "babel-preset-expo": "~8.1.0"
+  },
+  "jest": {
+    "preset": "react-native",
+    "setupFiles": [
+      "jest/setup.js"
+    ]
   },
   "private": true
 }

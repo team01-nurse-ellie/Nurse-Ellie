@@ -8,7 +8,7 @@ const SplashScreen = ({ navigation }) => {
   
         var user = firebase.auth().currentUser;
 
-        if (user) {
+       if (user) {
             firebase.auth().signOut()
             console.log("User session is still within 1 hour, user is still signed in")
         } else {

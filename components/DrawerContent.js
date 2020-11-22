@@ -24,6 +24,10 @@ function DrawerContent(props) {
                     label="Edit User Profile"
                     onPress={() => { props.navigation.navigate('UserProfileScreen') }}
                 />
+                  <DrawerItem
+                    label="Profile"
+                    onPress={() => { props.navigation.navigate('EditUserProfileScreen') }}
+                />
                 <Drawer.Section style={styles.bottomDrawerSection}>
                     <DrawerItem
                         label="Medication List"
