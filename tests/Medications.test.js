@@ -5,7 +5,7 @@ import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext'
 import MedicationListScreen from '../screens/MedicationListScreen';
 import MedicationDetailScreen from '../screens/MedicationDetailScreen';
 import MedicationSummaryScreen from '../screens/MedicationSummaryScreen';
-import AddMedicationScreen from '../screens/MedicationSummaryScreen';
+import AddMedicationScreen from '../screens/AddMedicationScreen';
 
 const navigationProp = {
     navigate: jest.fn(),
@@ -13,9 +13,29 @@ const navigationProp = {
 };
 const routeProp = {
     params: {
-        item: {},
+        item: {
+            medication: {
+                adverseEvents: ['nausea','constipation'],
+                directions: 'Take with or without food',
+                doseForm: 'Oral pill',
+                information: 'Cymbalta is indicated for',
+                intakeTime: 62160,
+                medIcon: '1',
+                nameDisplay: 'Cymbalta',
+                strength: '1 mg',
+            }
+        },
     },
 };
+
+item.medication.nameDisplay
+item.medication.medIcon
+item.medication.intakeTime
+item.medication.doseForm
+item.medication.strength
+item.medication.directions
+item.medication.information
+item.medication.adverseEvents
 
 export const FirebaseAuthProvider = ({ children }) => (
     <FirebaseAuthContext.Provider value={{ currentUser: { uid: 'test' } }}>
@@ -43,6 +63,6 @@ test('Medication Summary Screen render correctly', ()=>{
 });
 
 test('Medication Add Screen renders correctly', ()=>{
-    const wrapper = renderer.create(<MedicationSummaryScreen />);
+    const wrapper = renderer.create(<AddMedicationScreen />);
     expect(wrapper.toJSON()).toMatchSnapshot();
 });
