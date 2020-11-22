@@ -31,11 +31,6 @@ test('Medication List Screen renders correctly', async () => {
     expect(wrapper.toJSON()).toMatchSnapshot();
 });
 
-test('Medication Detail Screen renders correctly', ()=>{
-    const wrapper = renderer.create(<MedicationDetailScreen navigation={navigationProp} route={routeProp} />);
-    expect(wrapper.toJSON()).toMatchSnapshot();
-});
-
 test('Medication Summary Screen render correctly', ()=>{
     const wrapper = renderer.create(<MedicationSummaryScreen />);
     expect(wrapper.toJSON()).toMatchSnapshot();

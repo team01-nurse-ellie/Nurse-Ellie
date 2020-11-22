@@ -4,9 +4,11 @@ import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 import { firebase } from '../components/Firebase/config'
+
 const SplashScreen = ({ navigation }) => {
-  
-        var user = firebase.auth().currentUser;
+
+
+    var user = firebase.auth().currentUser;
 
        if (user) {
             firebase.auth().signOut()
@@ -15,9 +17,8 @@ const SplashScreen = ({ navigation }) => {
             firebase.auth().signOut()
             console.log("User is not sign in")
         }
-       
-        return (
-        <View style={styles.container}>
+    return (
+        <View style={[PatientStyles.background, {justifyContent: 'center'}]}>
             <Background />
             <View style={styles.logoCircle}>
                 <NurseEllieLogo style={styles.logo} />
@@ -54,6 +55,5 @@ const styles = StyleSheet.create({
         bottom: screenHeight / 4.5
     }
 });
-
 
 export default SplashScreen;
