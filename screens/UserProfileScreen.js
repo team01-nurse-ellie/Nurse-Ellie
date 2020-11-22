@@ -2,8 +2,8 @@ import React, { useState }from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard, Picker, Alert, KeyboardAvoidingView, Animated} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
-import Background from '../components/background';
-import MenuIcon from '../assets/images/menu-icon';
+import Background from '../components/background.js';
+import MenuIcon from '../assets/images/menu-icon.svg';
 import EntryIcon from '/Users/hoangvu/Nurse-Ellie copy/assets/images/g-entry-arrow-icon.svg';
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
@@ -17,7 +17,7 @@ const UserProfileScreen = ({navigation}) => {
     const [email, setEmail] = useState('')
     const usersRef = firebase.firestore().collection('users')
     const [gender, setGender] = useState('none')
-    const [bdate, setDate] = useState(new Date(1598051730000));
+    const [bdate, setDate] = useState('');
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);

@@ -2,8 +2,8 @@ import React, { useState, useEffect }from 'react';
 import { View, Text, TouchableOpacity, Image, Dimensions, StyleSheet} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
-import Background from '../components/background';
-import MenuIcon from '../assets/images/menu-icon';
+import Background from '../components/background.js';
+import MenuIcon from '../assets/images/menu-icon.svg';
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
@@ -13,13 +13,14 @@ const EditUserProfileScreen = ({navigation}) => {
     //state declare
     const usersRef = firebase.firestore().collection('users')
     const [user, setUser] = useState();
-    const {uid} = firebase.auth().currentUser;
   
     const onEditUser = () => {
         navigation.navigate('UserProfileScreen');
     };
 
     const getUser = async () => {
+        const {uid} = firebase.auth().currentUser;
+
       try {
         const documentSnapshot = await usersRef
           .doc(uid)

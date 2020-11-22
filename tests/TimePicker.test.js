@@ -44,3 +44,4 @@ describe('TimePicker', () => {
         expect(instance.getValueFormatted()).toBe('1:00 AM');
     });
 });
+
