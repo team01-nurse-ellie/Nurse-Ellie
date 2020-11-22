@@ -17,23 +17,17 @@ const defaultProps = {
 };
 
 const renderTimePicker = (props = defaultProps) => {
-    wrapper = shallow(<TimePicker {...props} onSelect={onSelectMock}/>);
-    //wrapper.setState({onSelect:(selected)=>{value = selected}});
+    wrapper = shallow(<TimePicker {...props} />);
     instance = wrapper.instance();
 }
 describe('TimePicker', () => {
-
-    //instance.onSelect = jest.fn();
-    //const spy = jest.spyOn(instance, "onSelect");
-
     beforeEach(()=>{
         renderTimePicker();
     });
 
-    afterEach(() => {
-        jest.clearAllMocks();
-      });
-
+    // afterEach(() => {
+    //     jest.clearAllMocks();
+    //   });
     it('should properly update time from hour picker', () => {
         renderTimePicker({ ...defaultProps, value: 3600 })
         instance.calculateTimeFromHourPicker('1');
@@ -53,6 +47,6 @@ describe('TimePicker', () => {
     it('should properly display time from seconds', () => {
         renderTimePicker({ ...defaultProps, value: 3600 });
         instance.getValueFormatted()
-        //expect(instance.getValueFormatted()).toBe('1:00 AM');
+        expect(instance.getValueFormatted()).toBe('1:00 AM');
     });
 });

@@ -31,12 +31,6 @@ const routeProp = {
     },
 };
 
-// var querySnapshot = {};
-// Object.defineProperty(querySnapshot, 'data', {
-//     value: jest.fn(),
-//     configurable: true,
-//   });
-
 jest.mock("../components/TimePicker", () => {
     return {
         __esModule: true,
