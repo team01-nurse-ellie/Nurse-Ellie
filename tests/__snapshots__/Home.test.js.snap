@@ -1,0 +1,274 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home Screen renders correctly 1`] = `
+<View
+  behaviour="padding"
+  onLayout={[Function]}
+  style={
+    Object {
+      "backgroundColor": "#42C86A",
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#42C86A",
+        "flex": 1,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(62, 185, 99, 0.8)",
+          "borderRadius": 250,
+          "height": 500,
+          "position": "absolute",
+          "right": -375,
+          "top": 667,
+          "width": 500,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 30,
+          "height": 60,
+          "left": 10,
+          "position": "absolute",
+          "top": 30,
+          "width": 60,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 125,
+          "height": 250,
+          "left": 150,
+          "position": "absolute",
+          "top": 222.33333333333334,
+          "width": 250,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 300,
+          "height": 600,
+          "left": 300,
+          "position": "absolute",
+          "top": -333.5,
+          "width": 600,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 175,
+          "height": 350,
+          "left": -250,
+          "position": "absolute",
+          "top": 667,
+          "width": 350,
+        }
+      }
+    />
+  </View>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+        "position": "absolute",
+        "right": 30,
+        "top": 40,
+      }
+    }
+  >
+    <svg
+      data-file-name="SvgMenuIcon"
+    />
+  </View>
+  <View
+    forwardedRef={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#fff",
+        "borderTopLeftRadius": 30,
+        "borderTopRightRadius": 30,
+        "flex": 4,
+        "height": 1133.8999999999999,
+        "opacity": 0,
+        "paddingHorizontal": 30,
+        "paddingVertical": 50,
+        "position": "absolute",
+        "top": 200.1,
+        "transform": Array [
+          Object {
+            "translateY": 500,
+          },
+        ],
+        "width": 750,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "paddingBottom": 10,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "fontFamily": "roboto-regular",
+            "fontSize": 24,
+            "fontWeight": "100",
+          }
+        }
+      >
+        Medications
+      </Text>
+      <svg
+        data-file-name="SvgMedicationsIcon"
+      />
+    </View>
+    <View
+      style={
+        Object {
+          "borderBottomColor": "rgba(0, 0, 0, 0.6)",
+          "borderBottomWidth": 1,
+          "flexDirection": "row",
+          "marginVertical": 10,
+          "minWidth": 600,
+        }
+      }
+    >
+      <TextInput
+        allowFontScaling={true}
+        placeholder="Search Your Medications..."
+        rejectResponderTermination={true}
+        style={
+          Object {
+            "minWidth": 600,
+          }
+        }
+        underlineColorAndroid="transparent"
+      />
+      <View
+        accessible={true}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <svg
+          data-file-name="SvgSearchIcon"
+        />
+      </View>
+    </View>
+    <RCTScrollView
+      data={Array []}
+      disableVirtualization={false}
+      getItem={[Function]}
+      getItemCount={[Function]}
+      horizontal={false}
+      initialNumToRender={10}
+      keyExtractor={[Function]}
+      maxToRenderPerBatch={10}
+      onContentSizeChange={[Function]}
+      onEndReachedThreshold={2}
+      onLayout={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      removeClippedSubviews={false}
+      renderItem={[Function]}
+      scrollEventThrottle={50}
+      stickyHeaderIndices={Array []}
+      updateCellsBatchingPeriod={50}
+      viewabilityConfigCallbackPairs={Array []}
+      windowSize={21}
+    >
+      <View />
+    </RCTScrollView>
+    <View
+      accessibilityRole="button"
+      accessibilityState={Object {}}
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {},
+          ]
+        }
+      >
+        <Text
+          style={
+            Array [
+              Object {
+                "color": "#007AFF",
+                "fontSize": 18,
+                "margin": 8,
+                "textAlign": "center",
+              },
+              Object {
+                "color": "#42C86A",
+              },
+            ]
+          }
+        >
+          ADD NEW MEDICATION
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
