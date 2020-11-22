@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Platform, SafeAreaView, StatusBar } from 'react-native';
 // Styling
-import { patient_styles, hp_styles } from '../general-stylesheet';
-
+import PatientStyles from '../styles/PatientStyleSheet';
+import HealthProStyles from '../styles/HealthProfessionalStyleSheet';
 // Auth Context
 import { FirebaseAuthContext } from './Firebase/FirebaseAuthContext';
 
@@ -15,7 +15,6 @@ import HomeScreen from '../screens/HomeScreen';
 import SplashScreen from '../screens/SplashScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import SignInScreen from '../screens/SignInScreen';
-import SettingsScreen from '../screens/SettingsScreen';
 import UserLinkScreen from '../screens/UserLinkScreen';
 import PatientListScreen from '../screens/PatientListScreen';
 import AddMedicationScreen from '../screens/AddMedicationScreen';
@@ -54,7 +53,6 @@ const AppNavigation = () => {
                 <Drawer.Screen name="Medication" component={MedicationDetailScreen} />
                 <Drawer.Screen name="Patients" component={PatientListScreen} />
                 <Drawer.Screen name="Patient" component={PatientDetailScreen} />
-                <Drawer.Screen name="Settings" component={SettingsScreen} />
                 <Drawer.Screen name="UserLinkScreen" component={UserLinkScreen} />
                 <Drawer.Screen name="HealthProfessional" component={HealthProfessionalScreen} />
                 <Drawer.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen} />
@@ -67,7 +65,7 @@ const AppNavigation = () => {
 
     return (
         <>
-            <StatusBar backgroundColor={(accountType == "patient") ? patient_styles.background.backgroundColor : hp_styles.background.backgroundColor} />
+            <StatusBar backgroundColor={(accountType == "patient") ? PatientStyles.background.backgroundColor : HealthProStyles.background.backgroundColor} />
             <SafeAreaView style={{
                 flex: 1,
                 // marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
@@ -90,7 +88,7 @@ const AppNavigation = () => {
                                         close: TransitionSpecs.TransitionIOSSpec   
                                     },
                                     // Color of header depending on account type.
-                                    headerStyle: { backgroundColor: (accountType == "patient") ? patient_styles.background.backgroundColor : hp_styles.background.backgroundColor}, title: "Scan" }} />
+                                    headerStyle: { backgroundColor: (accountType == "patient") ? PatientStyles.background.backgroundColor : HealthProStyles.background.backgroundColor}, title: "Scan" }} />
                             </>
                         ) : (
                                 <>

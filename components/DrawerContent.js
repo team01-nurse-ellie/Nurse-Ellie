@@ -43,10 +43,6 @@ function DrawerContent(props) {
                     onPress={() => { props.navigation.navigate('Patients') }}
                 />
                 <DrawerItem
-                    label="Setting"
-                    onPress={() => { props.navigation.navigate('Settings') }}
-                />
-                <DrawerItem
                     label="User Connect"
                     onPress={() => { props.navigation.navigate('UserLinkScreen') }}
                 />

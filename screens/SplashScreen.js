@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
-
+import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 import { firebase } from '../components/Firebase/config'
@@ -33,11 +33,6 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        backgroundColor: '#42C86A',
-    },
     logoCircle: {
         height: 300,
         width: 300,

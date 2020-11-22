@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, FlatList, Button, Dimensions, StyleSheet, Alert } from 'react-native';
+import { View, Text, KeyboardAvoidingView, TouchableOpacity, FlatList, Button, Dimensions, StyleSheet, Alert } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 
@@ -11,7 +11,7 @@ import MedIconIndex from '../components/MedicationImages';
 import MenuIcon from '../assets/images/hp-menu-icon';
 import EditIcon from '../assets/images/edit-icon';
 import PlusIcon from '../assets/images/plus-icon';
-import EnterIcon from '../assets/images/entry-triangle-icon';
+import EnterIcon from '../assets/images/entry-triangle-icon.svg';
 import DissatisifiedIcon from '../assets/images/scale-dissatisfied-icon';
 import TempAvatar from '../assets/images/temp-avatar';
 
