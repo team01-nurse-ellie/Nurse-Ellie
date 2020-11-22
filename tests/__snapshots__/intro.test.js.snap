@@ -305,12 +305,16 @@ exports[`Sign In Screen renders correctly 1`] = `
       rejectResponderTermination={true}
       returnKeyType="done"
       style={
-        Object {
-          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
-          "borderBottomWidth": 1.5,
-          "fontSize": 16,
-          "paddingTop": 8,
-        }
+        Array [
+          Object {
+            "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+            "borderBottomWidth": 1.5,
+            "fontSize": 16,
+          },
+          Object {
+            "marginBottom": 8,
+          },
+        ]
       }
       underlineColorAndroid="transparent"
       value=""
@@ -324,12 +328,16 @@ exports[`Sign In Screen renders correctly 1`] = `
       returnKeyType="done"
       secureTextEntry={true}
       style={
-        Object {
-          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
-          "borderBottomWidth": 1.5,
-          "fontSize": 16,
-          "paddingTop": 8,
-        }
+        Array [
+          Object {
+            "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+            "borderBottomWidth": 1.5,
+            "fontSize": 16,
+          },
+          Object {
+            "marginBottom": 8,
+          },
+        ]
       }
       underlineColorAndroid="transparent"
       value=""
@@ -524,14 +532,18 @@ exports[`Sign Up Screen renders correctly 1`] = `
     />
     <Text
       style={
-        Object {
-          "fontFamily": "roboto-regular",
-          "fontSize": 32,
-          "fontWeight": "100",
-          "left": 214.28571428571428,
-          "paddingBottom": 30,
-          "top": 93.38000000000001,
-        }
+        Array [
+          Object {
+            "fontFamily": "roboto-regular",
+            "fontSize": 32,
+            "fontWeight": "100",
+          },
+          Object {
+            "left": 214.28571428571428,
+            "paddingBottom": 30,
+            "top": 93.38000000000001,
+          },
+        ]
       }
     >
        Sign-Up 
@@ -552,12 +564,16 @@ exports[`Sign Up Screen renders correctly 1`] = `
       rejectResponderTermination={true}
       returnKeyType="done"
       style={
-        Object {
-          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
-          "borderBottomWidth": 1.5,
-          "fontSize": 16,
-          "paddingTop": 8,
-        }
+        Array [
+          Object {
+            "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+            "borderBottomWidth": 1.5,
+            "fontSize": 16,
+          },
+          Object {
+            "marginBottom": 8,
+          },
+        ]
       }
       underlineColorAndroid="transparent"
       value=""
@@ -571,12 +587,16 @@ exports[`Sign Up Screen renders correctly 1`] = `
       rejectResponderTermination={true}
       returnKeyType="done"
       style={
-        Object {
-          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
-          "borderBottomWidth": 1.5,
-          "fontSize": 16,
-          "paddingTop": 8,
-        }
+        Array [
+          Object {
+            "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+            "borderBottomWidth": 1.5,
+            "fontSize": 16,
+          },
+          Object {
+            "marginBottom": 8,
+          },
+        ]
       }
       underlineColorAndroid="transparent"
       value=""
@@ -591,12 +611,16 @@ exports[`Sign Up Screen renders correctly 1`] = `
       returnKeyType="done"
       secureTextEntry={true}
       style={
-        Object {
-          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
-          "borderBottomWidth": 1.5,
-          "fontSize": 16,
-          "paddingTop": 8,
-        }
+        Array [
+          Object {
+            "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+            "borderBottomWidth": 1.5,
+            "fontSize": 16,
+          },
+          Object {
+            "marginBottom": 8,
+          },
+        ]
       }
       underlineColorAndroid="transparent"
       value=""
@@ -611,12 +635,16 @@ exports[`Sign Up Screen renders correctly 1`] = `
       returnKeyType="done"
       secureTextEntry={true}
       style={
-        Object {
-          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
-          "borderBottomWidth": 1.5,
-          "fontSize": 16,
-          "paddingTop": 8,
-        }
+        Array [
+          Object {
+            "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+            "borderBottomWidth": 1.5,
+            "fontSize": 16,
+          },
+          Object {
+            "marginBottom": 8,
+          },
+        ]
       }
       underlineColorAndroid="transparent"
     />
@@ -694,11 +722,15 @@ exports[`Sign Up Screen renders correctly 1`] = `
 exports[`Splash Screen renders correctly 1`] = `
 <View
   style={
-    Object {
-      "backgroundColor": "#42C86A",
-      "flex": 1,
-      "justifyContent": "center",
-    }
+    Array [
+      Object {
+        "backgroundColor": "#42C86A",
+        "flex": 1,
+      },
+      Object {
+        "justifyContent": "center",
+      },
+    ]
   }
 >
   <View
