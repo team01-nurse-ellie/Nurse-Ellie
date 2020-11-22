@@ -8,13 +8,13 @@ Enzyme.configure({ adapter: new Adapter() });
 
 jest.mock('react-native-wheel-scroll-picker', () => "ScrollPicker");
 
-const onSelectMock = jest.fn();
-       
-let wrapper, instance;
+let wrapper, instance, onSelectValue;
 const defaultProps = {
-    value: 0 ,
-    //onSelect: value => {return value}
-}
+    value: 0,
+    onSelect: value => {
+        onSelectValue = value;
+    },
+};
 
 const renderTimePicker = (props = defaultProps) => {
     wrapper = shallow(<TimePicker {...props} onSelect={onSelectMock}/>);
@@ -35,30 +35,23 @@ describe('TimePicker', () => {
       });
 
     it('should properly update time from hour picker', () => {
-        expect(wrapper.state('value')).toBe(0);
+        renderTimePicker({ ...defaultProps, value: 3600 })
         instance.calculateTimeFromHourPicker('1');
-        expect(onSelectMock).toHaveBeenCalledTimes(1);
-        expect(onSelectMock).toHaveBeenCalledWith(3600);
-        //expect(wrapper.state('value')).toBe(3600);
-
+        expect(onSelectValue).toBe(3600);
     });
     it('should properly update time from minute picker', () => {
-        expect(wrapper.state('value')).toBe(0);
         instance.calculateTimeFromMinutePicker('25');
-        expect(onSelectMock).toHaveBeenCalledTimes(1);
-        //expect(wrapper.state('value')).toBe(1500);
+        expect(onSelectValue).toBe(1500);
     });
     it('should properly update time from am/pm picker', () => {
-        renderTimePicker({value:3600});
+        renderTimePicker({ ...defaultProps, value: 3600 });
         instance.calculateTimeFromAMPMPicker('AM');
-        expect(onSelectMock).toHaveBeenCalledTimes(1);
-        expect(wrapper.state('value')).toBe(3600);
-        expect(onSelectMock).toHaveBeenCalledTimes(1);
+        expect(onSelectValue).toBe(3600);
         instance.calculateTimeFromAMPMPicker('PM');
-        //expect(wrapper.state('value')).toBe(46800);
+        expect(onSelectValue).toBe(46800);
     });
     it('should properly display time from seconds', () => {
-        renderTimePicker({value:3600});
+        renderTimePicker({ ...defaultProps, value: 3600 });
         instance.getValueFormatted()
         //expect(instance.getValueFormatted()).toBe('1:00 AM');
     });

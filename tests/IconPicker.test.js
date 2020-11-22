@@ -7,7 +7,7 @@ import IconPicker from '../components/IconPicker';
 Enzyme.configure({ adapter: new Adapter() });
 
 let wrapper, instance;
-const defaultProps = {value:0};
+const defaultProps = {value:0, selected: '0'};
 
 const renderIconPicker = (props = defaultProps) => {
     wrapper = shallow(<IconPicker {...props} />);
@@ -15,12 +15,14 @@ const renderIconPicker = (props = defaultProps) => {
 }
 
 describe('IconPicker', () => {
-
     beforeEach(()=>{
         renderIconPicker();
     });
     it('should be set to index of 1 by default', () => {
         expect(wrapper.state('selected')).toBe('1');
     });
-
+    it('should properly store a new icon when picked', () => {
+        instance.onIconPress('3');
+        expect(wrapper.state('selected')).toBe('3');
+    });
 });
