@@ -11,13 +11,6 @@ const navigationProp = {
     openDrawer: jest.fn(),
 };
 
-// var querySnapshot = {};
-// Object.defineProperty(querySnapshot, 'data', {
-//     value: jest.fn(),
-//     configurable: true,
-//   });
-
-
 const firestoreMock = {
     collection: jest.fn().mockReturnThis(),
     doc: jest.fn().mockReturnThis(),
