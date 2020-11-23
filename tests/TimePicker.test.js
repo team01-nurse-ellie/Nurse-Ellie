@@ -20,12 +20,14 @@ const renderTimePicker = (props = defaultProps) => {
     wrapper = shallow(<TimePicker {...props} />);
     instance = wrapper.instance();
 }
-
 describe('TimePicker', () => {
-
     beforeEach(()=>{
         renderTimePicker();
     });
+
+    // afterEach(() => {
+    //     jest.clearAllMocks();
+    //   });
     it('should properly update time from hour picker', () => {
         renderTimePicker({ ...defaultProps, value: 3600 })
         instance.calculateTimeFromHourPicker('1');
