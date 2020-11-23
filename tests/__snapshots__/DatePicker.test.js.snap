@@ -48,19 +48,17 @@ Array [
           "fontFamily": "roboto-regular",
           "fontSize": 14,
         },
-        Object {
-          "color": "#707070",
-        },
+        false,
       ]
     }
   >
-    Start Date
+    November 21st, 2020
   </Text>,
   <View />,
 ]
 `;
 
-exports[`DatePicker should print a default text of "Start Date" 2`] = `
+exports[`DatePicker should print a default text of "Start Date" 1`] = `
 Array [
   <Text
     accessible={true}
@@ -83,7 +81,7 @@ Array [
       ]
     }
   >
-    November 21st, 2020
+    January 1st, 2000
   </Text>,
   <View />,
 ]

@@ -9,7 +9,7 @@ Enzyme.configure({ adapter: new Adapter() });
 
 let wrapper, instance;
 const defaultProps = {
-    selected: 0, 
+    selected: '0', 
     placeholder: 'Start Date'
 };
 
