@@ -72,6 +72,7 @@ const AddMedicationScreen = ({ navigation }) => {
     } catch (error) {
       console.log(error);
     }
+    
   }
 
   // returns filtered sub-set of master rxnow query

@@ -1,7 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { renderHook } from '@testing-library/react-hooks'
-
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
 import MedicationListScreen from '../screens/MedicationListScreen';
 import MedicationDetailScreen from '../screens/MedicationDetailScreen';
