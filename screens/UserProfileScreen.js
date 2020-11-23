@@ -1,5 +1,5 @@
 import React, { useState }from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard, Picker, Alert, KeyboardAvoidingView, Animated} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard, StatusBar, Alert, KeyboardAvoidingView, Animated} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
 import Background from '../components/background';
@@ -8,19 +8,20 @@ import EntryIcon from '/Users/hoangvu/Nurse-Ellie/assets/images/g-entry-arrow-ic
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import RNPickerSelect from 'react-native-picker-select';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DatePicker from '../components/DatePicker';
+import 'firebase/storage';
+
+
 const UserProfileScreen = ({navigation}) => {
     //state declare
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const usersRef = firebase.firestore().collection('users')
     const [gender, setGender] = useState('none')
-    const [dateVisi, setDateVisi] = useState(false);
     const [bdate, setDate] = useState(new Date(1598051730000));
 
+  
 
     //update user profile to firebase
    const onEditUser = async (res) => {
@@ -30,7 +31,7 @@ const UserProfileScreen = ({navigation}) => {
         'fullName':'',
         'email': '',
         'gender': '',
-        'bdate': ''
+        'bdate': '',
     })
 
     const obj = {
@@ -38,7 +39,7 @@ const UserProfileScreen = ({navigation}) => {
         email,
         gender,
         bdate
-    };
+        };
     usersRef.doc(data).update(obj)
     navigation.navigate('HomeScreen')
 
@@ -78,6 +79,9 @@ const UserProfileScreen = ({navigation}) => {
         color: '#9EA0A4',
       };
 
+      // image function
+    
+    
 return (
       
     <View style={styles.container}>
@@ -91,6 +95,7 @@ return (
         <Text style={{ fontFamily: 'roboto-regular', fontSize: 25, paddingRight: 30}}> {`Edit User Profile`}</Text>
     </View>
     
+
     <TextInput style={styles.textInput} placeholder="Full Name" autoCapitalize="none"  onChangeText={(text) => setFullName(text)}
                     value={fullName} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
 
