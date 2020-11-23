@@ -4,10 +4,11 @@ import {View, Text, Button, KeyboardAvoidingView, TouchableOpacity, Dimensions, 
 import * as Animatable from 'react-native-animatable';
 import { VictoryBar, VictoryLabel, VictoryAxis, VictoryLine, VictoryChart } from "victory-native";
 
+import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import Card from '../components/MedicationCard';
-import MenuIcon from '../assets/images/menu-icon';
-import EntryTriangle from '../assets/images/entry-triangle-icon';
+import MenuIcon from '../assets/images/menu-icon.svg';
+import EntryTriangle from '../assets/images/entry-triangle-icon.svg';
 
 const MedicationSummary = ({ navigation }) => {
 
@@ -26,14 +27,14 @@ const MedicationSummary = ({ navigation }) => {
     };
 
     return (
-        <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+        <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
             <Background/>
-            <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
+            <TouchableOpacity style={PatientStyles.menuButton} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
             </TouchableOpacity>
-            <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
-                <View style={styles.header}>
-                    <Text style={styles.title}>
+            <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig"> 
+                <View style={PatientStyles.header}>
+                    <Text style={PatientStyles.title}>
                         Medication Summary
                     </Text>
                 </View>
@@ -61,7 +62,7 @@ const MedicationSummary = ({ navigation }) => {
                         <Text style={styles.descriptionFont}> Tomorrow: 4 Medications </Text>
                         <View style={{padding: 5}}/>
                         <TouchableOpacity style={{flexDirection:'row', alignItems: 'center', paddingHorizontal: 5}}>
-                            <Text style={styles.clickableFont}>DETAILS</Text><EntryTriangle style={{paddingHorizontal:7}}/>
+                            <Text style={PatientStyles.clickableFont}>DETAILS</Text><EntryTriangle style={{paddingHorizontal:7}}/>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.timeView}>
@@ -76,7 +77,7 @@ const MedicationSummary = ({ navigation }) => {
                         <Text style={styles.descriptionFont}> Monday, July 27 at 2:00PM </Text>
                         <View style={{padding: 5}}/>
                         <TouchableOpacity style={{flexDirection:'row', alignItems: 'center', paddingHorizontal: 5}}>
-                            <Text style={styles.clickableFont}>DETAILS</Text><EntryTriangle style={{paddingHorizontal:7}}/>
+                            <Text style={PatientStyles.clickableFont}>DETAILS</Text><EntryTriangle style={{paddingHorizontal:7}}/>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.timeView}>
@@ -92,37 +93,12 @@ const MedicationSummary = ({ navigation }) => {
         </KeyboardAvoidingView>
     )
 }
-var screenHeight = Dimensions.get("window").height;
-var screenWidth = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        backgroundColor: '#42C86A',
-    }, 
-    menuButton: {
-        position: 'absolute',
-        right: 30,
-        top: 40 
-    },
-    header:{
-        flexDirection:'row', 
-        justifyContent: 'space-between', 
-        paddingBottom: 10
-    },
-    title: {
-        fontFamily: 'roboto-regular',
-        fontSize: 24,
-        fontWeight: "100",
-    }, 
     descriptionFont:{
         fontFamily: 'roboto-regular', 
         fontSize: 14, 
         color: 'rgba(0, 0, 0, 0.7)'
-    },
-    clickableFont:{
-        fontFamily: 'roboto-medium',
-        fontSize: 15,
-        fontWeight: "100",
     },
     status: {
         fontFamily: 'roboto-regular',
@@ -133,18 +109,6 @@ const styles = StyleSheet.create({
         fontFamily: 'roboto-regular',
         fontSize: 17
     },
-    drawer: {
-        flex: 4,
-        backgroundColor: '#fff', 
-        borderTopLeftRadius: 30, 
-        borderTopRightRadius: 30, 
-        paddingVertical: 50, 
-        paddingHorizontal: 30, 
-        position: 'absolute',
-        width: screenWidth,
-        height: screenHeight * 0.85,
-        top: screenHeight * 0.15
-    }, 
     timeView:{
         borderLeftColor: 'rgba(0, 0, 0, 0.33)', 
         borderLeftWidth: 1,

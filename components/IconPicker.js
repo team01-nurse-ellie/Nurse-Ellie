@@ -56,7 +56,7 @@ class Component extends React.Component {
                         <Text style={styles.headerText}> Select a Medication Icon </Text>
                         <View style={styles.iconContainer}>
                             {Object.keys(MedIconIndex.index).map((key) => (
-                                <TouchableOpacity key={key} onPress={()=> this.onIconPress(Number(key))} style={styles.medicationIcon}>
+                                <TouchableOpacity key={key} onPress={()=> this.onIconPress(key)} style={styles.medicationIcon}>
                                     {MedIconIndex.index[key]}
                                 </TouchableOpacity>
                             ))}

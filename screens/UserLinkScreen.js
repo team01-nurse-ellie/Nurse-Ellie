@@ -1,15 +1,21 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, TextInput, KeyboardAvoidingView, Keyboard, Alert } from 'react-native';
 import * as Animatable from 'react-native-animatable'
+
 import Background from '../components/background';
+
 import NurseEllieConnectLogo from '../assets/images/ellie-connect-logo.svg';
 import NurseEllieLogo from '../assets/android/drawable-hdpi/entry-logo.png';
 import HP_Btn from '../assets/images/nurse-unselected-icon.svg';
 import HP_BtnSelected from '../assets/images/nurse-selected-icon.svg';
 import FamilyFriendBtn from '../assets/images/familyfriend-unselected-icon.svg';
 import FamilyFriendBtnSelected from '../assets/images/familyfriend-selected-icon.svg';
-import Modal from 'react-native-modal';
 import CloseBtn from '../assets/images/close-button.svg';
+
+import PatientStyles from '../styles/PatientStyleSheet';
+
+import Modal from 'react-native-modal';
+
 import QRCode from 'react-native-qrcode-svg';
 import { firebase } from "../components/Firebase/config";
 import { generateCode } from '../utils/codeGenerator';
@@ -361,7 +367,7 @@ const UserLinkScreen = ({ navigation }) => {
                     textAlign="center"
                     autoFocus={true}
                     autoCapitalize="characters"
-                    style={styles.textInput}
+                    style={[PatientStyles.textInput, {paddingTop: 8}]}
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss} 
                     onChange={(event) => {
@@ -395,12 +401,12 @@ const UserLinkScreen = ({ navigation }) => {
         <>
             <KeyboardAvoidingView style={{ flex: 1, }} behavior="padding" enabled>
                 <Background />
-                <TouchableOpacity style={styles.button} onPress={() => navigation.openDrawer()}>
+                <TouchableOpacity style={PatientStyles.menuButton} onPress={() => navigation.openDrawer()}>
                     <MenuIcon />
                 </TouchableOpacity>
-                <Animatable.View style={styles.drawer} animation="fadeInUpBig">
+                <Animatable.View style={[PatientStyles.drawer, {justifyContent: 'space-between'}]} animation="fadeInUpBig">
                     <View style={styles.screenHeader}>
-                        <Text style={styles.headerFont}>
+                        <Text style={PatientStyles.headerFont}>
                             {`Stay\nConnected`}
                         </Text>
                         <NurseEllieConnectLogo height={75} style={styles.headerImage} />
@@ -419,7 +425,6 @@ const UserLinkScreen = ({ navigation }) => {
                         <Text style={styles.connectText}>
                             Connect to:
                     </Text>
-                        {/* <TextInput style={{ backgroundColor: 'pink' }}></TextInput> */}
                         <TouchableOpacity onPressIn={() => buttonSelect('HEALTH_PRO')} style={connectButtonHP.button}>
                             <View style={styles.buttonFormat}>
                                 {connectButtonHP.HPIcon}
@@ -464,17 +469,7 @@ const UserLinkScreen = ({ navigation }) => {
     );
 }
 
-var screenHeight = Dimensions.get("window").height;
-var screenWidth = Dimensions.get("window").width;
-
 const styles = StyleSheet.create({
-    textInput: {
-        borderBottomColor: 'rgba(112, 112, 112, 0.7)',
-        borderBottomWidth: 1.5,
-        fontSize: 16,
-        paddingTop: 8,
-        // backgroundColor: 'cyan'
-    },
     refreshCodeBtn: {
         backgroundColor: '#42C86A',
         elevation: 3,
@@ -546,13 +541,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginLeft: 0
     },
-    background: {
-        flex: 1,
-        backgroundColor: '#42C86A',
-    },
     UserLinkScreenDescription: {
         marginBottom: 85,
-
     },
     descriptionText: {
         fontFamily: 'roboto-medium',
@@ -566,59 +556,14 @@ const styles = StyleSheet.create({
     screenHeader: {
         flexDirection: 'row',
     },
-    // whitePadding: {
-    //     height: screenHeight / 8
-    // },
-    // textInput: {
-    //     borderBottomColor: 'black',
-    //     borderBottomWidth: 1
-    // },
-    // heading: {
-    //     flex: 1,
-    //     justifyContent: 'flex-end',
-    //     position: 'absolute',
-    //     paddingHorizontal: 20,
-    //     paddingBottom: 5
-    // },
-    headerFont: {
-        fontFamily: 'roboto-regular',
-        fontSize: 32,
-        fontWeight: "100",
-    },
     headerImage: {
         flex: 1,
         right: 10,
-        // height: 100,
-        // resizeMode: 'contain',
     },
     UserLinkScreenDescriptionFont: {
         fontFamily: 'roboto-regular',
         fontSize: 12
     },
-    // clickableFont: {
-    //     fontFamily: 'roboto-medium',
-    //     fontSize: 14,
-    // },
-    button: {
-        position: 'absolute',
-        right: 30,
-        top: 40
-    },
-    drawer: {
-        flex: 4,
-        // backgroundColor: 'gray',
-        backgroundColor: '#fff',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        paddingVertical: 50,
-        paddingHorizontal: 30,
-        position: 'absolute',
-        width: screenWidth,
-        height: screenHeight * 0.85,
-        // bottom: 0,
-        top: screenHeight * 0.15,   
-        justifyContent: 'space-between'
-    }
 });
 
 export default UserLinkScreen;

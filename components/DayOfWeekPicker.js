@@ -28,12 +28,18 @@ class Component extends React.Component {
   };
 
   onSelectDay = index => {
-    this.setState(prevState => {
-      if (prevState.selected.has(index)) {
-        return { selected: prevState.selected.remove(index) };
+    if (this.state.selected.has(index)) {
+      if (this.state.selected.delete(index)){
+        this.props.onSelect(Array.from(this.state.selected));
+        return;
+      } else {
+        console.log("error");
+        return;
       }
-      return { selected: prevState.selected.add(index) };
-    });
+    } else {
+      this.state.selected.add(index);
+      this.props.onSelect(Array.from(this.state.selected));
+    }
   };
 
   onConfirm = () => {

@@ -71,7 +71,7 @@ const MedicationListScreen = ({navigation}) => {
                         <SearchIcon/>
                     </TouchableOpacity>
                 </View>
-                { loading ? (
+            { loading ? (
                     <View style={{padding:screenHeight *.5}}>
                         <ActivityIndicator/>
                     </View>
@@ -89,7 +89,7 @@ const MedicationListScreen = ({navigation}) => {
                                 </View>
                                 <View style={styles.medicationInfoView}>
                                 <Text style={styles.medicationFont}>{item.medication.nameDisplay}</Text>
-                                {/*  <Text style={styles.functionFont}>no simple function in db yet</Text> */}
+                                  <Text style={styles.functionFont}>no simple function in db yet</Text> 
                                 <Text style={styles.frequencyfont}>{item.medication.strength}</Text>
                                 </View>
                                 <View style={styles.timeView}>
@@ -98,7 +98,7 @@ const MedicationListScreen = ({navigation}) => {
                             </MedicationCard>
                         </TouchableOpacity>
                     )}/>
-                )}
+                        )} 
                 <Button title="ADD NEW MEDICATION" color='#42C86A' onPress={()=>{navigation.navigate('AddMedication'); console.log(JSON.stringify(newMedications[0]));}}/>
             </Animatable.View>
         </KeyboardAvoidingView>

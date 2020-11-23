@@ -2,10 +2,10 @@ import React, { useState }from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Dimensions, StyleSheet, Keyboard, KeyboardAvoidingView } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
-import Background from '/Users/hoangvu/Nurse-Ellie/components/BackgroundHP.js';
+import Background from '/Users/hoangvu/Nurse-Ellie copy/components/BackgroundHP.js';
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 import MenuIcon from '../assets/images/hp-menu-icon.svg';
-import BlueAddIcon from '../assets/images/blue-add-icon';
+import BlueAddIcon from '../assets/images/blue-add-icon.svg';
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 

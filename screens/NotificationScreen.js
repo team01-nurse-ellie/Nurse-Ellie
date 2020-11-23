@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, Text, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
-import { Swipeable } from "react-native-gesture-handler";
+import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 
 import Background from '../components/background';
 
