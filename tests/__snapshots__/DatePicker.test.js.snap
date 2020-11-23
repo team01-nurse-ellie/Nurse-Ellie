@@ -48,13 +48,11 @@ Array [
           "fontFamily": "roboto-regular",
           "fontSize": 14,
         },
-        Object {
-          "color": "#707070",
-        },
+        false,
       ]
     }
   >
-    Start Date
+    January 1st, 2000
   </Text>,
   <View />,
 ]
