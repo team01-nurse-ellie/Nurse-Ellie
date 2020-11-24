@@ -20,6 +20,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
     let emotions_icon_value = 'No Feelings';
 
     const emotionClicked = (value) => {
+        console.log("==>inside value: " + value);
         if (value == 'VDI') {
             emotions_icon_value = 'Terrible'
         } else if (value == 'DI') {
@@ -31,6 +32,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
         } else if (value == 'VSI') {
             emotions_icon_value = 'Better'
         }
+        console.log("==>inside value: " + emotions_icon_value);
     }
 
     //Having Pain or Discomfort
@@ -69,12 +71,12 @@ const SymptomChecklistScreen = ({ navigation }) => {
     const getFormValue = async(res) => {
         let current_date = new Date();
 
-        const data = await firebase.auth().currentUser.uid
+        const patient_id = await firebase.auth().currentUser.uid
         
 
         const obj = {
             current_date,
-            data,
+            patient_id,
             emotions_icon_value,
             pain_Discomfort,
     
@@ -103,7 +105,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
 
         /** printing codes */
         console.log("\n------------------\n");
-        console.log("its uid: " + data);
+        console.log("its uid: " + patient_id);
         console.log("Date: " + current_date);
         console.log('Emotion Icons Value: ' + emotions_icon_value);
         console.log('Having Pain or Discomfort: ' + pain_Discomfort);
@@ -343,10 +345,6 @@ const SymptomChecklistScreen = ({ navigation }) => {
                             getFormValue
                         }
                     />
-
-                    <TouchableOpacity onPress={()=>navigation.push('SignInScreen')}> 
-                        <Text style={styles.clickableFont}> Professional Symptom </Text>
-                    </TouchableOpacity>
 
                 </ScrollView>
 
