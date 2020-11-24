@@ -54,6 +54,8 @@ const AppNavigation = () => {
                 <Drawer.Screen name="UserLinkScreen" component={UserLinkScreen} />
                 <Drawer.Screen name="HealthProfessional" component={HealthProfessionalScreen} />
                 <Drawer.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen} />
+                
+                
             </Drawer.Navigator>
         );
     }

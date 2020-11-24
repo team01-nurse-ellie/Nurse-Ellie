@@ -344,6 +344,10 @@ const SymptomChecklistScreen = ({ navigation }) => {
                         }
                     />
 
+                    <TouchableOpacity onPress={()=>navigation.push('SignInScreen')}> 
+                        <Text style={styles.clickableFont}> Professional Symptom </Text>
+                    </TouchableOpacity>
+
                 </ScrollView>
 
             </Animatable.View> 
@@ -484,7 +488,10 @@ const styles = StyleSheet.create({
     },
 
 
-
+    clickableFont: {
+        fontFamily: 'roboto-medium',
+        fontSize: 14,
+    },
 
 
     inputText2: {
