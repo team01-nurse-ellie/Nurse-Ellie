@@ -65,7 +65,7 @@ const MedicationListScreen = ({navigation}) => {
                         <SearchIcon/>
                     </TouchableOpacity>
                 </View>
-                { loading ? (
+             { loading ? (
                     <View style={{flex:1, justifyContent:'center', padding:screenHeight *.5}}>
                         <ActivityIndicator/>
                     </View>
@@ -92,7 +92,7 @@ const MedicationListScreen = ({navigation}) => {
                             </MedicationCard>
                         </TouchableOpacity>
                     )}/>
-                )}
+                        )} 
                 <Button title="ADD NEW MEDICATION" color='#42C86A' onPress={()=>{navigation.navigate('AddMedication')}}/>
             </Animatable.View>
         </KeyboardAvoidingView>
