@@ -50,6 +50,7 @@ const AppNavigation = () => {
                 <Drawer.Screen name="Home" component={HomeScreen} />
                 <Drawer.Screen name="Medications" component={MedicationListScreen} />
                 <Drawer.Screen name="AddMedication" component={AddMedicationScreen} />
+                <Drawer.Screen name="EditMedicationScreen" component={EditMedicationScreen} />
                 <Drawer.Screen name="Medication" component={MedicationDetailScreen} />
                 <Drawer.Screen name="Patients" component={PatientListScreen} />
                 <Drawer.Screen name="Patient" component={PatientDetailScreen} />

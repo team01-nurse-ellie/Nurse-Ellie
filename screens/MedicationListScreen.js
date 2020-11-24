@@ -71,7 +71,7 @@ const MedicationListScreen = ({navigation}) => {
                         <SearchIcon/>
                     </TouchableOpacity>
                 </View>
-            { loading ? (
+       { loading ? (
                     <View style={{padding:screenHeight *.5}}>
                         <ActivityIndicator/>
                     </View>
