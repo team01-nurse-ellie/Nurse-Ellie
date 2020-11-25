@@ -1,0 +1,274 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HealthProfessionalScreen renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+      "justifyContent": "center",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#4285C8",
+        "flex": 1,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(51, 112, 172, 0.8)",
+          "borderRadius": 250,
+          "height": 500,
+          "position": "absolute",
+          "right": -375,
+          "top": 667,
+          "width": 500,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 30,
+          "height": 60,
+          "left": 10,
+          "position": "absolute",
+          "top": 30,
+          "width": 60,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 125,
+          "height": 250,
+          "left": 150,
+          "position": "absolute",
+          "top": 222.33333333333334,
+          "width": 250,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 300,
+          "height": 600,
+          "left": 300,
+          "position": "absolute",
+          "top": -333.5,
+          "width": 600,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0.3)",
+          "borderRadius": 175,
+          "height": 350,
+          "left": -250,
+          "position": "absolute",
+          "top": 667,
+          "width": 350,
+        }
+      }
+    />
+  </View>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+        "position": "absolute",
+        "right": 30,
+        "top": 40,
+      }
+    }
+  >
+    <svg
+      data-file-name="SvgHpMenuIcon"
+    />
+  </View>
+  <View
+    forwardedRef={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#fff",
+        "borderTopLeftRadius": 30,
+        "borderTopRightRadius": 30,
+        "flex": 4,
+        "height": 1133.8999999999999,
+        "opacity": 0,
+        "paddingHorizontal": 30,
+        "paddingVertical": 50,
+        "position": "absolute",
+        "top": 200.1,
+        "transform": Array [
+          Object {
+            "translateY": 500,
+          },
+        ],
+        "width": 750,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "marginBottom": 133.4,
+        }
+      }
+    >
+      <svg
+        data-file-name="SvgNurseEllieLogo"
+        height={75}
+        style={
+          Object {
+            "flex": 1,
+            "marginRight": "5%",
+          }
+        }
+      />
+      <Text
+        style={
+          Object {
+            "fontFamily": "roboto-regular",
+            "fontSize": 25,
+          }
+        }
+      >
+         
+        Account Change:
+ Health Professional
+      </Text>
+    </View>
+    <TextInput
+      allowFontScaling={true}
+      autoCapitalize="none"
+      onChangeText={[Function]}
+      onSubmitEditing={[Function]}
+      placeholder="Field of Practice"
+      rejectResponderTermination={true}
+      returnKeyType="done"
+      style={
+        Object {
+          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+          "borderBottomWidth": 1.5,
+          "fontSize": 16,
+          "paddingTop": 8,
+        }
+      }
+      underlineColorAndroid="transparent"
+      value=""
+    />
+    <TextInput
+      allowFontScaling={true}
+      autoCapitalize="none"
+      onChangeText={[Function]}
+      onSubmitEditing={[Function]}
+      placeholder="License Number"
+      rejectResponderTermination={true}
+      returnKeyType="done"
+      style={
+        Object {
+          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+          "borderBottomWidth": 1.5,
+          "fontSize": 16,
+          "paddingTop": 8,
+        }
+      }
+      underlineColorAndroid="transparent"
+      value=""
+    />
+    <TextInput
+      allowFontScaling={true}
+      autoCapitalize="none"
+      onChangeText={[Function]}
+      onSubmitEditing={[Function]}
+      placeholder="Regulatory Body"
+      rejectResponderTermination={true}
+      returnKeyType="done"
+      style={
+        Object {
+          "borderBottomColor": "rgba(112, 112, 112, 0.7)",
+          "borderBottomWidth": 1.5,
+          "fontSize": 16,
+          "paddingTop": 8,
+        }
+      }
+      underlineColorAndroid="transparent"
+      value=""
+    />
+    <Text
+      style={
+        Object {
+          "marginBottom": 15,
+        }
+      }
+    >
+      Status: Will be loaded from firebase db
+    </Text>
+    <Text
+      style={
+        Object {
+          "color": "rgba(0, 0, 0, 0.7)",
+          "fontFamily": "roboto-regular",
+          "fontSize": 14,
+          "textAlign": "center",
+        }
+      }
+    >
+      Your account will be verified in the next  2-3 business days. Thank you
+    </Text>
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignSelf": "flex-start",
+          "marginTop": 30,
+          "opacity": 1,
+        }
+      }
+    >
+      <svg
+        data-file-name="SvgBlueAddIcon"
+      />
+    </View>
+    <View
+      style={
+        Object {
+          "height": 166.75,
+        }
+      }
+    />
+  </View>
+</View>
+`;
