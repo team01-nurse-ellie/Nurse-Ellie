@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { YellowBox } from 'react-native';
+import { LogBox } from 'react-native';
 // Firebase Authentication
 import { FirebaseAuthProvider } from './components/Firebase/FirebaseAuthProvider';
 // Components
@@ -30,9 +30,9 @@ const App = () => {
   useEffect(() => {
 
     // QR screen uses a setTimeout() to delay the camera opening. React-Native pops up a warning about long timers so it is supressed now.
-    YellowBox.ignoreWarnings(['Non-serializable values were found in the navigation state', 'Setting a timer',]);
+    LogBox.ignoreLogs(['Non-serializable values were found in the navigation state', 'Setting a timer',]);
     // ScrollPicker in TimePicker warning, and IconPicker warning, respectively.
-    YellowBox.ignoreWarnings(['Expected style', 'Failed prop type']);
+    LogBox.ignoreLogs(['Expected style', 'Failed prop type']);
 
   }, []);
 
