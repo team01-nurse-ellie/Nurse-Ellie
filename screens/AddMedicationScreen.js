@@ -28,7 +28,7 @@ import IconPicker from '../components/IconPicker';
 import DayOfWeekPicker from '../components/DayOfWeekPicker';
 import MenuIcon from '../assets/images/menu-icon.svg';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
-import PinkMedication from '../assets/images/pink-medication-icon';
+import PinkMedication from '../assets/images/pink-medication-icon.svg';
 import MedicationCard from '../components/MedicationCard';
 
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
@@ -58,15 +58,16 @@ const AddMedicationScreen = ({ navigation }) => {
   const [medicationToAdd, setMedicationToAdd] = useState("Add Medication");
 
   useEffect(() => {
+    let current = true;
     load();
+    return () => (current = false);
   }, []);
 
   // load master list of molecules and brand-names
   async function load() {
     try {
-      //const ingredientsBrand = await getAllByConcepts(['IN','BN','MIN']);
       const ingredientsBrand = await getAllByConcepts(['IN', 'BN']);
-      await setMasterRxcui(ingredientsBrand);
+      setMasterRxcui(ingredientsBrand);
       setMedicationToAdd('Add Medication');
     } catch (error) {
       console.log(error);

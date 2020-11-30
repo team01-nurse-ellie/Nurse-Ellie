@@ -29,14 +29,14 @@ const MedicationDetailScreen = ({route, navigation}) => {
                     <ReturnIcon/>
                 </TouchableOpacity>
                 <Text style={styles.headerFont}>
-                    {item.medication.nameDisplay}
+                    {item.medication ? item.medication.nameDisplay : ''}
                 </Text>
                 <TouchableOpacity style={styles.headerEdit} onPress={()=> navigation.navigate("EditMedication", {item: item})}>
                     <EditIcon/>
                 </TouchableOpacity>
             </View>
             <View style={{alignItems: 'center', paddingVertical: 15}}>
-                {MedIconIndex.index[item.medication.medIcon]}
+                { MedIconIndex.index[item.medication.medIcon]}
             </View>
             <View style={{alignItems: 'center', marginBottom: 7}}>
                 <Text style={styles.timeFont}> {getValueFormatted(item.medication.intakeTime)} </Text>
