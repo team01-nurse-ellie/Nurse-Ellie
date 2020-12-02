@@ -1,5 +1,5 @@
-import React, { useState }from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard, Picker, Alert, KeyboardAvoidingView, Animated} from 'react-native';
+import React, { useState, useEffect }from 'react';
+import { View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, Button, Dimensions, StyleSheet, Keyboard, Picker, Alert, KeyboardAvoidingView, Icon} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
 import Background from '../components/background.js';
@@ -10,6 +10,8 @@ var screenWidth = Dimensions.get("window").width;
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 import RNPickerSelect from 'react-native-picker-select';
 import DatePicker from '../components/DatePicker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const EditUserProfileScreen = ({navigation}) => {
     //state declare
@@ -17,12 +19,11 @@ const EditUserProfileScreen = ({navigation}) => {
     const [email, setEmail] = useState('')
     const usersRef = firebase.firestore().collection('users')
     const [gender, setGender] = useState('none')
-    const [bdate, setDate] = useState('');
+   // const [bdate, setDate] = useState('2020-11-24T05:00:00.000Z');
     const [image, setImage] = useState(null);
-    const [uploading, setUploading] = useState(false);
-    const [transferred, setTransferred] = useState(0);
-  
-
+    const [dateVisi, setDateVisi] = useState(false);
+    const [date, setDate] = useState('');
+ 
     //update user profile to firebase
    const onEditUser = async (res) => {
    const data = await firebase.auth().currentUser.uid
@@ -31,7 +32,7 @@ const EditUserProfileScreen = ({navigation}) => {
         'fullName':'',
         'email': '',
         'gender': '',
-        'bdate': '',
+        'date': '',
         'image': ''
     })
 
@@ -39,50 +40,93 @@ const EditUserProfileScreen = ({navigation}) => {
         fullName,
         email,
         gender,
-        bdate,
+        date,
         image
     };
     usersRef.doc(data).update(obj)
-    navigation.navigate('HomeScreen')
+    navigation.navigate('UserProfile')
 
     }
-
-    // alert
-    const simpleAlertHandler = () => {
-        alert('Your user profile is up to date');
+  const cancel = () => {
+        navigation.navigate('UserProfile')
     };
 
     // date function
     const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
+      const currentDate = selectedDate || date;
 
-        setDate(currentDate);
+      setDate(currentDate);
+  };
+
+  const showDatePicker = () => {
+      setDateVisi(true);
     };
+  
+  const hideDatePicker = () => {
+      setDateVisi(false);
+    };
+  
+  const handleConfirm = (date) => {
+      console.warn("A date has been picked: ", date);
+      setDate(date);
 
-    const showDatePicker = () => {
-        setDateVisi(true);
+      hideDatePicker();
+  };
+  
+  // display
+      const [user, setUser] = useState();
+  
+      const getUser = async () => {
+          const {uid} = firebase.auth().currentUser;
+  
+        try {
+          const documentSnapshot = await usersRef
+            .doc(uid)
+            .get();
+    
+          const userData = documentSnapshot.data();
+          console.log(userData);
+          setUser(userData);
+        } catch(error) {
+          alert(error);
+        }
       };
     
-    const hideDatePicker = () => {
-        setDateVisi(false);
-      };
-    
-    const handleConfirm = (date) => {
-        console.warn("A date has been picked: ", date);
-        setDate(date);
+  // Get user on mount
+      useEffect(() => {
+          
+        getUser();
+      }, []);
 
-        hideDatePicker();
-    };
-
-    //gender function
-    const placeholder = {
-        label: 'Select your gender...',
+      const placeholder = {
+        label: 'Select your gender ...',
         value: null,
         color: '#9EA0A4',
       };
 
-      // image function
+    // check input 
+      const checkTextInput = () => {
+        //Check for the Name TextInput
+        if (!fullName.trim()) {
+          alert('Please Enter Name');
+          return;
+        }
+        //Check for the Email TextInput
+        if (!email.trim()) {
+          alert('Please Enter Email');
+          return;
+        }
+        if (!gender.trim()) {
+            alert('Please Select Gender');
+            return;
+          }
       
+         
+        //Checked Successfully
+        //Do whatever you want
+        alert('Success');
+      };
+
 return (
       
     <View style={styles.container}>
@@ -95,17 +139,17 @@ return (
         <NurseEllieLogo height={75} style={{ flex: 1, marginRight: '5%' }} />
         <Text style={{ fontFamily: 'roboto-regular', fontSize: 25, paddingRight: 30}}> {`Edit User Profile`}</Text>
     </View>
-    
-
-
-
-    <TextInput style={styles.textInput} placeholder="Full Name" autoCapitalize="none"  onChangeText={(text) => setFullName(text)}
+    <Text>Full Name: </Text>
+    <TextInput style={styles.textInput} placeholder={user && user?.fullName} autoCapitalize="none"  onChangeText={(text) => setFullName(text)}
                     value={fullName} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
+    <Text>New email: </Text>
+     <TextInput style={styles.textInput} typep="email" placeholder={user && user?.email} autoCapitalize="none"  onChangeText={(text) => setEmail(text)}
+                    value={email} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>               
 
-     <TextInput style={styles.textInput} typep="email" placeholder="New email" autoCapitalize="none"  onChangeText={(text) => setEmail(text)}
-                    value={email} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>                
     
-    <View style={{
+        
+        <Text></Text>
+        <View style={{
                     paddingVertical: 0,
                     paddingHorizontal: 0,
                     flexDirection: "row",
@@ -117,9 +161,19 @@ return (
                             color: "black",
                             alignContent: "flex-start",
                             paddingLeft: 0
-                }}>Date of Birth:</Text>
-                <DatePicker selected={bdate} onSelect={setDate} placeholder="Select Date" />
+                }}>Gender:  {user && user?.gender}  </Text>
+                <View style={{paddingRight: 150}}>
+                <RNPickerSelect placeholder={placeholder}
+                onValueChange={gender => setGender(gender)}
+                styles={{paddingLeft: 1000}}
+                items={[
+                { label: 'Men', value: 'men' },
+                { label: 'Women', value: 'women' },
+                { label: 'Others', value: 'other' },
+            ]}/>
+                </View>
         </View>
+
         
         <View style={{
                     paddingVertical: 0,
@@ -133,24 +187,43 @@ return (
                             color: "black",
                             alignContent: "flex-start",
                             paddingLeft: 0
-                }}>Gender:</Text>
-                <View style={{paddingRight: 150}}>
-                <RNPickerSelect placeholder={placeholder}
-                onValueChange={gender => setGender(gender)}
-                styles={{paddingLeft: 1000}}
-                items={[
-                { label: 'Men', value: 'men' },
-                { label: 'Women', value: 'women' },
-                { label: 'Others', value: 'other' },
-            ]}/>
+                }}>Date of Birth:</Text>
+                <TouchableOpacity style={styles.button} onPress={() => { showDatePicker();}}>  
+                <View style={styles.inner} style={{paddingRight: 150, top: -12}} >
+                  <Text style={styles.TextComponentStyle}>{user && user.date && user.date.seconds && new Date(user.date.seconds * 1000).toLocaleDateString("en-US")}</Text>
                 </View>
-               
+                <DateTimePickerModal mode="date"
+                    isVisible={dateVisi}
+                    value={date}
+                    mode="date"
+                    onConfirm={handleConfirm}
+                    onCancel={hideDatePicker}
+                    onChange={onChange}
+                    maximumDate={new Date()}
+                
+                />
+                 
+                </TouchableOpacity>
         </View>
-     
-        <TouchableOpacity style={styles.button} onPress={() => { onEditUser(); simpleAlertHandler(); }}>  
-            <EntryIcon />
-        </TouchableOpacity>
-                    
+
+
+
+        <View style={styles.container}>
+      <View style={styles.button}>
+      <Button 
+            title="Save"
+            onPress={() => { onEditUser(); checkTextInput(); }}
+             color="#606070" 
+          />
+      </View>
+      <View style={styles.button}> 
+      <Button 
+            title="Cancel"
+            onPress={cancel}
+            color="#606070" 
+          /></View>
+    </View>
+      
       <View style={styles.whitePadding}/>
             </Animatable.View>
         </View>
@@ -160,7 +233,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
+    button: {
+        backgroundColor: 'green',
+        width: '40%',
+        height: 40
+      },
     heading: {
         flex: 1,
         justifyContent: 'flex-end',
@@ -230,7 +310,32 @@ const styles = StyleSheet.create({
         width: screenWidth,
         height: screenHeight * 0.85,
         top: screenHeight * 0.15
+    },
+    TextComponentStyle: {
+ 
+      borderRadius: 5,
+   
+      // Set border width.
+      borderWidth: 2,
+   
+      // Set border Hex Color Code Here.
+      borderColor: 'black',
+   
+      // Setting up Text Font Color.
+      color: 'black',
+   
+      // Setting Up Background Color of Text component.
+      backgroundColor : 'white',
+      
+      // Adding padding on Text component.
+      padding : 7,
+      fontSize: 14,
+   
+      textAlign: 'center',
+   
+      margin: 10
     }
+
 });
 
 export default EditUserProfileScreen;
