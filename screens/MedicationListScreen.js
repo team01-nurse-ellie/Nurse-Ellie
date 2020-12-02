@@ -65,7 +65,7 @@ const MedicationListScreen = ({navigation}) => {
                         <SearchIcon/>
                     </TouchableOpacity>
                 </View>
-                { loading ? (
+             { loading ? (
                     <View style={{flex:1, justifyContent:'center', padding:screenHeight *.5}}>
                         <ActivityIndicator/>
                     </View>

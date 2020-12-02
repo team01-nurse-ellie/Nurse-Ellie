@@ -27,6 +27,9 @@ import SymptomChecklistScreen from '../screens/SymptomChecklistScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 import MedicationSummaryScreen from '../screens/MedicationSummaryScreen';
 import HomeScreenHP from '../screens/HomeScreenHP';
+import EditUserProfileScreen from '../screens/EditUserProfileScreen';
+import UserProfileScreen from '../screens/UserProfileScreen';
+
 
 // Navigation modules
 import { NavigationContainer } from '@react-navigation/native';
@@ -61,6 +64,8 @@ const AppNavigation = () => {
                 <Drawer.Screen name="EditMedication" component={EditMedicationScreen}/>
                 <Drawer.Screen name="MedicationSummary" component={MedicationSummaryScreen}/>
                 <Drawer.Screen name="HomeScreenHP" component={HomeScreenHP} />
+                <Drawer.Screen name="EditUserProfileScreen" component={EditUserProfileScreen} options={{unmountOnBlur:true}}/>
+                <Drawer.Screen name="UserProfile" component={UserProfileScreen} options={{unmountOnBlur:true}}/>
             </Drawer.Navigator>
         );
     }
