@@ -1,5 +1,7 @@
 import React, { useState, useContext,useEffect } from 'react';
-import { View, Text, Switch, KeyboardAvoidingView, TouchableOpacity, StyleSheet, TextInput, Keyboard, Alert } from 'react-native';
+import { View, Text, Switch, KeyboardAvoidingView, TouchableOpacity, StyleSheet, TextInput, Keyboard, Alert} from 'react-native';
+import Modal from 'react-native-modal';
+import {CommonActions}  from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import { ActivityIndicator } from 'react-native-paper';
 import * as Notifications from 'expo-notifications';
@@ -45,6 +47,8 @@ const EditMedicationScreen = ({route, navigation }) => {
   const [alarm, setAlarm] = useState('false');
   const [drugFunction, setDrugFunction] = useState('');
   const [directions, setDirections] = useState('');
+  const [deleteWarning, setDeleteWarning] = useState(false);
+  const [editWarning, setEditWarning] = useState(false);
   const toggleSwitch = () => setAlarm(previousState => !previousState);
 
   useEffect(() => {
@@ -275,7 +279,7 @@ const EditMedicationScreen = ({route, navigation }) => {
                             { item.medication ? item.medication.nameDisplay : ''}
                         </Text>
                     </View>
-                    <TouchableOpacity onPress={updateMedication}>
+                    <TouchableOpacity onPress={()=>setEditWarning(true)}>
                         <Text style={styles.saveText}> SAVE </Text>
                     </TouchableOpacity>
                 </View>
@@ -347,9 +351,62 @@ const EditMedicationScreen = ({route, navigation }) => {
                     </View>
                 </View>
                 <View style={{ paddingBottom: 14 }} />
-                <TouchableOpacity onPress={async () => await deleteMedication()}>
+                <TouchableOpacity onPress={()=> setDeleteWarning(true)}>
                     <Text style={styles.deleteText}> DELETE MEDICATION </Text>
                 </TouchableOpacity>
+                <Modal
+                    isVisible={deleteWarning}
+                    animationIn="slideInUp"
+                    animationOut="slideOutDown"
+                    onBackButtonPress={()=> setDeleteWarning(false)}
+                    backdropOpacity={0}>
+                    <View style={styles.centeredView}>
+                        <View style={styles.confirmationModal}>
+                            <Text style={styles.confirmationFont}> Warning </Text>
+                            <View style={{paddingVertical: 5}}/>
+                            <Text> You are about to remove a medication that was prescribed by your health professional. They will receive notice that you have made these changes. Would you like to continue? </Text>
+                            <View style={{paddingVertical: 5}}/>
+                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                                <TouchableOpacity onPress={async () => {
+                                        // await fsFn.removeMedication(currentUser.uid,item.docId);
+                                        await deleteMedication().then(()=> {
+                                            navigation.navigate('Medications');
+                                        });
+                                    }}>
+                                        <Text style={styles.confirmationTouchable}>CONTINUE</Text>
+                                </TouchableOpacity>
+                                <View style={{paddingHorizontal:10}}/>
+                                <TouchableOpacity onPress={()=> setDeleteWarning(false)}>
+                                    <Text style={styles.confirmationTouchable}>RETURN</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+                <Modal
+                    isVisible={editWarning}
+                    animationIn="slideInUp"
+                    animationOut="slideOutDown"
+                    onBackButtonPress={()=> setEditWarning(false)}
+                    backdropOpacity={0}>
+                    <View style={styles.centeredView}>
+                        <View style={styles.confirmationModal}>
+                            <Text style={styles.confirmationFont}> Warning </Text>
+                            <View style={{paddingVertical: 5}}/>
+                            <Text> You are about to make changes to a medication that was prescribed by your health professional. They will receive notice that you have made these changes. Would you like to continue? </Text>
+                            <View style={{paddingVertical: 5}}/>
+                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                                <TouchableOpacity onPress={updateMedication}>
+                                    <Text style={styles.confirmationTouchable}>CONTINUE</Text>
+                                </TouchableOpacity>
+                                <View style={{paddingHorizontal:10}}/>
+                                <TouchableOpacity onPress={()=> setEditWarning(false)}>
+                                    <Text style={styles.confirmationTouchable}>RETURN</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
             </>
             )}
             </Animatable.View>
@@ -373,6 +430,29 @@ const styles = StyleSheet.create({
         fontFamily: 'roboto-medium', 
         fontSize: 14
     },
+    centeredView:{
+        flex: 1, 
+        justifyContent: "center", 
+        alignItems: "center", 
+        marginTop: 22
+    },
+    confirmationModal: {
+        backgroundColor: 'white', 
+        borderRadius: 25, 
+        padding: 35, 
+        alignItems: "center", 
+        elevation: 5
+    }, 
+        confirmationFont: {
+        fontFamily: 'roboto-regular',
+        fontSize: 24,
+        color: 'rgba(0, 0, 0, 0.95)',
+    },
+        confirmationTouchable: {
+        fontFamily: 'roboto-medium', 
+        fontSize: 14, 
+        color: '#42C86A'
+    }
 });
 
 export default EditMedicationScreen;
