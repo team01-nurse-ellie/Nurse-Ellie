@@ -1,10 +1,40 @@
-import React from 'react';
+import React, { useEffect }from 'react';
 import { View, Image, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
+import { firebase } from '../components/Firebase/config.js'
 
 const SplashScreen = ({ navigation }) => {
+
+ 
+    const logout = async () => {
+
+        try {
+    
+          await firebase.auth().signOut();
+    
+         
+    
+        } catch (error) {
+          console.log(error);
+        }
+    
+      };
+    // Get user on mount
+    useEffect(() => {
+        
+        logout();
+    }, []);
+    /*var user = firebase.auth().currentUser;
+
+       if (user) {
+          //  firebase.auth().signOut();
+            console.log("User session is still within 1 hour, user is still signed in")
+        } else {
+            firebase.auth().signOut();
+           console.log("User is not sign in")
+        }*/
     return (
         <View style={[PatientStyles.background, {justifyContent: 'center'}]}>
             <Background />
