@@ -3,17 +3,20 @@ import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, FlatList
 
 import * as Animatable from 'react-native-animatable';
 
-import Background from '../components/hpBackground';
+import Background from '../components/BackgroundHP';
 import MedicationCard from '../components/MedicationCard';
 
 import MenuIcon from '../assets/images/hp-menu-icon';
 import SearchIcon from '../assets/images/search-icon';
+
+import TempAvatar from '../assets/images/sm-temp-avatar';
 
 const PatientListScreen = ({navigation}) => {
     const [patients, setPatients] = useState ([
         {patientName: 'Julie Ng', lastSeen: 'Tuesday, October 13th 2020', key: '1'}, 
         {patientName: 'Patrick Henderson', lastSeen: 'Wednesday, October 14th 2020', key: '2'}, 
         {patientName: 'Lee Follis', lastSeen: 'Monday, October 12th 2020', key: '3'},
+        {patientName: 'Mary Burns', lastSeen: 'Wednesday, October 14th 2020', key: '4'}
     ]);
 
     return (
@@ -27,7 +30,6 @@ const PatientListScreen = ({navigation}) => {
                     <Text style={styles.title}>
                         Patients
                     </Text>
-                    
                 </View>
                 <View style={styles.searchInput}>
                     <TextInput style={{minWidth: screenWidth*0.8}}placeholder="Search Patient List..."></TextInput>
@@ -38,6 +40,9 @@ const PatientListScreen = ({navigation}) => {
                 <FlatList data={patients} renderItem={({item}) => (
                     <TouchableOpacity style={styles.searchButton} onPress={()=>navigation.navigate('Patient', {item: item})}>
                         <MedicationCard>
+                            <View>
+                                <TempAvatar />
+                            </View>
                             <View style={styles.patientInfoView}>
                                 <Text style={styles.patientFont}>{item.patientName}</Text>
                                 <Text style={styles.lastSeenFont}>Last Seen: {item.lastSeen}</Text>
@@ -78,7 +83,7 @@ const styles = StyleSheet.create({
         color: 'rgba(0, 0, 0, 0.7)'
     },
     patientInfoView: {
-        width: 250,
+        width: 260,
         paddingHorizontal: 10
     },
     timeView:{

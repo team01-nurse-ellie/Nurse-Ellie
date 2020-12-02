@@ -1,6 +1,8 @@
+coverage
 node_modules/**/*
 .expo/*
 npm-debug.*
+*.log
 *.jks
 *.p8
 *.p12
@@ -9,6 +11,6 @@ npm-debug.*
 *.orig.*
 web-build/
 config.js
-
+assets/data/RxTermsMap.js
 # macOS
 .DS_Store

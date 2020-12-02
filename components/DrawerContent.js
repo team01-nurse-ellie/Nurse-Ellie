@@ -35,16 +35,24 @@ function DrawerContent(props) {
                     onPress={() => { props.navigation.navigate('Patients') }}
                 />
                 <DrawerItem
-                    label="Setting"
-                    onPress={() => { props.navigation.navigate('Settings') }}
-                />
-                <DrawerItem
                     label="User Connect"
                     onPress={() => { props.navigation.navigate('UserLinkScreen') }}
                 />
                 <DrawerItem
                     label="Symptom Checklist"
                     onPress={() => { props.navigation.navigate('SymptomChecklistScreen') }}
+                />
+                <DrawerItem
+                    label="Alarm"
+                    onPress={() => { props.navigation.navigate('NotificationScreen') }}
+                />
+                <DrawerItem
+                    label="Medication Summary"
+                    onPress={()=> {props.navigation.navigate('MedicationSummary')}}
+                />
+                <DrawerItem
+                    label="Home (Health Professional)"
+                    onPress={()=> { props.navigation.navigate('HomeScreenHP')}}
                 />
             </Drawer.Section>
             <Drawer.Section style={styles.bottomDrawerSection}>

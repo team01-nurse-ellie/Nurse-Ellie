@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DatePicker should print "November 21st, 2020" 1`] = `
+Array [
+  <Text
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Array [
+        Object {
+          "color": "#707070",
+          "fontFamily": "roboto-regular",
+          "fontSize": 14,
+        },
+        false,
+      ]
+    }
+  >
+    November 21st, 2020
+  </Text>,
+  <View />,
+]
+`;
+
+exports[`DatePicker should print a default text of "Start Date" 1`] = `
+Array [
+  <Text
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Array [
+        Object {
+          "color": "#707070",
+          "fontFamily": "roboto-regular",
+          "fontSize": 14,
+        },
+        false,
+      ]
+    }
+  >
+    January 1st, 2000
+  </Text>,
+  <View />,
+]
+`;

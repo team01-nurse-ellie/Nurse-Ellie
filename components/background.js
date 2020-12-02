@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.3)', 
         position: 'absolute',
         left: -screenWidth/3, 
-        bottom: 40
+        top: screenHeight/2
     }, 
     circleXLLarge: {
         height: 600, 
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(62, 185, 99, 0.8)', 
         position: 'absolute',
         right: -screenWidth/2,
-        bottom: -screenHeight/6
+        top: screenHeight/2
     }
 });
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image, Dimensions, StyleSheet } from 'react-native';
 
-const hpBackground = () => {
+const BackgroundHP = () => {
     return (
         <View style={styles.container}>
             <View style={styles.circleBlue} />
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.3)', 
         position: 'absolute',
         left: -screenWidth/3, 
-        bottom: 40
+        top: screenHeight/2
     }, 
     circleXLLarge: {
         height: 600, 
@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(51, 112, 172, 0.8)', 
         position: 'absolute',
         right: -screenWidth/2,
-        bottom: -screenHeight/6
+        top: screenHeight/2
     }
 });
 
-export default hpBackground;
+export default BackgroundHP;

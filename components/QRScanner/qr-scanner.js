@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, StyleSheet, Dimensions } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Camera } from 'expo-camera';
@@ -7,8 +7,9 @@ import QRCapture from '../../assets/images/qr-square.svg';
 import FlashOffIcon from '../../assets/images/flash-off.svg';
 import FlashOnIcon from '../../assets/images/flash-on.svg';
 
-const QRScanner = (navigation) => {
+const QRScanner = ({goBack, connectMethod, connectType, connectUser}) => {
 
+    const mounted = useRef(true);
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
     const [flashOn, setFlash] = useState(false);
@@ -24,31 +25,44 @@ const QRScanner = (navigation) => {
         })();
 
         setTimeout(t => {
+            // adds a slight delay to allow camera to load up without delaying initial screen load up when navigating to QR screen.
             setShowQR(true);
         }, 200);
-        // adds a slight delay to allow camera to load up without delaying initial screen load up when navigating to QR screen.
 
         // if (hasPermission == true) {
         // } else {
         //     alert("Camera needs permissions");
         // }
 
+        return () => {
+            mounted.current = false;
+            console.log("UNMOUNTING QR Scanner");
+        }
     }, []);
 
     const handlQRCodeScanned = (scannerResult) => {
-        console.log(scannerResult)
-        alert(scannerResult.data)
         setScanned(true);
+        connectUser(connectMethod, connectType, scannerResult.data);
+ 
+        setTimeout(t=> {
+            if (mounted.current === true) {
+                // If component unmounts it will not update the state, this prevents the warning msg from popping up. 
+                setScanned(false);
+            }
+        }, 2500);  
+
+        // if (f(a, b, scannerResult.data) === "done") {
+        //     setScanned(false);
+        // }
         // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     };
 
     const toggleFlash = () => {
-        // console.log(!flashOn)
         setFlash(!flashOn);
     };
 
     const cancel = () => {
-        navigation.goBack();
+        goBack();
     };
 
     const { width, height } = Dimensions.get('screen');
