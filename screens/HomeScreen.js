@@ -59,7 +59,7 @@ const HomeScreen = ({ navigation }) => {
     useEffect(()=> {
         (async ()=> {
             let time = calculateLocalTimezone(1606435200000);
-            console.log(time);
+            console.log(time, "time");
             await registerForPushNotificationsAsync()
             notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
                 console.log(`====ReceivedListener====`);
@@ -294,8 +294,8 @@ const HomeScreen = ({ navigation }) => {
     return (
         <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
             <Background />
-            <TouchableOpacity style={styles.button} onPress={async () => await scheduleAlarms()}>
-            {/* <TouchableOpacity style={PatientStyles.menuButton} onPress={()=> navigation.openDrawer()}> */}
+            {/* <TouchableOpacity style={styles.button} onPress={async () => await scheduleAlarms()}> */}
+             <TouchableOpacity style={PatientStyles.menuButton} onPress={()=> navigation.openDrawer()}> 
                 <MenuIcon/>
             </TouchableOpacity>
             <Text style={styles.time}> {greeting} </Text>
@@ -314,7 +314,7 @@ const HomeScreen = ({ navigation }) => {
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 10 }}>
                     <Text style={PatientStyles.title}> Medications </Text>
-                    <MedicationsIcon />
+                    <MedicationsIcon onPress={showNotifs}/>
                 </View>
             {medications ? (
                 <FlatList 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import {
   View,
   Text,
@@ -19,6 +19,12 @@ import * as Animatable from 'react-native-animatable';
 import Autocomplete from 'react-native-autocomplete-input';
 import Modal from 'react-native-modal';
 import moment from 'moment';
+import * as Notifications from 'expo-notifications';
+// import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
+import {calculateLocalTimezone} from '../utils/dateHelpers';
+import { scheduleNotifications} from '../utils/scheduleNotifications';
+import { alarmsRef } from '../utils/databaseRefs.js';
 
 import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
@@ -31,20 +37,33 @@ import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 import PinkMedication from '../assets/images/pink-medication-icon.svg';
 import MedicationCard from '../components/MedicationCard';
 
+
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
+import { UserContext } from '../components/UserProvider/UserContext';
 import * as fsFn  from '../utils/firestore';
 import { getAllByConcepts, getDrugsByIngredientBrand} from '../utils/medication';
 import { ActivityIndicator } from 'react-native-paper';
+// import { isCompositeComponent } from 'react-addons-test-utils';
 
 const AddMedicationScreen = ({ navigation }) => {
+
+  const autoCompleteRef = useRef();
   const { currentUser } = useContext(FirebaseAuthContext);
+  const { firstName } = useContext(UserContext);
   const currentTime = new Date();
   const [medIcon, setMedIcon] = useState('1');
   const [scrollViewRef, setScrollViewRef] = useState();
   const [selectDoW, setSelectDoW] = useState([]);
-  const [selectTime, setSelectTime] = useState(43200);
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  // is correct time in Seconds.
+  // const [selectTime, setSelectTime] = useState(Date.now() / 1000);
+  const [selectTime, setSelectTime] = useState(0);
+  const [scheduledTime, setScheduledTime] = useState({
+    hour: null,
+    minute: null,
+    AM_PM: null
+  });
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [timestamp, setTimestamp] = useState({
     startDate: null,
     endDate: null
@@ -60,11 +79,24 @@ const AddMedicationScreen = ({ navigation }) => {
   const [drugList, setDrugList] = useState([]);
   const [searchResult, setSearchResult] = useState('');
   const [medicationToAdd, setMedicationToAdd] = useState("Add Medication");
+  const [medicationNotifications, setNotifications] = useState([]);
 
   useEffect(() => {
+    // moment(endDate) < moment(startDate) || moment(endDate) < moment(currentTime)
+    // console.log(firstName)
     let current = true;
+    const unsubscribe = navigation.addListener('blur', () => {
+      resetUserInput();
+      // console.log("unmounting med screen");
+    });
+    
     load();
-    return () => (current = false);
+
+    return () => {
+      (current = false)
+      unsubscribe();
+    };
+
   }, []);
 
   // load master list of molecules and brand-names
@@ -125,8 +157,66 @@ const AddMedicationScreen = ({ navigation }) => {
     return header;
   }
   
+  // const scheduleNotifications = async (medicationToAdd) => {
+
+  //   try {
+  //     console.log(`***SCHEDULING ALARMS***`);
+  //     let oneDay = 86400000;
+  //     let daysToSchedule = [];
+  //     let notifications = [];
+      
+  //     // console.log(`===== schedle ===== `);
+  //     // console.log(scheduledTime)
+  //     // console.log(timestamp)
+  //     // console.log(selectDoW)
+  //     // console.log(`===== schedle ===== `);
+  //     // calculateLocalTimezone(year, month, day, scheduledTime.hour, scheduledTime.minute, scheduledTime.AM_PM);
+
+  //     // 1 day - 86400000ms
+  //     for (let i = timestamp.startDate;  i <= timestamp.endDate; i += oneDay) {
+  //       // console.log(new Date(i));
+  //       let date = new Date(i);
+  //       // console.log(date.getDay());
+  //       if (selectDoW.includes(date.getDay())) {
+  //         daysToSchedule.push(i);
+  //       }
+  //       // console.log(date.getUTCDay());
+  //     }
+
+  //     // console.log(daysToSchedule);
+
+  //     const content = {
+  //       title: `${firstName}, it's time to take your ${medicationToAdd.nameDisplay}.`,
+  //       body: `Please check-in if you have taken this medication.`,
+  //     };
+
+  //     // console.log(content);
+      
+  //     for (let i = 0; i < daysToSchedule.length; i++) {
+  //       // console.log(daysToSchedule[i])
+  //       await Notifications.scheduleNotificationAsync({ content, trigger: daysToSchedule[i] }).then(notificationID => {
+  //         notifications.push({
+  //           id: notificationID,
+  //           trigger: daysToSchedule[i]
+  //         });
+  //       });
+  //     }
+  //     // console.log(notifications)
+    
+  //     const alarm = {
+  //       content,
+  //       notifications
+  //     }
+    
+  //     return alarm;
+
+  //   } catch (error) { throw error; }
+
+  // };
+
   // Add medication with user settings to user collection
   const addMedicationToDB = async () => {
+
     // Check that there is start date, end date, day(s) of week, start dateand medication object
     if (medicationToAdd !== Object(medicationToAdd)) {
       Alert.alert('', '\nPlease find medication to add');
@@ -137,50 +227,95 @@ const AddMedicationScreen = ({ navigation }) => {
     } else if (selectDoW.length == 0) {
       Alert.alert('', '\nPlease select days of week medication will be taken');
       return;
-    } else if(moment(endDate) < moment(startDate) || moment(endDate) < moment(currentTime)){
+    } else if (timestamp.endDate < timestamp.startDate) {
       Alert.alert('', '\nPlease select a valid end date');
       return;
-    } else if(drugFunction == undefined || !drugFunction.trim().length > 0 ) {
+    } else if (drugFunction == undefined || !drugFunction.trim().length > 0) {
       Alert.alert('', '\nPlease fill in function of the medication');
       return;
-    } else if(directions == undefined || !directions.trim().length > 0 ) {
+    } else if (directions == undefined || !directions.trim().length > 0) {
       Alert.alert('', '\nPlease fill in directions for intake');
       return;
     }
+
     var medSettings = {
       'medIcon': medIcon,
-      'intakeTime' : selectTime,
-      'startDate' : new Date(startDate),
+      'intakeTime': selectTime,
+      'startDate': new Date(startDate),
       'startDateTimestamp': timestamp.startDate,
-      'endDate' : new Date(endDate),
-      'endDateTimestamp': timestamp.endDate,
-      'daysOfWeek' : selectDoW,
+      'endDate': new Date(endDate),
+      'endDateTimestamp': timestamp.endDate, 
+      'daysOfWeek': selectDoW,
       'alarm': alarm,
       'function': drugFunction,
       'directions': directions,
+      'alarmRef': null,
+      // 'medicationNotifications': medicationNotifications,
     }
+
     // Merge medication information from APIs and user specified medication settings
     Object.assign(medicationToAdd, medSettings);
-    console.log(medicationToAdd, "---MED BEFORE ADDING---");
-    await fsFn.addMedication(currentUser.uid, medicationToAdd
-      // Clear user input components if addition to DB successful
+
+    if (alarm == true) {
+
+      scheduleNotifications(medicationToAdd,timestamp, selectDoW, firstName).then(async alarm => {
+        const { content, notifications } = alarm;
+        // console.log(alarm, `line 260`);
+        await alarmsRef.add({
+          alarmTitle: content.title,
+          alarmBody: content.body,
+          notifications: notifications
+        }).then(async docRef => {
+          medicationToAdd.alarmRef = docRef.id;
+          // console.log(medicationToAdd, "---MED BEFORE ADDING---");
+          // console.log(medicationToAdd);
+          await fsFn.addMedication(currentUser.uid, medicationToAdd
+            // Clear user input components if addition to DB successful 
+          ).then(() => {
+            resetUserInput();
+            scrollViewRef.scrollTo({ x: 0, y: 0, animated: true });
+            Alert.alert('', '\nMedication Added!');
+            navigation.navigate('Medications');
+          }
+          ).catch(e => {
+            e.toString() == 'Error: Medication already in user collection' ?
+              (Alert.alert('', '\nYou have already added this medication'), resetUserInput()) :
+              console.log(e);
+          });
+        }).catch(error => { throw error; });
+      });
+
+    } else {
+
+      await fsFn.addMedication(currentUser.uid, medicationToAdd
+        // Clear user input components if addition to DB successful 
       ).then(() => {
         resetUserInput();
-        scrollViewRef.scrollTo({x:0,y:0,animated:true});
-        Alert.alert('','\nMedication Added!');
+        scrollViewRef.scrollTo({ x: 0, y: 0, animated: true });
+        Alert.alert('', '\nMedication Added!');
         navigation.navigate('Medications');
       }
       ).catch(e => {
-        e.toString() == 'Error: Medication already in user collection'? 
-        (Alert.alert('','\nYou have already added this medication'), resetUserInput()) : 
-        console.log(e);
+        e.toString() == 'Error: Medication already in user collection' ?
+          (Alert.alert('', '\nYou have already added this medication'), resetUserInput()) :
+          console.log(e);
       });
+    }
+    
   }
   
   // Reset user input components to default values
   const resetUserInput = () => {
+    // Helps reset the autocomplete search input and renderedItems from a search term.
+    setFilterRxcui([]);
+    autoCompleteRef.current.textInput.clear();
+    
     setMedIcon('1');
-    setSelectTime(43200);
+    setSelectTime(0);
+    // setSelectTime(0) won't change the scheduledTime because selectTime is passed to TimePicker and used when AddMedicationScreen first rendered.
+    // When leaving the screen and coming back here, the screen has already rendered and does not re-render.
+    setScheduledTime({ hour: 12, minute: 0, AM_PM: "AM" });
+    setTimestamp({ startDate: null, endDate: null });
     setStartDate();
     setEndDate();
     setSelectDoW([]);
@@ -212,6 +347,7 @@ const AddMedicationScreen = ({ navigation }) => {
         </View>
         <View style={PatientStyles.autoView}>
           <Autocomplete
+            ref={autoCompleteRef}
             autoCapitalize="sentences"
             autoCorrect={false}
             containerStyle={PatientStyles.autoContainer}
@@ -236,7 +372,7 @@ const AddMedicationScreen = ({ navigation }) => {
           <>
           <View style={{ alignItems: 'center', paddingTop:35, paddingBottom: 15 }}>
             <IconPicker selected={medIcon} onSelect={setMedIcon} />
-            <TimePicker value={selectTime} onSelect={setSelectTime} />
+            <TimePicker value={selectTime} onSelect={setSelectTime} setScheduledTime={setScheduledTime} />
           </View>
           <TextInput style={[PatientStyles.textInput, {marginVertical: 10}]} placeholder="Function" autoCapitalize="none"  onChangeText={(text) => setDrugFunction(text)}
                     value={drugFunction} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
@@ -245,9 +381,9 @@ const AddMedicationScreen = ({ navigation }) => {
           <View style={{ paddingBottom: 14 }} />
           <View style={PatientStyles.card}>
             <View>
-              <Text style={PatientStyles.fieldText}> Start </Text>
-              <Text style={PatientStyles.fieldText}> Days </Text>
-              <Text style={PatientStyles.fieldText}> End </Text>
+              <Text onPress={()=> console.log(scheduledTime)} style={PatientStyles.fieldText}> Start </Text>
+              <Text onPress={()=> console.log(timestamp)} style={PatientStyles.fieldText}> Days </Text>
+              <Text onPress={()=> console.log(selectDoW)} style={PatientStyles.fieldText}> End </Text> 
               <Text style={PatientStyles.fieldText}> Alarm </Text>
             </View>
             <View style={{ justifyContent: 'flex-end' }}>
@@ -256,15 +392,24 @@ const AddMedicationScreen = ({ navigation }) => {
                         selected={startDate}
                         onSelect={setStartDate}
                         dateTimestamp={(value) => setTimestamp(prev => ({ ...prev, startDate: value }))}
-                        placeholder="Start Date" 
+                        time={scheduledTime}
+                        timestamp={timestamp}
+                        placeholder="Start Date"
                       />
               </View>
-              <DayOfWeekPicker selected={selectDoW} onSelect={setSelectDoW}/>
+                    <DayOfWeekPicker
+                      selected={selectDoW}
+                      onSelect={setSelectDoW}
+                      startDate={timestamp.startDate}
+                      endDate={timestamp.endDate}
+                    />
               <View style={{ paddingBottom: 8 }}>
                       <DatePicker
                         selected={endDate}
                         onSelect={setEndDate}
                         dateTimestamp={(value) => setTimestamp(prev => ({ ...prev, endDate: value }))}
+                        time={scheduledTime}
+                        timestamp={timestamp}
                         placeholder="End Date"
                       />
               </View>

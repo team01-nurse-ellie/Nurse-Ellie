@@ -14,6 +14,7 @@ import store from './src/redux/store'
 
 // fix for [Unhandled promise rejection: ReferenceError: Can't find variable: atob]
 import {decode, encode} from 'base-64'
+import { UserProvider } from './components/UserProvider/UserProvider';
 if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
@@ -46,7 +47,9 @@ const App = () => {
     return (
       <StateProvider store={store}>
         <FirebaseAuthProvider>
-          <AppNavigation />
+          <UserProvider>
+            <AppNavigation />
+          </UserProvider>
         </FirebaseAuthProvider>
       </StateProvider>
     );

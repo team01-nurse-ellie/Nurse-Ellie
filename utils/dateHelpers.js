@@ -11,16 +11,17 @@ const calculateLocalTimezone = (timestamp = null,
         TWO WAYS TO USE DATE HELPER.
         
         1. Insert (Year, Month, Day, Hour, Minute, AM/PM) as parameters. *Accepts 12-hour format*
-            Ex: calculateLocalTimezone(2020, 11, 21, 4, 44, 'PM');
+            Ex: calculateLocalTimezone(null, 2020, 11, 21, 4, 44, 'PM');
 
         2. Insert UTC value (Unix Epoch milliseconds *type is a number* ). 
             Ex: calculateLocalTimezone(1606435200000);
     */
 
     try {
-       
+        
         if (typeof(timestamp) === "number") {
-        //    console.log(`-----`)
+            // console.log(timestamp)
+        //    console.log(`yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy`)
             let date = new Date(timestamp);
             // console.log(date)
             // console.log(timestamp)
@@ -31,7 +32,7 @@ const calculateLocalTimezone = (timestamp = null,
         }
 
         if (timestamp == null) {
-
+            // console.log("HHHHHHHHHHHHHHHHHHHHH")
             if (month < 1 || month > 12) {
                 throw new Error("Invalid months, choose months between 1 - 12");
             }
@@ -88,7 +89,7 @@ const calculateLocalTimezone = (timestamp = null,
             // console.log(new Date(utc))
             // use timezoneoffset if only using utc one.
             let alarmDate = (Date.UTC(year, month, day, hour, minute) + timezoneOffset);
-            console.log(alarmDate, "- alarmDate UTC")
+            // console.log(alarmDate, "- alarmDate UTC")
 
             // if convert to new Date() then dont use timezoneoffset????
             //let d = new Date(alarmDate)
@@ -104,6 +105,20 @@ const calculateLocalTimezone = (timestamp = null,
 
 }
 
+
+const dateDifference = (endDate, startDate) => {
+
+    if (endDate == null|| startDate == null) {
+        return null;
+    }
+    
+    const DAY_IN_MS = 1000 * 60 * 60 * 24;
+    // const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    // const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+    return Math.floor((endDate - startDate) / DAY_IN_MS) + 1;
+}
+
 export {
-    calculateLocalTimezone
+    calculateLocalTimezone,
+    dateDifference
 }
