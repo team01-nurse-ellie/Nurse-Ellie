@@ -22,13 +22,15 @@ const styles = StyleSheet.create({
     shadowRadius: 2, 
     marginHorizontal: 4, 
     marginVertical: 6, 
-    paddingVertical: 3, 
-    width: 120, 
-    height: 155, 
+    paddingVertical: 3,
+    flex: 1, 
+    // width: 120, 
+    // height: 155, 
   }, 
   cardContent: {
-    marginHorizontal: 18, 
-    marginVertical: 10, 
+    flex:1,
+    marginHorizontal: 8, 
+    marginVertical: 1, 
     alignItems: 'center', 
   }
 })

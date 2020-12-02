@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, KeyboardAvoidingView, TouchableOpacity, FlatList, Button, Dimensions, StyleSheet, Alert } from 'react-native';
+import { View, Text, KeyboardAvoidingView, TouchableOpacity, FlatList, Button, Dimensions, StyleSheet, Alert, ScrollView } from 'react-native';
 import moment from 'moment';
 import * as Animatable from 'react-native-animatable';
 
@@ -14,7 +14,7 @@ import PlusIcon from '../assets/images/plus-icon';
 import EnterIcon from '../assets/images/entry-triangle-icon.svg';
 import DissatisifiedIcon from '../assets/images/scale-dissatisfied-icon';
 import TempAvatar from '../assets/images/temp-avatar';
-
+import { getValueFormatted } from '../utils/utils';
 import { dateFromToday } from '../utils/utils';
 
 const PatientDetailScreen = ({route, navigation}) => {
@@ -26,12 +26,14 @@ const PatientDetailScreen = ({route, navigation}) => {
     ])
     const { item } = route.params;
     return (
+        
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
             <Background/>
             <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
             </TouchableOpacity>
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
+            <ScrollView>
                 <View style={styles.header}>
                     <Text style={styles.title}>
                         {item.fullName}
@@ -48,7 +50,7 @@ const PatientDetailScreen = ({route, navigation}) => {
                         <Text style={styles.apptFont}> Next Appointment </Text>
                     </View>
                     <View>
-                        <Text style={styles.dateFont}> {moment(dateFromToday(-item.fullName.length*30)).format('dddd MMMM Do YYYY')} </Text>
+                        <Text style={styles.dateFont}> {item.fullName ? moment(dateFromToday(-item.fullName.length*30)).format('dddd MMMM Do YYYY') : ''} </Text>
                     </View>
                 </View>
                  <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 8}}>
@@ -56,7 +58,7 @@ const PatientDetailScreen = ({route, navigation}) => {
                         <Text style={styles.apptFont}> Last Appointment </Text>
                     </View>
                     <View>
-                        <Text style={styles.dateFont}> {moment(dateFromToday(item.fullName.length*30)).format('dddd MMMM Do YYYY')} </Text>
+                        <Text style={styles.dateFont}> {item.fullName ? moment(dateFromToday(item.fullName.length*30)).format('dddd MMMM Do YYYY') : ''} </Text>
                     </View>
                 </View>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 13}}>
@@ -67,13 +69,20 @@ const PatientDetailScreen = ({route, navigation}) => {
                         <PlusIcon/>
                     </TouchableOpacity>
                 </View>
-                <FlatList horizontal data={medications} renderItem={({item}) => (
+                <FlatList horizontal 
+                data={item.medications} 
+                keyExtractor={(item) => item.rxcui.toString()} 
+                renderItem={({item}) => (
                     <TouchableOpacity style={styles.searchButton} onPress={()=>navigation.navigate('Medication', {item: item})}>
                         <CondensedCard>
-                            <Text style={{paddingBottom: 10}}> {item.medicationName}</Text>
-                            {MedIconIndex.index[item.key]}
-                            <Text> Intake Time </Text>
-                            <Text> {item.alert}</Text>
+                            <Text style={{paddingBottom: 10, flex: 1}}> {item.nameDisplay}</Text>
+                            <View style={{flexGrow:1}}>
+                                {MedIconIndex.index[item.medIcon]}
+                            </View>
+                            <View style={{justifyContent:'center'}}>
+                                <Text style={{paddingTop: 10,}}> {getValueFormatted(item.intakeTime)} </Text>
+                                {/* <Text> {item.alarm ? 'Alarm' : ''}</Text> */}
+                            </View>
                         </CondensedCard>
                     </TouchableOpacity>
                 )}/>
@@ -99,6 +108,7 @@ const PatientDetailScreen = ({route, navigation}) => {
                         <EnterIcon style={{paddingTop: 30}}/>
                     </View>
                 </TouchableOpacity>
+                </ScrollView>
             </Animatable.View>
         </KeyboardAvoidingView>
     );

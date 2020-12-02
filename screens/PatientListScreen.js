@@ -14,7 +14,7 @@ import TempAvatar from '../assets/images/sm-temp-avatar';
 import { firebase } from '../components/Firebase/config';
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
 import * as fsFn  from '../utils/firestore';
-import dateFromToday from '../utils/utils.js';
+import { dateFromToday } from '../utils/utils';
 
 const PatientListScreen = ({navigation}) => {
     const {currentUser} = useContext(FirebaseAuthContext);
@@ -36,14 +36,6 @@ const PatientListScreen = ({navigation}) => {
         await setFsPatients(patients);
     }
 
-    // Arbitrary date. Scheduling and appointment feature to be implemented later.
-    function dateFromToday(days) {
-        var start = new Date();
-        var end = new Date();
-        start.setDate(start.getDate() - days);
-        return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-    }
-
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
             <Background/>
@@ -62,10 +54,8 @@ const PatientListScreen = ({navigation}) => {
                         <SearchIcon/>
                     </TouchableOpacity>
                 </View>
-                {console.log('fs patients is' + fsPatients)}
-                {console.log(fsPatients)}
                 {fsPatients.length > 0? (
-                <FlatList 
+                <FlatList
                 data={fsPatients} 
                 keyExtractor={(item) => item.id}
                 renderItem={({item}) => (
@@ -75,10 +65,10 @@ const PatientListScreen = ({navigation}) => {
                                 <TempAvatar />
                             </View>
                             <View style={styles.patientInfoView}>
-                                <Text style={styles.patientFont}>{item.fullName}</Text>
+                                <Text style={styles.patientFont}>{item.fullName? item.fullName: ''}</Text>
                                 <Text style={styles.lastSeenFont}>
                                     Last Seen:{'\n'} 
-                                    {moment(dateFromToday(item.fullName.length*30)).format('dddd MMMM Do YYYY')} 
+                                    {item.fullName ? moment(dateFromToday(item.fullName.length*30)).format('dddd MMMM Do YYYY'):''} 
                                 </Text>
                             </View>
                         </MedicationCard>

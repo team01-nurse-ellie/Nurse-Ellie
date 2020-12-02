@@ -1,3 +1,4 @@
+import { wait } from '@testing-library/react';
 import { firebase } from '../components/Firebase/config';
 
 const userCollection = firebase.firestore().collection("users");
@@ -84,8 +85,7 @@ export async function getCurrentMedications(userId) {
     }).catch(error => {
         console.log(error);
     });
-    //  medications where 
-    return medications; 
+     return medications; 
 }
 
 // get medication by docid
@@ -127,7 +127,7 @@ export async function getUserName(userId) {
 }
 
 
-// get all patients
+// Return array of patients with their medications
 export async function getallPatients(hpUserId) {
     var hpUser;
     var hpUserLinks = []
@@ -141,18 +141,30 @@ export async function getallPatients(hpUserId) {
     });
     // get all patients with matching health professional userLink codes
     for (const connCode of hpUserLinks) {
+        var userObj = {};
         await userCollection
         .where('userLinks', 'array-contains', connCode).get()
         .then(async querySnapshot => {
             if (!querySnapshot.empty) {
-                querySnapshot.forEach(doc => {
-                    if (doc.id != hpUserId)
-                        patients.push(doc.data());
+                querySnapshot.forEach( async doc => {
+                    if (doc.id != hpUserId){
+                        userObj = doc.data();
+                        patients.push(userObj);
+                    }
                 })
+                // 
             }
         });
     }
-    //console.log(patients);
+    
+    // get each patients medication collection
+    for (const patient of patients) {
+        await userCollection.doc(patient.id).collection("medications").get()
+        .then( snapshot => {
+            const meds = snapshot.docs.map(doc => doc.data());
+            patient.medications = meds;
+        });
+    }
     return patients;
     } catch (error) {
         throw error;
