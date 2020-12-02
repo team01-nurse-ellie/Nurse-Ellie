@@ -29,6 +29,7 @@ import DayOfWeekPicker from '../components/DayOfWeekPicker';
 import MenuIcon from '../assets/images/menu-icon.svg';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 import PinkMedication from '../assets/images/pink-medication-icon.svg';
+import SuccessIcon from '../assets/images/success-icon.svg';
 import MedicationCard from '../components/MedicationCard';
 
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
@@ -47,6 +48,7 @@ const AddMedicationScreen = ({ navigation }) => {
   const [endDate, setEndDate] = useState();
   const [alarm, setAlarm] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [confirmationModal, setConfirmationModal] = useState(false);
   const [drugFunction, setDrugFunction] = useState('');
   const [directions, setDirections] = useState('');
   const toggleSwitch = () => setAlarm(previousState => !previousState);
@@ -160,8 +162,8 @@ const AddMedicationScreen = ({ navigation }) => {
       ).then(() => {
         resetUserInput();
         scrollViewRef.scrollTo({x:0,y:0,animated:true});
-        Alert.alert('','\nMedication Added!');
         navigation.navigate('Medications');
+        setConfirmationModal(true);
       }
       ).catch(e => {
         e.toString() == 'Error: Medication already in user collection'? 
@@ -260,7 +262,29 @@ const AddMedicationScreen = ({ navigation }) => {
             </View>
           </View>
           <View style={{ paddingBottom: 14 }} />
-          <Button title="ADD MEDICATION" color="#42C86A" onPress={addMedicationToDB } />
+          <Button 
+            title="ADD MEDICATION" 
+            color="#42C86A" 
+            onPress={addMedicationToDB} />
+          <Modal
+            isVisible={confirmationModal}
+            animationIn="slideInUp"
+            animationOut="slideOutDown"
+            onBackButtonPress={()=> setConfirmationModal(false)}
+            backdropOpacity={0}
+            >
+              <View style={styles.centeredView}>
+                <View style={styles.confirmationModal}>
+                  <SuccessIcon/>
+                  <Text style={styles.confirmationFont}>Success!</Text> 
+                  <Text styles={styles.confirmationFont}>You have added a new medication.</Text>
+                  <View style={{paddingVertical: 2}}/>
+                  <TouchableOpacity onPress={()=> setConfirmationModal(false)}>
+                    <Text style={styles.confirmationTouchable}>CLOSE</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+          </Modal>
           </> 
         )
         }
@@ -358,6 +382,30 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingBottom: 20,
   },
+  centeredView:{
+    flex: 1, 
+    justifyContent: "center", 
+    alignItems: "center", 
+    marginTop: 22
+  },
+  confirmationModal: {
+    backgroundColor: 'white', 
+    borderRadius: 25, 
+    padding: 35, 
+    alignItems: "center", 
+    elevation: 5
+  }, 
+  confirmationFont: {
+    fontFamily: 'roboto-regular',
+    fontSize: 24,
+    color: 'rgba(0, 0, 0, 0.95)',
+  },
+  confirmationTouchable: {
+    fontFamily: 'roboto-medium', 
+    fontSize: 14, 
+    color: '#42C86A'
+  }
+
 });
 
 export default AddMedicationScreen;
