@@ -1,6 +1,6 @@
 import * as Notifications from 'expo-notifications';
 
-const scheduleNotifications = async (medicationToAdd, timestamp, selectDoW, firstName = null) => {
+const scheduleNotifications = async (medicationToAdd, medicationDocID, timestamp, selectDoW, firstName = null) => {
 
     try {
       console.log(`***SCHEDULING ALARMS***`);
@@ -40,7 +40,9 @@ const scheduleNotifications = async (medicationToAdd, timestamp, selectDoW, firs
         await Notifications.scheduleNotificationAsync({ content, trigger: daysToSchedule[i] }).then(notificationID => {
           notifications.push({
             id: notificationID,
-            trigger: daysToSchedule[i]
+            trigger: daysToSchedule[i],
+            rxcui: medicationToAdd.rxcui,
+            medicationID: medicationDocID
           });
         });
       }

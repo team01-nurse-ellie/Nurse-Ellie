@@ -49,6 +49,7 @@ class Component extends React.Component {
     const { startDate, endDate, selected } = this.props;
 
     // When leaving screen, it will reset the DoW rendered days. 
+    // console.log(`re-render`, selected);
     if (selected.length != prevProps.selected.length) {
       // if array is empty
       if (selected.length < 1) {

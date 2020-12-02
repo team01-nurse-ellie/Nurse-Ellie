@@ -96,6 +96,9 @@ const EditMedicationScreen = ({route, navigation }) => {
       await fsFn.removeMedication(currentUser.uid, item.docId).then(async () => {
         // after medication is deleted, use alarmRef to grab notification IDs
         await alarmsRef.doc(item.medication.alarmRef).get().then(async doc => {
+            if (!doc.exists) {
+                throw new Error(`ALARM CAN NOT BE FOUND FOR MEDICATION DOC ID: ${item.docId}`);
+            }
             // fetch array notification array that holds expo's notification ID and the notification date trigger. 
             let notificationsToDelete = doc.data().notifications;
             
@@ -156,6 +159,9 @@ const EditMedicationScreen = ({route, navigation }) => {
     if (alarm == true) {
         // grabs previous alarm notifications
         await alarmsRef.doc(item.medication.alarmRef).get().then(async doc => {
+            if (!doc.exists) {
+                throw new Error(`ALARM CAN NOT BE FOUND FOR MEDICATION DOC ID: ${item.docId}`);
+            }
             let notificationsToDelete = doc.data().notifications;
             // delete notifs for that 1 med
             await (async () => {
@@ -166,6 +172,11 @@ const EditMedicationScreen = ({route, navigation }) => {
             })().then(async () => {
                 // schedule new alarm notifications 
                 await scheduleNotifications(item.medication, timestamp, selectDoW).then(async alarm => {
+                    
+                    if (!alarm) {
+                        throw new Error(`NEW SCHEDULED ALARMS DID NOT GET RETURNED`);
+                    }
+                    
                     const { notifications } = alarm;
                     // update medication 
                     await fsFn.updateMedication(currentUser.uid, item.docId, item.medication
@@ -200,6 +211,9 @@ const EditMedicationScreen = ({route, navigation }) => {
             ).then(async () => {
                 // resetUserInput();
                 await alarmsRef.doc(item.medication.alarmRef).get().then(async doc => {
+                    if (!doc.exists) {
+                        throw new Error(`ALARM CAN NOT BE FOUND FOR MEDICATION DOC ID: ${item.docId}`);
+                    }
                     let notificationsToDelete = doc.data().notifications;
                     
                 // delete notifs for that 1 med
@@ -231,6 +245,12 @@ const EditMedicationScreen = ({route, navigation }) => {
 
   const resetUserInput = () => {
     setMedIcon(item.medication.medIcon);
+    // console.log(item.medication.intakeTime)
+    setScheduledTime(item.medication.scheduledTime);
+    setTimestamp({
+        startDate: item.medication.startDateTimestamp,
+        endDate: item.medication.startDateTimestamp
+    });
     setIntakeTime(item.medication.intakeTime);
     setStartDate(item.medication.startDate);
     setEndDate(item.medication.endDate);
@@ -284,7 +304,7 @@ const EditMedicationScreen = ({route, navigation }) => {
                 <View style={PatientStyles.card}>
                     <View>
                     <Text onPress={()=> console.log(scheduledTime)} style={PatientStyles.fieldText}> Start </Text>
-                    <Text onPress={()=> console.log(timestamp)} style={PatientStyles.fieldText}> Days </Text>
+                    <Text onPress={()=> console.log("start date:", new Date(timestamp.startDate), "\nend date:", new Date(timestamp.endDate))} style={PatientStyles.fieldText}> Days </Text>
                     <Text onPress={()=> console.log(selectDoW)} style={PatientStyles.fieldText}> End </Text>
                     <Text style={PatientStyles.fieldText}> Alarm </Text>
                     </View>

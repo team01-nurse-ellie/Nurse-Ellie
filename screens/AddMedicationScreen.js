@@ -216,8 +216,8 @@ const AddMedicationScreen = ({ navigation }) => {
 
   // Add medication with user settings to user collection
   const addMedicationToDB = async () => {
-
-    // Check that there is start date, end date, day(s) of week, start dateand medication object
+    // console.log(item.medication)
+    //Check that there is start date, end date, day(s) of week, start dateand medication object
     if (medicationToAdd !== Object(medicationToAdd)) {
       Alert.alert('', '\nPlease find medication to add');
       return;
@@ -241,6 +241,7 @@ const AddMedicationScreen = ({ navigation }) => {
     var medSettings = {
       'medIcon': medIcon,
       'intakeTime': selectTime,
+      'scheduledTime': scheduledTime,  
       'startDate': new Date(startDate),
       'startDateTimestamp': timestamp.startDate,
       'endDate': new Date(endDate),
@@ -255,35 +256,53 @@ const AddMedicationScreen = ({ navigation }) => {
 
     // Merge medication information from APIs and user specified medication settings
     Object.assign(medicationToAdd, medSettings);
-
+    // console.log(medicationToAdd);
     if (alarm == true) {
 
-      scheduleNotifications(medicationToAdd,timestamp, selectDoW, firstName).then(async alarm => {
-        const { content, notifications } = alarm;
-        // console.log(alarm, `line 260`);
-        await alarmsRef.add({
-          alarmTitle: content.title,
-          alarmBody: content.body,
-          notifications: notifications
-        }).then(async docRef => {
-          medicationToAdd.alarmRef = docRef.id;
-          // console.log(medicationToAdd, "---MED BEFORE ADDING---");
-          // console.log(medicationToAdd);
-          await fsFn.addMedication(currentUser.uid, medicationToAdd
-            // Clear user input components if addition to DB successful 
-          ).then(() => {
-            resetUserInput();
-            scrollViewRef.scrollTo({ x: 0, y: 0, animated: true });
-            Alert.alert('', '\nMedication Added!');
-            navigation.navigate('Medications');
-          }
-          ).catch(e => {
+    //   scheduleNotifications(medicationToAdd,timestamp, selectDoW, firstName).then(async alarm => {
+    //     const { content, notifications } = alarm;
+    //     // console.log(alarm, `line 260`);
+    //     await alarmsRef.doc(currentUser.uid).collection("medicationAlarms").add({
+    //       alarmTitle: content.title,
+    //       alarmBody: content.body,
+    //       notifications: notifications
+    //     }).then(async docRef => {
+    //       medicationToAdd.alarmRef = docRef.id;
+    //       // console.log(medicationToAdd, "---MED BEFORE ADDING---");
+    //       // console.log(medicationToAdd);
+
+    //     }).catch(error => { throw error; });
+    //   });
+    
+          // Clear user input components if addition to DB successful 
+          await fsFn.addMedication(currentUser.uid, medicationToAdd)
+            .then(async (medicationDocID) => {
+            // console.log(medicationDocID, `addMedication DATA RETURNED FROM FIRESTORE`);
+            await scheduleNotifications(medicationToAdd, medicationDocID, timestamp, selectDoW, firstName).then(async alarm => {
+              // once notifications scheduled, add details of notification object into user's medication's alarm object.
+              const { content, notifications } = alarm;
+              await alarmsRef.doc(currentUser.uid).collection("medicationAlarms").add({
+                alarmTitle: content.title,
+                alarmBody: content.body,
+                notifications: notifications
+              }).then(async docRef => {
+                // once medication is added and scheduled notifications, use the alarm's ID and update the medication alarmRef property.
+                medicationToAdd.alarmRef = docRef.id; 
+                await fsFn.updateMedication(currentUser.uid, medicationDocID, medicationToAdd)
+                  .then(async () => {
+                    // Once done, navigate to medication list.
+                    resetUserInput();
+                    scrollViewRef.scrollTo({ x: 0, y: 0, animated: true });
+                    Alert.alert('', '\nMedication Added!');
+                    navigation.navigate('Medications');
+                  }).catch(error => { throw error });
+              }).catch(error => { throw error });
+            }).catch(error => { throw error });
+          }).catch(e => {
             e.toString() == 'Error: Medication already in user collection' ?
               (Alert.alert('', '\nYou have already added this medication'), resetUserInput()) :
               console.log(e);
           });
-        }).catch(error => { throw error; });
-      });
 
     } else {
 
