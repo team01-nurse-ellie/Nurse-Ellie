@@ -92,8 +92,10 @@ const MedicationListScreen = ({navigation}) => {
                             </MedicationCard>
                         </TouchableOpacity>
                     )}/>
-                        )} 
-                <Button title="ADD NEW MEDICATION" color='#42C86A' onPress={()=>{navigation.navigate('AddMedication')}}/>
+                )}
+                <View style={styles.addMedicationButton}>
+                    <Button title="ADD NEW MEDICATION" color='#42C86A' onPress={()=>{navigation.navigate('AddMedication')}}/>
+                </View>
             </Animatable.View>
         </KeyboardAvoidingView>
     )
@@ -139,6 +141,11 @@ const styles = StyleSheet.create({
     searchButton:{
         right: 5
     },
+    addMedicationButton: {
+        position: 'absolute', 
+        top: screenHeight * 0.65, 
+        alignSelf: 'center'
+    }, 
 });
 
 export default MedicationListScreen;
