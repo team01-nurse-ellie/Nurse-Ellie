@@ -125,3 +125,36 @@ export async function getUserName(userId) {
         }
     })
 }
+
+
+// get all patients
+export async function getallPatients(hpUserId) {
+    var hpUser;
+    var hpUserLinks = []
+    var patients = [];
+    try {
+    // get health professionals user document
+    await userCollection.doc(hpUserId).get().then(async doc => {
+        if (doc.data()) 
+            hpUser= doc.data();
+            hpUserLinks = hpUser.userLinks;
+    });
+    // get all patients with matching health professional userLink codes
+    for (const connCode of hpUserLinks) {
+        await userCollection
+        .where('userLinks', 'array-contains', connCode).get()
+        .then(async querySnapshot => {
+            if (!querySnapshot.empty) {
+                querySnapshot.forEach(doc => {
+                    if (doc.id != hpUserId)
+                        patients.push(doc.data());
+                })
+            }
+        });
+    }
+    //console.log(patients);
+    return patients;
+    } catch (error) {
+        throw error;
+    }
+}

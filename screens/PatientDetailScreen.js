@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, KeyboardAvoidingView, TouchableOpacity, FlatList, Button, Dimensions, StyleSheet, Alert } from 'react-native';
-
+import moment from 'moment';
 import * as Animatable from 'react-native-animatable';
 
 import Background from '../components/BackgroundHP';
@@ -14,6 +14,8 @@ import PlusIcon from '../assets/images/plus-icon';
 import EnterIcon from '../assets/images/entry-triangle-icon.svg';
 import DissatisifiedIcon from '../assets/images/scale-dissatisfied-icon';
 import TempAvatar from '../assets/images/temp-avatar';
+
+import { dateFromToday } from '../utils/utils';
 
 const PatientDetailScreen = ({route, navigation}) => {
     const [medications, setMedications] = useState ([
@@ -32,7 +34,7 @@ const PatientDetailScreen = ({route, navigation}) => {
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
                 <View style={styles.header}>
                     <Text style={styles.title}>
-                        {item.patientName}
+                        {item.fullName}
                     </Text>
                     <TouchableOpacity>
                         <EditIcon/>
@@ -46,7 +48,7 @@ const PatientDetailScreen = ({route, navigation}) => {
                         <Text style={styles.apptFont}> Next Appointment </Text>
                     </View>
                     <View>
-                        <Text style={styles.dateFont}> Monday, November 23, 2020 </Text>
+                        <Text style={styles.dateFont}> {moment(dateFromToday(-item.fullName.length*30)).format('dddd MMMM Do YYYY')} </Text>
                     </View>
                 </View>
                  <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 8}}>
@@ -54,7 +56,7 @@ const PatientDetailScreen = ({route, navigation}) => {
                         <Text style={styles.apptFont}> Last Appointment </Text>
                     </View>
                     <View>
-                        <Text style={styles.dateFont}> {item.lastSeen} </Text>
+                        <Text style={styles.dateFont}> {moment(dateFromToday(item.fullName.length*30)).format('dddd MMMM Do YYYY')} </Text>
                     </View>
                 </View>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 13}}>

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, FlatList, Button, Dimensions, StyleSheet, Alert } from 'react-native';
-
+import moment from 'moment';
 import * as Animatable from 'react-native-animatable';
 
 import Background from '../components/BackgroundHP';
@@ -11,13 +11,38 @@ import SearchIcon from '../assets/images/search-icon';
 
 import TempAvatar from '../assets/images/sm-temp-avatar';
 
+import { firebase } from '../components/Firebase/config';
+import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
+import * as fsFn  from '../utils/firestore';
+import dateFromToday from '../utils/utils.js';
+
 const PatientListScreen = ({navigation}) => {
+    const {currentUser} = useContext(FirebaseAuthContext);
+    const [fsPatients, setFsPatients] = useState ([]);
     const [patients, setPatients] = useState ([
         {patientName: 'Julie Ng', lastSeen: 'Tuesday, October 13th 2020', key: '1'}, 
         {patientName: 'Patrick Henderson', lastSeen: 'Wednesday, October 14th 2020', key: '2'}, 
         {patientName: 'Lee Follis', lastSeen: 'Monday, October 12th 2020', key: '3'},
         {patientName: 'Mary Burns', lastSeen: 'Wednesday, October 14th 2020', key: '4'}
+        
     ]);
+
+    useEffect(()=>{
+        load();
+    },[])
+
+    async function load() {
+        let patients = await fsFn.getallPatients(currentUser.uid);
+        await setFsPatients(patients);
+    }
+
+    // Arbitrary date. Scheduling and appointment feature to be implemented later.
+    function dateFromToday(days) {
+        var start = new Date();
+        var end = new Date();
+        start.setDate(start.getDate() - days);
+        return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    }
 
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
@@ -37,19 +62,33 @@ const PatientListScreen = ({navigation}) => {
                         <SearchIcon/>
                     </TouchableOpacity>
                 </View>
-                <FlatList data={patients} renderItem={({item}) => (
+                {console.log('fs patients is' + fsPatients)}
+                {console.log(fsPatients)}
+                {fsPatients.length > 0? (
+                <FlatList 
+                data={fsPatients} 
+                keyExtractor={(item) => item.id}
+                renderItem={({item}) => (
                     <TouchableOpacity style={styles.searchButton} onPress={()=>navigation.navigate('Patient', {item: item})}>
                         <MedicationCard>
                             <View>
                                 <TempAvatar />
                             </View>
                             <View style={styles.patientInfoView}>
-                                <Text style={styles.patientFont}>{item.patientName}</Text>
-                                <Text style={styles.lastSeenFont}>Last Seen: {item.lastSeen}</Text>
+                                <Text style={styles.patientFont}>{item.fullName}</Text>
+                                <Text style={styles.lastSeenFont}>
+                                    Last Seen:{'\n'} 
+                                    {moment(dateFromToday(item.fullName.length*30)).format('dddd MMMM Do YYYY')} 
+                                </Text>
                             </View>
                         </MedicationCard>
                     </TouchableOpacity>
                 )}/>
+                ) : (
+                    <>
+                    <View></View>
+                    </>
+                )}
             </Animatable.View>
         </KeyboardAvoidingView>
     )
