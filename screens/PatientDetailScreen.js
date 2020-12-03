@@ -80,7 +80,7 @@ const PatientDetailScreen = ({route, navigation}) => {
                                 {MedIconIndex.index[item.medIcon]}
                             </View>
                             <View style={{justifyContent:'center'}}>
-                                <Text style={{paddingTop: 10,}}> {getValueFormatted(item.intakeTime)} </Text>
+                                <Text> {getValueFormatted(item.intakeTime)} </Text>
                                 {/* <Text> {item.alarm ? 'Alarm' : ''}</Text> */}
                             </View>
                         </CondensedCard>
