@@ -11,7 +11,6 @@ import SearchIcon from '../assets/images/search-icon';
 
 import TempAvatar from '../assets/images/sm-temp-avatar';
 
-import { firebase } from '../components/Firebase/config';
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
 import * as fsFn  from '../utils/firestore';
 import { dateFromToday } from '../utils/utils';
@@ -113,7 +112,7 @@ const PatientListScreen = ({navigation}) => {
                                 <Text style={styles.patientFont}>{item.fullName? item.fullName: ''}</Text>
                                 <Text style={styles.lastSeenFont}>
                                     Last Seen:{'\n'} 
-                                    {item.fullName ? moment(dateFromToday(item.fullName.length*30)).format('dddd MMMM Do YYYY'):''} 
+                                    {item.fullName ? moment(dateFromToday(item.fullName.charCodeAt(0))).format('dddd MMMM Do YYYY'):''} 
                                 </Text>
                             </View>
                         </MedicationCard>

@@ -20,11 +20,24 @@ import { firebase } from '../components/Firebase/config';
 
 const PatientDetailScreen = ({route, navigation}) => {
     const { item } = route.params;
+    const [medications, setMedications] = useState([]);
 
     useEffect(()=>{
         const subscriber = firebase.firestore().collection("users").doc(item.id).collection("medications")
         .onSnapshot(querySnapshot => {
-            
+            const meds = [];
+            querySnapshot.forEach(documentSnapshot =>{
+                let id = documentSnapshot.id;
+                let data = documentSnapshot.data();
+                meds.push({
+                    'docId' : id,
+                    'medication': data,
+                    'isPatient': true,
+                    'patientId': item.id,
+                })
+            });
+            setMedications(meds);
+            console.log(meds);
         });
 
         return () => subscriber();
@@ -54,7 +67,7 @@ const PatientDetailScreen = ({route, navigation}) => {
                         <Text style={styles.apptFont}> Next Appointment </Text>
                     </View>
                     <View>
-                        <Text style={styles.dateFont}> {item.fullName ? moment(dateFromToday(-item.fullName.length*30)).format('dddd MMMM Do YYYY') : ''} </Text>
+                        <Text style={styles.dateFont}> {item.fullName ? moment(dateFromToday(item.fullName.charCodeAt(0))*1.015).format('dddd MMMM Do YYYY') : ''} </Text>
                     </View>
                 </View>
                  <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 8}}>
@@ -62,7 +75,7 @@ const PatientDetailScreen = ({route, navigation}) => {
                         <Text style={styles.apptFont}> Last Appointment </Text>
                     </View>
                     <View>
-                        <Text style={styles.dateFont}> {item.fullName ? moment(dateFromToday(item.fullName.length*30)).format('dddd MMMM Do YYYY') : ''} </Text>
+                        <Text style={styles.dateFont}> {item.fullName ? moment(dateFromToday(item.fullName.charCodeAt(0))).format('dddd MMMM Do YYYY') : ''} </Text>
                     </View>
                 </View>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 13}}>
@@ -74,7 +87,7 @@ const PatientDetailScreen = ({route, navigation}) => {
                     </TouchableOpacity>
                 </View>
                 <FlatList horizontal 
-                data={item.medications} 
+                data={medications} 
                 keyExtractor={(item) => item.medication.rxcui.toString()} 
                 renderItem={({item}) => (
                     <TouchableOpacity 

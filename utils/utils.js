@@ -1,9 +1,10 @@
-export function dateFromToday(days) {
+export function dateFromToday(code) {
+    var ratio = code/127;
+    console.log(ratio);
     var start = new Date();
     var end = new Date();
-    start.setDate(start.getDate() - days);
-    // return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    start.setDate(start.getDate() - 360);
+    return new Date(start.getTime() + ratio * (end.getTime() - start.getTime()));
 }
 
 
