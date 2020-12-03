@@ -30,7 +30,6 @@ const PatientListScreen = ({navigation}) => {
 
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
-            {console.log(fsPatients)}
             <Background/>
             <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
