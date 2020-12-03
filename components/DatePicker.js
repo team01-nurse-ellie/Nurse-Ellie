@@ -61,7 +61,7 @@ class Component extends React.Component {
     if (this.props.hasOwnProperty(`screenType`)) {
       if (this.props.screenType === `Edit Medication`) {
         const { startDate, endDate } = this.props.timestamp;
-        if (startDate != null) { 
+        if (startDate != null && this.props.placeholder === "Start Date") { 
           if (this.state.date.day == null) {
             let day = new Date(startDate);
             this.setState({ date: { year: day.getFullYear(), month: day.getMonth() + 1, day: day.getDate() } });
@@ -69,7 +69,7 @@ class Component extends React.Component {
           }
         }
         
-        if (endDate != null) { 
+        if (endDate != null && this.props.placeholder === "End Date") { 
           if (this.state.date.day == null) {
             let day = new Date(endDate);
             this.setState({ date: { year: day.getFullYear(), month: day.getMonth() + 1, day: day.getDate() } });
@@ -100,6 +100,7 @@ class Component extends React.Component {
       console.log("go change!!!")
       const { date } = this.state;
       const { time } = this.props;
+      console.log(`BEFORE updateDateByTime`, date);
       this.updateDateByTime(date, time);
     }
   }

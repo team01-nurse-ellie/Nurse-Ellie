@@ -1,12 +1,10 @@
 import React, { useState, useContext,useEffect } from 'react';
 import { View, Text, Switch, KeyboardAvoidingView, TouchableOpacity, StyleSheet, TextInput, Keyboard, Alert} from 'react-native';
 import Modal from 'react-native-modal';
-import {CommonActions}  from '@react-navigation/native';
-import * as Animatable from 'react-native-animatable';
 import { ActivityIndicator } from 'react-native-paper';
+import * as Animatable from 'react-native-animatable';
 import * as Notifications from 'expo-notifications';
-// import {CommonActions}  from '@react-navigation/native';
-// import moment from 'moment';
+import * as fsFn  from '../utils/firestore';
 
 import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
@@ -20,46 +18,40 @@ import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 
 import { firebase } from '../components/Firebase/config';
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
-import * as fsFn  from '../utils/firestore';
-import { scheduleNotifications} from '../utils/scheduleNotifications';
-import { alarmsRef} from '../utils/databaseRefs';
+import { scheduleNotifications } from '../utils/scheduleNotifications';
+import { alarmsRef } from '../utils/databaseRefs';
 
 const EditMedicationScreen = ({route, navigation }) => {
-  const { item } = route.params;
-  const {currentUser} = useContext(FirebaseAuthContext);
-  const currentTime = new Date();
-  const [loading, setLoading] = useState();
-  const [medication, setMedication] = useState();
-  const [medIcon, setMedIcon] = useState('1');
-  const [selectDoW, setSelectDoW] = useState([]);
-  const [intakeTime, setIntakeTime] = useState(0);
-  const [scheduledTime, setScheduledTime] = useState({
-    hour: null,
-    minute: null, 
-    AM_PM: null
-  });
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
-  const [timestamp, setTimestamp] = useState({
-    startDate: item.medication.startDateTimestamp,
-    endDate: item.medication.endDateTimestamp
-  }); 
-  const [alarm, setAlarm] = useState('false');
-  const [drugFunction, setDrugFunction] = useState('');
-  const [directions, setDirections] = useState('');
-  const [deleteWarning, setDeleteWarning] = useState(false);
-  const [editWarning, setEditWarning] = useState(false);
-  const toggleSwitch = () => setAlarm(previousState => !previousState);
-
+    const { item } = route.params;
+    const { currentUser } = useContext(FirebaseAuthContext);
+    // --------------------------------------------------
+    const [scheduledTime, setScheduledTime] = useState(item.medication.scheduledTime);
+    const [timestamp, setTimestamp] = useState({
+        startDate: item.medication.startDateTimestamp,
+        endDate: item.medication.endDateTimestamp
+    });
+    const [selectDoW, setSelectDoW] = useState(item.medication.daysOfWeek.sort((a, b) => a > b));
+    const [alarm, setAlarm] = useState('false');
+    // --------------------------------------------------
+    const [medIcon, setMedIcon] = useState('1');
+    const [intakeTime, setIntakeTime] = useState(0);
+    const [startDate, setStartDate] = useState();
+    const [endDate, setEndDate] = useState();
+    const [drugFunction, setDrugFunction] = useState('');
+    const [directions, setDirections] = useState('');
+    const currentTime = new Date();
+    const [loading, setLoading] = useState();
+    const [medication, setMedication] = useState();
+    const [deleteWarning, setDeleteWarning] = useState(false);
+    const [editWarning, setEditWarning] = useState(false);
+    const toggleSwitch = () => setAlarm(previousState => !previousState);
+    // --------------------------------------------------
+    
   useEffect(() => {
     // subscribe to document of medication
-    // console.log(item, `IN EDIT`)
-    // console.log(item.docId)
     const unsubscribe = navigation.addListener('blur', () => {
-        // console.log(item.medication)
         resetUserInput();
     })
-    // console.log(unsubscribe)
     setLoading(true);
     const subscriber = firebase.firestore()
         .collection("users")
@@ -67,17 +59,20 @@ const EditMedicationScreen = ({route, navigation }) => {
         .collection("medications")
         .doc(item.docId)
         .onSnapshot(querySnapshot => {
-            // console.log(querySnapshot.data(), "ffffffffffffffffffffffffffff")
-            // console.log("yooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
             if (querySnapshot.data() !== undefined) {
                 setMedication(querySnapshot.data());
                 setMedIcon(querySnapshot.data().medIcon);
                 setIntakeTime(querySnapshot.data().intakeTime);
+                setScheduledTime(querySnapshot.data().scheduledTime);
                 setDrugFunction(querySnapshot.data().function);
                 setDirections(querySnapshot.data().directions);
                 setStartDate(querySnapshot.data().startDate.toDate());
-                setSelectDoW(querySnapshot.data().daysOfWeek.sort((a,b) => a > b));
+                setSelectDoW(querySnapshot.data().daysOfWeek.sort((a, b) => a > b));
                 setEndDate(querySnapshot.data().endDate.toDate());
+                setTimestamp({
+                    startDate: querySnapshot.data().startDateTimestamp,
+                    endDate: querySnapshot.data().endDateTimestamp,
+                });
                 setAlarm(querySnapshot.data().alarm);
                 setLoading(false);
             }
@@ -130,18 +125,17 @@ const EditMedicationScreen = ({route, navigation }) => {
 
             }).catch(error => { throw error; });
         } else {
-            // IF NO MEDICATION HAD TO ALARM TO BEGIN WITH.
+            // IF MEDICATION HAD NO ALARM TO BEGIN WITH.
             navigation.navigate('Medications');
         }
         
-
-
     }).catch(error => { throw error; });
 
   };
 
   // Add medication with user settings to user collection
   const updateMedication = async () => {
+    
     if (startDate == undefined || endDate == undefined) {
         Alert.alert('', '\nPlease select a start and end date');
         return;
@@ -161,6 +155,7 @@ const EditMedicationScreen = ({route, navigation }) => {
     var medSettings = {
       'medIcon': medIcon,
       'intakeTime' : intakeTime,
+      'scheduledTime': scheduledTime,
       'startDate' : new Date(startDate),
       'startDateTimestamp': timestamp.startDate,
       'endDate' : new Date(endDate),
@@ -174,50 +169,59 @@ const EditMedicationScreen = ({route, navigation }) => {
 
     Object.assign(item.medication, medSettings);
 
-    if (alarm == true) {
-        // grabs previous alarm notifications
-        await alarmsRef.doc(item.medication.alarmRef).get().then(async doc => {
-            if (!doc.exists) {
-                throw new Error(`UPDATE MEDICATION: ALARM CAN NOT BE FOUND FOR MEDICATION DOC ID: ${item.docId} TO DELETE (alarm set to true)`);
-            }
-            let notificationsToDelete = doc.data().notifications;
-            // delete notifs for that 1 med
-            await (async () => {
-                // delete the notification from expo in loop
-                for (let i = 0; i < notificationsToDelete.length; i++) {
-                    await Notifications.cancelScheduledNotificationAsync(notificationsToDelete[i].id);
-                }
-            })().then(async () => {
-                // schedule new alarm notifications 
-                await scheduleNotifications(item.medication, timestamp, selectDoW).then(async alarm => {
-                    
-                    if (!alarm) {
-                        throw new Error(`NEW SCHEDULED ALARMS DID NOT GET RETURNED`);
-                    }
-                    
-                    const { notifications } = alarm;
-                    // update medication 
-                    await fsFn.updateMedication(currentUser.uid, item.docId, item.medication
-                    ).then(async () => {
+    const { alarmRef } = item.medication;
 
+    if (alarm == true) {
+
+        // update medication 
+        await fsFn.updateMedication(currentUser.uid, item.docId, item.medication
+        ).then(async () => {
+            // grabs previous alarm notifications
+            await alarmsRef.doc(currentUser.uid).collection("medicationAlarms").doc(alarmRef).get().then(async doc => {
+                
+                if (!doc.exists) {
+                    throw new Error(`UPDATE MEDICATION: ALARM CAN NOT BE FOUND FOR MEDICATION DOC ID: ${item.docId} TO DELETE (alarm set to true)`);
+                }
+                
+                // delete notifs for that 1 med
+                let notificationsToDelete = doc.data().notifications;
+                await (async () => {
+                    
+                    for (let i = 0; i < notificationsToDelete.length; i++) {
+                        // delete the notification from expo in loop
+                        await Notifications.cancelScheduledNotificationAsync(notificationsToDelete[i].id).then(()=> {
+                            console.log("Cancelled notif")
+                        }).catch(error => { throw error; });
+                    }
+
+                })().then(async () => {
+                    // once expo notifs are deleted, schedule new alarm notifications. 
+                    await scheduleNotifications(item.medication, item.docId, timestamp, selectDoW)
+                    .then(async alarm => {
+                        
+                        if (!alarm) {
+                            throw new Error(`NEW SCHEDULED ALARMS DID NOT GET RETURNED`);
+                        }
+                        // returns alarm's new notifications only,
+                        // content doesn't need to be fetched b/c it remains the same for that medication,
+                        // just the date triggers are changed.
+                        const { notifications } = alarm;
+                        
                         // overwrites old notifications with new notifications
-                        await alarmsRef.doc(item.medication.alarmRef).update({
+                        await alarmsRef.doc(currentUser.uid).collection("medicationAlarms").doc(alarmRef).update({
                             notifications: notifications
                         }).then(() => {
                             Alert.alert('', '\nMedication Updated!');
                             navigation.navigate('Medication', { item: item });
-                        });
-
-                    }
-                    ).catch(e => {
-                        e.toString() == 'Error: Medication already in user collection' ?
-                            (Alert.alert('', '\nYou have already added this medication'), resetUserInput()) :
-                            console.log('could not update medication :' + e);
-                    });
-
+                        }).catch(error => { throw error; });
+                        
+                    }).catch(error => { throw error });
                 }).catch(error => { throw error });
-
-            });
+            }).catch(error => { throw error; });
+        }).catch(e => {
+            e.toString() == 'Error: Medication already in user collection' ?
+                (Alert.alert('', '\nYou have already added this medication'), resetUserInput()) :
+                console.log('could not update medication :' + e);
         });
     
   
@@ -228,30 +232,35 @@ const EditMedicationScreen = ({route, navigation }) => {
             // Clear user input components if addition to DB successful
             ).then(async () => {
                 // resetUserInput();
-                await alarmsRef.doc(item.medication.alarmRef).get().then(async doc => {
+                await alarmsRef.doc(currentUser.uid).collection('medicationAlarms').doc(alarmRef).get().then(async doc => {
+                    
                     if (!doc.exists) {
                         throw new Error(`UPDATE_MEDICATION: ALARM CAN NOT BE FOUND FOR MEDICATION DOC ID: ${item.docId} TO DELTE (alarm set to false)`);
                     }
+                    
                     let notificationsToDelete = doc.data().notifications;
                     
                 // delete notifs for that 1 med
                   await (async () => {
                       // delete the notification from expo in loop
                       for (let i = 0; i < notificationsToDelete.length; i++) {
-                          await Notifications.cancelScheduledNotificationAsync(notificationsToDelete[i].id);
+                          await Notifications.cancelScheduledNotificationAsync(notificationsToDelete[i].id).then(()=> {
+                              console.log(`cancelled notifs`);
+                          }).catch(error => { throw error; });
                       }
                   })().then(async () => {
 
-                      await alarmsRef.doc(item.medication.alarmRef).update({
+                      await alarmsRef.doc(currentUser.uid).collection('medicationAlarms').doc(alarmRef).update({
                           notifications: []
                       }).then(() => { 
                           Alert.alert('','\nMedication Updated!');
-                          navigation.navigate('Medication', {item:item});
-                      });
-                  })
-              })
-          }
-          ).catch(e => {
+                          navigation.navigate('Medication', { item: item });
+                      }).catch(error => { throw error; });
+
+                  }).catch(error => { throw error; });
+                }).catch(error => { throw error; });
+
+          }).catch(e => {
             e.toString() == 'Error: Medication already in user collection'? 
             (Alert.alert('','\nYou have already added this medication'), resetUserInput()) : 
             console.log('could not update medication :' + e);
@@ -259,6 +268,7 @@ const EditMedicationScreen = ({route, navigation }) => {
      
     }
 
+     setEditWarning(false);
   }
 
   const resetUserInput = () => {
@@ -267,7 +277,7 @@ const EditMedicationScreen = ({route, navigation }) => {
     setScheduledTime(item.medication.scheduledTime);
     setTimestamp({
         startDate: item.medication.startDateTimestamp,
-        endDate: item.medication.startDateTimestamp
+        endDate: item.medication.endDateTimestamp
     });
     setIntakeTime(item.medication.intakeTime);
     setStartDate(item.medication.startDate);
@@ -277,6 +287,7 @@ const EditMedicationScreen = ({route, navigation }) => {
     setDrugFunction(item.medication.function);
     setDirections(item.medication.directions);
   }
+  
     return (
         <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
             <Background/>
@@ -322,7 +333,7 @@ const EditMedicationScreen = ({route, navigation }) => {
                 <View style={PatientStyles.card}>
                     <View>
                     <Text onPress={()=> console.log(scheduledTime)} style={PatientStyles.fieldText}> Start </Text>
-                    <Text onPress={()=> console.log("start date:", new Date(timestamp.startDate), "\nend date:", new Date(timestamp.endDate))} style={PatientStyles.fieldText}> Days </Text>
+                    <Text onPress={()=> console.log("start date:", (timestamp.startDate), "\nend date:", (timestamp.endDate))} style={PatientStyles.fieldText}> Days </Text>
                     <Text onPress={()=> console.log(selectDoW)} style={PatientStyles.fieldText}> End </Text>
                     <Text style={PatientStyles.fieldText}> Alarm </Text>
                     </View>
@@ -343,6 +354,7 @@ const EditMedicationScreen = ({route, navigation }) => {
                         onSelect={setSelectDoW}
                         startDate={timestamp.startDate}
                         endDate={timestamp.endDate}
+                        screenType={`Edit Medication`}
                      />
                     <View style={{ paddingBottom: 8 }}>
                         <DatePicker 
