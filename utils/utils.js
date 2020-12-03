@@ -1,12 +1,10 @@
 export function dateFromToday(code) {
     var ratio = code/127;
-    console.log(ratio);
     var start = new Date();
     var end = new Date();
     start.setDate(start.getDate() - 360);
     return new Date(start.getTime() + ratio * (end.getTime() - start.getTime()));
 }
-
 
 export function getValueFormatted(value) {
     const hourValue = HOURS_DATA[getIndexForHourPicker(value)];

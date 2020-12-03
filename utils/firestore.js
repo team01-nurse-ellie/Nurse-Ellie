@@ -149,6 +149,7 @@ export async function getallPatients(hpUserId) {
                 querySnapshot.forEach( async doc => {
                     if (doc.id != hpUserId){
                         userObj = doc.data();
+                        userObj.isPatient = 'true';
                         patients.push(userObj);
                     }
                 })

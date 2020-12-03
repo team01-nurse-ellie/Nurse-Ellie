@@ -40,6 +40,7 @@ import { ActivityIndicator } from 'react-native-paper';
 const AddMedicationScreen = ({route, navigation }) => {
   const { item } = route.params ?? {};
   const { currentUser } = useContext(FirebaseAuthContext);
+  const [user, setUser] = useState('');
   const currentTime = new Date();
   const [medIcon, setMedIcon] = useState('1');
   const [scrollViewRef, setScrollViewRef] = useState();
@@ -62,6 +63,8 @@ const AddMedicationScreen = ({route, navigation }) => {
 
   useEffect(() => {
     let current = true;
+    const user = item.isPatient ? item.id : currentUser.uid;
+    setUser(user);
     load();
     return () => (current = false);
   }, []);
@@ -159,7 +162,7 @@ const AddMedicationScreen = ({route, navigation }) => {
     // Merge medication information from APIs and user specified medication settings
     Object.assign(medicationToAdd, medSettings);
     // Determine if adding medication for current user, or id of 
-    await fsFn.addMedication(currentUser.uid, medicationToAdd
+    await fsFn.addMedication(user, medicationToAdd
       // Clear user input components if addition to DB successful
       ).then(() => {
         resetUserInput();
@@ -188,6 +191,9 @@ const AddMedicationScreen = ({route, navigation }) => {
   
   return (
     <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
+      {console.log(currentUser.uid)}
+      {console.log('is patient: ' + item.isPatient)}
+      {console.log(user)}
       <Background />
       <TouchableOpacity style={PatientStyles.menuButton} onPress={() => navigation.openDrawer()}>
         <MenuIcon />
@@ -255,6 +261,7 @@ const AddMedicationScreen = ({route, navigation }) => {
                 <DatePicker selected={endDate} onSelect={setEndDate} placeholder="End Date" />
               </View>
               <Switch
+                style={{marginRight:40,}}
                 trackColor={{ false: '#767577', true: '#42C86A' }}
                 thumbColor={alarm ? '#F4F3F4' : '#F4F3F4'}
                 ios_backgroundColor="#3e3e3e"
@@ -316,11 +323,13 @@ const AddMedicationScreen = ({route, navigation }) => {
             data={drugList}
             renderItem={({ item }) => (
               <TouchableOpacity 
-                style={styles.searchButton} 
-                onPress={()=>{
-                  setMedicationToAdd(item); 
-                  setShowModal(false); 
-                  setSearchResult('');}}>
+              style={styles.searchButton} 
+              onPress={()=>{
+                console.log(item);
+                setMedicationToAdd(item); 
+                setShowModal(false); 
+                setSearchResult('');}}>
+                {console.log(item)}
                 <MedicationCard>
                   <View style={{ justifyContent: 'center', flex: 2 }}>
                     <PinkMedication />

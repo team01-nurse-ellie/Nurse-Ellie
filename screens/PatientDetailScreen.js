@@ -21,6 +21,7 @@ import { firebase } from '../components/Firebase/config';
 const PatientDetailScreen = ({route, navigation}) => {
     const { item } = route.params;
     const [medications, setMedications] = useState([]);
+    const [loading, setLoading] = useState([]);
 
     useEffect(()=>{
         const subscriber = firebase.firestore().collection("users").doc(item.id).collection("medications")
@@ -37,7 +38,6 @@ const PatientDetailScreen = ({route, navigation}) => {
                 })
             });
             setMedications(meds);
-            console.log(meds);
         });
 
         return () => subscriber();
@@ -93,7 +93,6 @@ const PatientDetailScreen = ({route, navigation}) => {
                     <TouchableOpacity 
                     style={styles.searchButton} 
                     onPress={()=> {
-                        console.log(item);
                         navigation.navigate('Medication', {item: item})
                         }}>
                         <CondensedCard>

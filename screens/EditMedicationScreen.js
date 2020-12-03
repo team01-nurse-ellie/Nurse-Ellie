@@ -207,7 +207,8 @@ const EditMedicationScreen = ({route, navigation }) => {
                             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                                 <TouchableOpacity onPress={async () => {
                                         await fsFn.removeMedication(user,item.docId);
-                                        navigation.navigate('Medications');
+                                        // navigation.navigate('Medications');
+                                        await navigation.navigate(item.isPatient ? 'Patient' : 'Medications')
                                     }}>
                                         <Text style={styles.confirmationTouchable}>CONTINUE</Text>
                                 </TouchableOpacity>

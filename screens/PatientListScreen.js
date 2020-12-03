@@ -26,62 +26,11 @@ const PatientListScreen = ({navigation}) => {
     async function load() {
         let patients = await fsFn.getallPatients(currentUser.uid);
         await setFsPatients(patients);
-        // Object {
-        //     "connectCode": "SBU35",
-        //     "email": "patient1@gmail.com",
-        //     "fullName": "Brian Fitz",
-        //     "id": "73Geey1xYpTgZDPA1c2M8MEUDsU2",
-        //     "medications": Array [
-        //       Object {
-        //         "docId": "POqI3CAlwn5x20JPFP20",
-        //         "medication": Object {
-        //           "adverseEvents": Array [
-        //           ],
-        //           "alarm": true,
-        //           "alarmRef": "CV382HRGVZ0ZzmRyBkn7",
-        //           "daysOfWeek": Array [],
-        //           "directions": "Take before meal",
-        //           "doseForm": "Tab",
-        //           "doseFormRxn": "Oral Tablet",
-        //           "endDate": t {
-        //             "nanoseconds": 0,
-        //             "seconds": 1630382400,
-        //           },
-        //           "endDateTimestamp": 1630454100000,
-        //           "function": "Chest Pain",
-        //           "information": "NORVASC is a calcium channel blocker",
-        //           "intakeTime": 71700,
-        //           "medIcon": "9",
-        //           "nameBrand": "Norvasc",
-        //           "nameDisplay": "Norvasc",
-        //           "nameFullGeneric": "amlodipine 2.5 MG Oral Tablet",
-        //           "namePrescribe": "Norvasc 2.5 MG Oral Tablet",
-        //           "route": "Oral Pill",
-        //           "rxcui": 212542,
-        //           "rxcuiGeneric": 308136,
-        //           "scheduledTime": Object {
-        //             "AM_PM": "PM",
-        //             "hour": 7,
-        //             "minute": 55,
-        //           },
-        //           "startDate": t {
-        //             "nanoseconds": 0,
-        //             "seconds": 1606798800,
-        //           },
-        //           "startDateTimestamp": 1606870500000,
-        //           "strength": "2.5 mg",
-        //           "tty": "SBD",
-        //         },
-        //       },
-        //     ],
-        //     "userLinks": Array [
-        //       "Bm8sgO2qYF3PWWe2qZuy",
-        //     ],
-        //   }
     }
 
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+            {console.log(fsPatients)}
             <Background/>
             <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
