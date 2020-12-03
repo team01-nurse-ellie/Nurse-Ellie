@@ -18,11 +18,11 @@ import {
 import * as Animatable from 'react-native-animatable';
 import Autocomplete from 'react-native-autocomplete-input';
 import Modal from 'react-native-modal';
-import moment from 'moment';
-import * as Notifications from 'expo-notifications';
+// import moment from 'moment';
+// import * as Notifications from 'expo-notifications';
 // import * as Permissions from 'expo-permissions';
-import Constants from 'expo-constants';
-import { calculateLocalTimezone } from '../utils/dateHelpers';
+// import Constants from 'expo-constants';
+// import { calculateLocalTimezone } from '../utils/dateHelpers';
 import { scheduleNotifications} from '../utils/scheduleNotifications';
 import { alarmsRef } from '../utils/databaseRefs.js';
 
@@ -38,13 +38,11 @@ import PinkMedication from '../assets/images/pink-medication-icon.svg';
 import SuccessIcon from '../assets/images/success-icon.svg';
 import MedicationCard from '../components/MedicationCard';
 
-
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
 import { UserContext } from '../components/UserProvider/UserContext';
 import * as fsFn  from '../utils/firestore';
 import { getAllByConcepts, getDrugsByIngredientBrand} from '../utils/medication';
 import { ActivityIndicator } from 'react-native-paper';
-// import { isCompositeComponent } from 'react-addons-test-utils';
 
 const AddMedicationScreen = ({ navigation }) => {
 
@@ -81,7 +79,7 @@ const AddMedicationScreen = ({ navigation }) => {
   const [drugList, setDrugList] = useState([]);
   const [searchResult, setSearchResult] = useState('');
   const [medicationToAdd, setMedicationToAdd] = useState("Add Medication");
-  const [medicationNotifications, setNotifications] = useState([]);
+  // const [medicationNotifications, setNotifications] = useState([]);
 
   useEffect(() => {
     // moment(endDate) < moment(startDate) || moment(endDate) < moment(currentTime)
@@ -159,63 +157,6 @@ const AddMedicationScreen = ({ navigation }) => {
     return header;
   }
   
-  // const scheduleNotifications = async (medicationToAdd) => {
-
-  //   try {
-  //     console.log(`***SCHEDULING ALARMS***`);
-  //     let oneDay = 86400000;
-  //     let daysToSchedule = [];
-  //     let notifications = [];
-      
-  //     // console.log(`===== schedle ===== `);
-  //     // console.log(scheduledTime)
-  //     // console.log(timestamp)
-  //     // console.log(selectDoW)
-  //     // console.log(`===== schedle ===== `);
-  //     // calculateLocalTimezone(year, month, day, scheduledTime.hour, scheduledTime.minute, scheduledTime.AM_PM);
-
-  //     // 1 day - 86400000ms
-  //     for (let i = timestamp.startDate;  i <= timestamp.endDate; i += oneDay) {
-  //       // console.log(new Date(i));
-  //       let date = new Date(i);
-  //       // console.log(date.getDay());
-  //       if (selectDoW.includes(date.getDay())) {
-  //         daysToSchedule.push(i);
-  //       }
-  //       // console.log(date.getUTCDay());
-  //     }
-
-  //     // console.log(daysToSchedule);
-
-  //     const content = {
-  //       title: `${firstName}, it's time to take your ${medicationToAdd.nameDisplay}.`,
-  //       body: `Please check-in if you have taken this medication.`,
-  //     };
-
-  //     // console.log(content);
-      
-  //     for (let i = 0; i < daysToSchedule.length; i++) {
-  //       // console.log(daysToSchedule[i])
-  //       await Notifications.scheduleNotificationAsync({ content, trigger: daysToSchedule[i] }).then(notificationID => {
-  //         notifications.push({
-  //           id: notificationID,
-  //           trigger: daysToSchedule[i]
-  //         });
-  //       });
-  //     }
-  //     // console.log(notifications)
-    
-  //     const alarm = {
-  //       content,
-  //       notifications
-  //     }
-    
-  //     return alarm;
-
-  //   } catch (error) { throw error; }
-
-  // };
-
   // Add medication with user settings to user collection
   const addMedicationToDB = async () => {
     // console.log(item.medication)
@@ -253,7 +194,6 @@ const AddMedicationScreen = ({ navigation }) => {
       'function': drugFunction,
       'directions': directions,
       'alarmRef': null,
-      // 'medicationNotifications': medicationNotifications,
     }
 
     // Merge medication information from APIs and user specified medication settings

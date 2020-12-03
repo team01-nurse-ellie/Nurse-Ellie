@@ -86,7 +86,6 @@ const EditMedicationScreen = ({route, navigation }) => {
             console.log(error)
         });
 
-        
         // Unsubscribe from document when no longer in use
         return () => {
             subscriber(); 
@@ -97,32 +96,47 @@ const EditMedicationScreen = ({route, navigation }) => {
 
   const deleteMedication = async () => {
 
-      await fsFn.removeMedication(currentUser.uid, item.docId).then(async () => {
-        // after medication is deleted, use alarmRef to grab notification IDs
-        await alarmsRef.doc(item.medication.alarmRef).get().then(async doc => {
-            if (!doc.exists) {
-                throw new Error(`ALARM CAN NOT BE FOUND FOR MEDICATION DOC ID: ${item.docId}`);
-            }
-            // fetch array notification array that holds expo's notification ID and the notification date trigger. 
-            let notificationsToDelete = doc.data().notifications;
-            
-            await (async () => {
-                // delete the notification from expo in loop
-                for (let i = 0; i < notificationsToDelete.length; i++) {
-                    await Notifications.cancelScheduledNotificationAsync(notificationsToDelete[i].id);
-                }
-            })().then(async () => {
-                // remove the alarm document associated with the medication document.
-                await alarmsRef.doc(item.medication.alarmRef).delete().then(() => {
-                    // navigate to medication list screen after deletion of medication, and its alarm. 
-                    navigation.navigate('Medications');
-                });
-                
-            });
+    const { alarmRef } = item.medication;
 
-        }).catch(error => { throw error; });
+    await fsFn.removeMedication(currentUser.uid, item.docId).then(async () => {
         
-      });
+        if (alarmRef != null && typeof (alarmRef) === "string") {
+            // console.log(`find notifs to delete.`)
+            // after medication is deleted, use alarmRef to grab notification IDs
+            await alarmsRef.doc(currentUser.uid).collection("medicationAlarms").doc(alarmRef).get().then(async doc => {
+
+                if (!doc.exists) {
+                    throw new Error(`ALARM CAN NOT BE FOUND FOR MEDICATION DOC ID: ${item.docId} TO DELETE`);
+                }
+                // fetch array notification array that holds expo's notification ID and the notification date trigger. 
+                let notificationsToDelete = doc.data().notifications;
+
+                await (async () => {
+                    // delete the notification from expo in loop
+                    for (let i = 0; i < notificationsToDelete.length; i++) {
+                        await Notifications.cancelScheduledNotificationAsync(notificationsToDelete[i].id).then(()=> {
+                            console.log('deleted notif on expo');
+                        })
+                            .catch(error => { throw error; });
+                    }
+                })().then(async () => {
+                    // remove the alarm document associated with the medication document.
+                    await alarmsRef.doc(currentUser.uid).collection("medicationAlarms").doc(alarmRef).delete().then(() => {
+                        // navigate to medication list screen after deletion of medication, and its alarm. 
+                        navigation.navigate('Medications');
+                    }).catch(error => { throw error; });
+
+                }).catch(error => { throw error; });
+
+            }).catch(error => { throw error; });
+        } else {
+            // IF NO MEDICATION HAD TO ALARM TO BEGIN WITH.
+            navigation.navigate('Medications');
+        }
+        
+
+
+    }).catch(error => { throw error; });
 
   };
 
@@ -164,7 +178,7 @@ const EditMedicationScreen = ({route, navigation }) => {
         // grabs previous alarm notifications
         await alarmsRef.doc(item.medication.alarmRef).get().then(async doc => {
             if (!doc.exists) {
-                throw new Error(`ALARM CAN NOT BE FOUND FOR MEDICATION DOC ID: ${item.docId}`);
+                throw new Error(`UPDATE MEDICATION: ALARM CAN NOT BE FOUND FOR MEDICATION DOC ID: ${item.docId} TO DELETE (alarm set to true)`);
             }
             let notificationsToDelete = doc.data().notifications;
             // delete notifs for that 1 med
@@ -216,7 +230,7 @@ const EditMedicationScreen = ({route, navigation }) => {
                 // resetUserInput();
                 await alarmsRef.doc(item.medication.alarmRef).get().then(async doc => {
                     if (!doc.exists) {
-                        throw new Error(`ALARM CAN NOT BE FOUND FOR MEDICATION DOC ID: ${item.docId}`);
+                        throw new Error(`UPDATE_MEDICATION: ALARM CAN NOT BE FOUND FOR MEDICATION DOC ID: ${item.docId} TO DELTE (alarm set to false)`);
                     }
                     let notificationsToDelete = doc.data().notifications;
                     
