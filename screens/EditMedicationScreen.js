@@ -384,6 +384,7 @@ const EditMedicationScreen = ({route, navigation }) => {
                                 <TouchableOpacity onPress={async () => {
                                         // await fsFn.removeMedication(currentUser.uid,item.docId);
                                         await deleteMedication().then(()=> {
+                                            setDeleteWarning(false);
                                             navigation.navigate('Medications');
                                         });
                                     }}>
