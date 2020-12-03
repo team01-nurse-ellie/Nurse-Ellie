@@ -13,7 +13,7 @@ import MedicationsIcon from '../assets/images/medications-icon';
 import { firebase } from '../components/Firebase/config';
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
 import * as fsFn  from '../utils/firestore';
-import { getValueFormatted } from '../utils/timeConvert';
+import { getValueFormatted } from '../utils/utils';
 
 
 const HomeScreen = ({ navigation }) => {
