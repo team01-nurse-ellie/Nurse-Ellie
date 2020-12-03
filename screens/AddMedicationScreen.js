@@ -37,7 +37,8 @@ import * as fsFn  from '../utils/firestore';
 import { getAllByConcepts, getDrugsByIngredientBrand} from '../utils/medication';
 import { ActivityIndicator } from 'react-native-paper';
 
-const AddMedicationScreen = ({ navigation }) => {
+const AddMedicationScreen = ({route, navigation }) => {
+  const { item } = route.params ?? {};
   const { currentUser } = useContext(FirebaseAuthContext);
   const currentTime = new Date();
   const [medIcon, setMedIcon] = useState('1');
@@ -157,6 +158,7 @@ const AddMedicationScreen = ({ navigation }) => {
     }
     // Merge medication information from APIs and user specified medication settings
     Object.assign(medicationToAdd, medSettings);
+    // Determine if adding medication for current user, or id of 
     await fsFn.addMedication(currentUser.uid, medicationToAdd
       // Clear user input components if addition to DB successful
       ).then(() => {

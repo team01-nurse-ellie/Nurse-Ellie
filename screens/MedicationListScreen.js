@@ -77,7 +77,6 @@ const MedicationListScreen = ({navigation}) => {
                         keyExtractor={(item) => item.docId}
                         renderItem={({item}) => (
                         <TouchableOpacity style={styles.searchButton} onPress={()=>{
-                            item.medication = item;
                             navigation.navigate('Medication', {item: item})}}>
                             <MedicationCard>
                                 <View style={{justifyContent:'center', paddingHorizontal:6, width: 60}}>

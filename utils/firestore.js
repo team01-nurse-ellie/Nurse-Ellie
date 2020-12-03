@@ -157,11 +157,22 @@ export async function getallPatients(hpUserId) {
         });
     }
     
-    // get each patients medication collection
+    // for each found patient
     for (const patient of patients) {
+        // retrieve snapshot of their medication collection
         await userCollection.doc(patient.id).collection("medications").get()
         .then( snapshot => {
-            const meds = snapshot.docs.map(doc => doc.data());
+            let meds = [];
+            snapshot.forEach(documentSnapshot =>{
+                let id = documentSnapshot.id;
+                let data = documentSnapshot.data();
+                meds.push({
+                    'docId' : id,
+                    'medication': data,
+                    'patientId': patient.id,
+                    'isPatient': true,
+                })
+            });
             patient.medications = meds;
         });
     }

@@ -53,7 +53,7 @@ const MedicationDetailScreen = ({route, navigation}) => {
             <Text>{item.medication.information}  </Text>
             <View style={{paddingVertical:10}}/>
             <Text style={styles.subheadingFont}>Possible Side Effects</Text>
-                {item.medication.adverseEvents.length == 0 ? (
+                {item.medication && item.medication.adverseEvents.length == 0 ? (
                 <>
                 <Unorderedlist><Text>dry cough</Text></Unorderedlist>
                 <Unorderedlist><Text>vomiting</Text></Unorderedlist>

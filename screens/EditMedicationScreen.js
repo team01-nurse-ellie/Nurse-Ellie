@@ -23,9 +23,10 @@ import * as fsFn  from '../utils/firestore';
 const EditMedicationScreen = ({route, navigation }) => {
   const { item } = route.params;
   const {currentUser} = useContext(FirebaseAuthContext);
+  const [user, setUser] = useState('');
   const currentTime = new Date();
-  const [loading, setLoading] = useState();
   const [medication, setMedication] = useState();
+  const [loading, setLoading] = useState();
   const [medIcon, setMedIcon] = useState('1');
   const [selectDoW, setSelectDoW] = useState([]);
   const [intakeTime, setIntakeTime] = useState(43200);
@@ -41,9 +42,13 @@ const EditMedicationScreen = ({route, navigation }) => {
   useEffect(() => {
     // subscribe to document of medication
     setLoading(true);
+    // Determine if route.params passed patient's medication or the current user's medication
+    const user = item.isPatient ? item.patientId : currentUser.uid;
+    setUser(user);
+    // Subscribe to medication in firestore
     const subscriber = firebase.firestore()
         .collection("users")
-        .doc(currentUser.uid)
+        .doc(user)
         .collection("medications")
         .doc(item.docId)
         .onSnapshot(querySnapshot => {
@@ -97,7 +102,7 @@ const EditMedicationScreen = ({route, navigation }) => {
     }
     // Merge medication information from APIs and user specified medication settings
     Object.assign(item.medication, medSettings);
-    await fsFn.updateMedication(currentUser.uid, item.docId,item.medication
+    await fsFn.updateMedication(user, item.docId,item.medication
       // Clear user input components if addition to DB successful
       ).then(() => {
         // resetUserInput();
@@ -201,7 +206,7 @@ const EditMedicationScreen = ({route, navigation }) => {
                             <View style={{paddingVertical: 5}}/>
                             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                                 <TouchableOpacity onPress={async () => {
-                                        await fsFn.removeMedication(currentUser.uid,item.docId);
+                                        await fsFn.removeMedication(user,item.docId);
                                         navigation.navigate('Medications');
                                     }}>
                                         <Text style={styles.confirmationTouchable}>CONTINUE</Text>

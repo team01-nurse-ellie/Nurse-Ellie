@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, KeyboardAvoidingView, TouchableOpacity, FlatList, Button, Dimensions, StyleSheet, Alert, ScrollView } from 'react-native';
 import moment from 'moment';
 import * as Animatable from 'react-native-animatable';
@@ -14,19 +14,23 @@ import PlusIcon from '../assets/images/plus-icon';
 import EnterIcon from '../assets/images/entry-triangle-icon.svg';
 import DissatisifiedIcon from '../assets/images/scale-dissatisfied-icon';
 import TempAvatar from '../assets/images/temp-avatar';
-import { getValueFormatted } from '../utils/utils';
-import { dateFromToday } from '../utils/utils';
+
+import { getValueFormatted, dateFromToday } from '../utils/utils';
+import { firebase } from '../components/Firebase/config';
 
 const PatientDetailScreen = ({route, navigation}) => {
-    const [medications, setMedications] = useState ([
-        {medicationName: 'Monopril', function: 'High Blood Pressure', frequency: '1x/day', alert: '10:00AM', key: '1'}, 
-        {medicationName: 'Cymbalta', function: 'Joint Pain', frequency: '1x/day', alert: '9:00AM', key: '2'}, 
-        {medicationName: 'Codeine', function: 'Cough & Cold', frequency: '15ml/day', alert: '10:00AM', key: '3'},
-        {medicationName: 'Caffeine', function: 'Cough & Cold', frequency: '15ml/day', alert: '10:00AM', key: '4'},
-    ])
     const { item } = route.params;
+
+    useEffect(()=>{
+        const subscriber = firebase.firestore().collection("users").doc(item.id).collection("medications")
+        .onSnapshot(querySnapshot => {
+            
+        });
+
+        return () => subscriber();
+    },[item])
+
     return (
-        
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
             <Background/>
             <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
@@ -65,22 +69,27 @@ const PatientDetailScreen = ({route, navigation}) => {
                     <Text style={styles.subheadingfont}>
                         Prescribed Medications
                     </Text>
-                    <TouchableOpacity onPress={()=>Alert.alert("add medication for patient...")}>
+                    <TouchableOpacity onPress={()=>{navigation.navigate('AddMedication',{item: item})}}>
                         <PlusIcon/>
                     </TouchableOpacity>
                 </View>
                 <FlatList horizontal 
                 data={item.medications} 
-                keyExtractor={(item) => item.rxcui.toString()} 
+                keyExtractor={(item) => item.medication.rxcui.toString()} 
                 renderItem={({item}) => (
-                    <TouchableOpacity style={styles.searchButton} onPress={()=>navigation.navigate('Medication', {item: item})}>
+                    <TouchableOpacity 
+                    style={styles.searchButton} 
+                    onPress={()=> {
+                        console.log(item);
+                        navigation.navigate('Medication', {item: item})
+                        }}>
                         <CondensedCard>
-                            <Text style={{paddingBottom: 10, flex: 1}}> {item.nameDisplay}</Text>
+                            <Text style={{paddingBottom: 10, flex: 1}}> {item.medication.nameDisplay}</Text>
                             <View style={{flexGrow:1}}>
-                                {MedIconIndex.index[item.medIcon]}
+                                {MedIconIndex.index[item.medication.medIcon]}
                             </View>
                             <View style={{justifyContent:'center'}}>
-                                <Text> {getValueFormatted(item.intakeTime)} </Text>
+                                <Text> {getValueFormatted(item.medication.intakeTime)} </Text>
                                 {/* <Text> {item.alarm ? 'Alarm' : ''}</Text> */}
                             </View>
                         </CondensedCard>
