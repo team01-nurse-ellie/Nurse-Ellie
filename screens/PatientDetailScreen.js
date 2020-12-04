@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { View, Text, KeyboardAvoidingView, TouchableOpacity, FlatList, Button, Dimensions, StyleSheet, Alert } from 'react-native';
-
+import React, { useState, useEffect } from 'react';
+import { View, Text, KeyboardAvoidingView, TouchableOpacity, FlatList, Button, Dimensions, StyleSheet, Alert, ScrollView } from 'react-native';
+import moment from 'moment';
 import * as Animatable from 'react-native-animatable';
 
 import Background from '../components/BackgroundHP';
@@ -15,14 +15,54 @@ import EnterIcon from '../assets/images/entry-triangle-icon.svg';
 import DissatisifiedIcon from '../assets/images/scale-dissatisfied-icon';
 import TempAvatar from '../assets/images/temp-avatar';
 
+import { getValueFormatted, dateFromToday } from '../utils/utils';
+import { firebase } from '../components/Firebase/config';
+
 const PatientDetailScreen = ({route, navigation}) => {
-    const [medications, setMedications] = useState ([
-        {medicationName: 'Monopril', function: 'High Blood Pressure', frequency: '1x/day', alert: '10:00AM', key: '1'}, 
-        {medicationName: 'Cymbalta', function: 'Joint Pain', frequency: '1x/day', alert: '9:00AM', key: '2'}, 
-        {medicationName: 'Codeine', function: 'Cough & Cold', frequency: '15ml/day', alert: '10:00AM', key: '3'},
-        {medicationName: 'Caffeine', function: 'Cough & Cold', frequency: '15ml/day', alert: '10:00AM', key: '4'},
-    ])
     const { item } = route.params;
+    const [medications, setMedications] = useState([]);
+    // const [checklist, setChecklist] = useState();
+
+
+    useEffect(()=>{
+        const subscriber = firebase.firestore().collection("users").doc(item.patientId).collection("medications")
+        .onSnapshot(querySnapshot => {
+            const meds = [];
+            querySnapshot.forEach(documentSnapshot =>{
+                let id = documentSnapshot.id;
+                let data = documentSnapshot.data();
+                meds.push({
+                    'docId' : id, // medication document id
+                    'medication': data, // the medication object (information and settings)
+                    'isPatient': true, // medication is for patient. used for route.params patient vs hp
+                    'patientId': item.patientId, // id of patient user document
+                })
+            });
+            setMedications(meds);
+        });
+
+        // Find most recently submitted symptom checklist
+        // const symptomSubscriber = firebase.firestore().collection("users").doc(item.patientId).collection("symptomChecklists")
+        // .onSnapshot(querySnapshot => {
+        //     // get the most recently submitted symptom checklist
+        //     // querySnapshot is array of checklist objects
+        //     let mostRecentChecklist;
+        //     querySnapshot.forEach(checklist => {
+        //         // date comparison
+        //         // if checklist date > m
+        //     })
+        //     });
+        //     // now have the most recently submitted symtptom checklist
+        //     setChecklist(mostRecentChecklist);
+        // });
+
+        // Unsubscribe from listeners when no longer in use
+        return () => {
+            subscriber();
+            // symptomSubscriber();
+        };
+    },[item])
+
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
             <Background/>
@@ -30,9 +70,10 @@ const PatientDetailScreen = ({route, navigation}) => {
                 <MenuIcon/>
             </TouchableOpacity>
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
+            <ScrollView>
                 <View style={styles.header}>
                     <Text style={styles.title}>
-                        {item.patientName}
+                        {item.fullName}
                     </Text>
                     <TouchableOpacity>
                         <EditIcon/>
@@ -46,7 +87,7 @@ const PatientDetailScreen = ({route, navigation}) => {
                         <Text style={styles.apptFont}> Next Appointment </Text>
                     </View>
                     <View>
-                        <Text style={styles.dateFont}> Monday, November 23, 2020 </Text>
+                        <Text style={styles.dateFont}> {item.fullName ? moment(dateFromToday(item.fullName.charCodeAt(0))*1.015).format('dddd MMMM Do YYYY') : ''} </Text>
                     </View>
                 </View>
                  <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 8}}>
@@ -54,24 +95,35 @@ const PatientDetailScreen = ({route, navigation}) => {
                         <Text style={styles.apptFont}> Last Appointment </Text>
                     </View>
                     <View>
-                        <Text style={styles.dateFont}> {item.lastSeen} </Text>
+                        <Text style={styles.dateFont}> {item.fullName ? moment(dateFromToday(item.fullName.charCodeAt(0))).format('dddd MMMM Do YYYY') : ''} </Text>
                     </View>
                 </View>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 13}}>
                     <Text style={styles.subheadingfont}>
                         Prescribed Medications
                     </Text>
-                    <TouchableOpacity onPress={()=>Alert.alert("add medication for patient...")}>
+                    <TouchableOpacity onPress={()=>{navigation.navigate('AddMedication',{item: item})}}>
                         <PlusIcon/>
                     </TouchableOpacity>
                 </View>
-                <FlatList horizontal data={medications} renderItem={({item}) => (
-                    <TouchableOpacity style={styles.searchButton} onPress={()=>navigation.navigate('Medication', {item: item})}>
+                <FlatList horizontal 
+                data={medications} 
+                keyExtractor={(item) => item.medication.rxcui.toString()} 
+                renderItem={({item}) => (
+                    <TouchableOpacity 
+                    style={styles.searchButton} 
+                    onPress={()=> {
+                        navigation.navigate('Medication', {item: item})
+                        }}>
                         <CondensedCard>
-                            <Text style={{paddingBottom: 10}}> {item.medicationName}</Text>
-                            {MedIconIndex.index[item.key]}
-                            <Text> Intake Time </Text>
-                            <Text> {item.alert}</Text>
+                            <Text style={{paddingBottom: 10, flex: 1}}> {item.medication.nameDisplay}</Text>
+                            <View style={{flexGrow:1}}>
+                                {MedIconIndex.index[item.medication.medIcon]}
+                            </View>
+                            <View style={{justifyContent:'center'}}>
+                                <Text> {getValueFormatted(item.medication.intakeTime)} </Text>
+                                {/* <Text> {item.alarm ? 'Alarm' : ''}</Text> */}
+                            </View>
                         </CondensedCard>
                     </TouchableOpacity>
                 )}/>
@@ -97,6 +149,7 @@ const PatientDetailScreen = ({route, navigation}) => {
                         <EnterIcon style={{paddingTop: 30}}/>
                     </View>
                 </TouchableOpacity>
+                </ScrollView>
             </Animatable.View>
         </KeyboardAvoidingView>
     );

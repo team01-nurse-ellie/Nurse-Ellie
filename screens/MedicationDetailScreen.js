@@ -12,7 +12,7 @@ import MenuIcon from '../assets/images/menu-icon.svg';
 import EditIcon from '../assets/images/edit-icon.svg';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 import EntryIcon from '../assets/images/entry-triangle-icon.svg';
-import { getValueFormatted } from '../utils/timeConvert';
+import { getValueFormatted } from '../utils/utils';
 
 const MedicationDetailScreen = ({route, navigation}) => {
     const { item } = route.params;
@@ -53,7 +53,7 @@ const MedicationDetailScreen = ({route, navigation}) => {
             <Text>{item.medication.information}  </Text>
             <View style={{paddingVertical:10}}/>
             <Text style={styles.subheadingFont}>Possible Side Effects</Text>
-                {item.medication.adverseEvents.length == 0 ? (
+                {item.medication && item.medication.adverseEvents.length == 0 ? (
                 <>
                 <Unorderedlist><Text>dry cough</Text></Unorderedlist>
                 <Unorderedlist><Text>vomiting</Text></Unorderedlist>

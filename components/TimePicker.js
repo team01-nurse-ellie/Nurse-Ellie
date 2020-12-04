@@ -3,6 +3,7 @@ import {Easing, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, Vi
 
 import ScrollPicker from 'react-native-wheel-scroll-picker';
 import Modal from 'react-native-modalbox';
+import {calculateLocalTimezone} from '../utils/dateHelpers';
 
 const HOURS_DATA = ['12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
 const MINUTES_DATA = Array.from({ length: 60 }, (_, i) => i < 10 ? `0${i}` : String(i));
@@ -14,10 +15,22 @@ class Component extends React.Component {
       this.state = {
         isModalOpen: false,
         value: this.props.value,
+        time: {
+          hour: null,
+          minute: null,
+          AM_PM: null
+        }
       };
+      // console.log(this.props, `timepicker`) 
+    }
+
+    componentDidMount() {
+      this.calculateScheduledTime();
     }
 
     static getDerivedStateFromProps(newProps, prevState) {
+      // console.log(newProps, `==NEW PROPS==`)
+      // console.log(prevState, `==PREV STATE==`)
       if (newProps.value !== prevState.value) {
         return { value: newProps.value, };
       } else {
@@ -38,9 +51,14 @@ class Component extends React.Component {
     };
 
     calculateTimeFromHourPicker(selectedValue) {
+      // console.log(selectedValue, `calculateTimeFromHourPIcker();`)
       const stateMinutes = Math.floor((this.state.value % 3600) / 60);
       const stateAMPM = Math.floor(this.state.value / 43200);
       const nextValue = Number(selectedValue) * 3600 + stateMinutes * 60 + stateAMPM * 43200;
+      // console.log(nextValue, `calculateTimeFromHourPIcker(); NEXT VALUE`) 
+      let finalValue = calculateLocalTimezone(nextValue * 1000) / 1000;
+      // console.log(finalValue)
+      // console.log(finalValue, `calculateTimeFromHourPIcker(); FINAL VALUE`)
       this.props.onSelect(nextValue);
     }
 
@@ -48,10 +66,15 @@ class Component extends React.Component {
       const stateHours = Math.floor((this.state.value % 43200) / 3600);
       const stateAMPM = Math.floor(this.state.value / 43200);
       const nextValue = stateHours * 3600 + Number(selectedValue) * 60 + stateAMPM * 43200;
+      // console.log(nextValue, `MinutePicker(); NEXT VALUE`)
+      let finalValue = calculateLocalTimezone(nextValue * 1000) / 1000;
+      // console.log(finalValue)
+      // console.log(finalValue, `MinutePicker(); FINAL VALUE`)
       this.props.onSelect(nextValue);
     }
 
     calculateTimeFromAMPMPicker(selectedValue) {
+      // console.log(selectedValue, `calculateTimeAM/PM`)
       const selectedAMPM = selectedValue === 'AM' ? 0 : 43200;
       const stateHours = Math.floor((this.state.value % 43200) / 3600);
       const stateMinutes = Math.floor((this.state.value % 3600) / 60);
@@ -60,6 +83,8 @@ class Component extends React.Component {
     }
 
     getIndexForHourPicker(value) {
+      // console.log(value)        
+      // console.log(`getIndexForHourPicker()`, Math.floor((value % 43200) / 3600));
       return Math.floor((value % 43200) / 3600);
     }
 
@@ -68,6 +93,8 @@ class Component extends React.Component {
     }
 
     getIndexForAMPMPicker(value) {
+      // console.log(value, `getIndexForAMPPMMMMM`)
+      // console.log(Math.floor(value / 43200));
       return Math.floor(value / 43200);
     }
 
@@ -79,7 +106,29 @@ class Component extends React.Component {
       return `${hourValue}:${minuteValue} ${ampmValue}`;
     }
 
+    calculateScheduledTime() {
+      
+      this.setState({
+        time: {
+          hour: parseInt(HOURS_DATA[this.getIndexForHourPicker(this.state.value)]),
+          minute: parseInt(MINUTES_DATA[this.getIndexForMinutePicker(this.state.value)]),
+          AM_PM: AMPM_DATA[this.getIndexForAMPMPicker(this.state.value)]
+        }
+      }, () => {
+        // console.log(this.state.time);
+        if (this.props.hasOwnProperty('setScheduledTime')) {
+          console.log("Has it.")
+          this.props.setScheduledTime(this.state.time);
+        }
+      })
+
+
+    }
+
     onSelect() {
+      // console.log(this.state.value, `STATE VALUE`)
+      // console.log(this.getValueFormatted(), `onSelect -> getValueFormatted`)
+      this.calculateScheduledTime();
       this.props.onSelect(this.state.value);
       this.onModalClose();
     }
@@ -109,6 +158,7 @@ class Component extends React.Component {
                   selectedIndex={this.getIndexForHourPicker(value)}
                   renderItem={(item, index, isSelected) => item}
                   onValueChange={(selectedValue, selectedIndex) => {
+                      // console.log(selectedValue, `valueChange`)
                       this.calculateTimeFromHourPicker(selectedValue);
                   }}
                   wrapperHeight={180}
@@ -143,6 +193,7 @@ class Component extends React.Component {
                   renderItem={(item, index, isSelected) => item}
                   onValueChange={(selectedValue, selectedIndex) => {
                     this.calculateTimeFromAMPMPicker(selectedValue);
+                    // console.log(selectedIndex)
                   }}
                   wrapperHeight={180}
                   wrapperWidth={50}
