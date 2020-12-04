@@ -95,7 +95,7 @@ const MedicationListScreen = ({navigation}) => {
                     )}/>
                 )}
                 <View style={styles.addMedicationButton}>
-                    <Button title="ADD NEW MEDICATION" color='#42C86A' onPress={()=>{navigation.navigate('AddMedication')}}/>
+                    <Button title="ADD NEW MEDICATION" color='#42C86A' onPress={()=>{navigation.navigate('AddMedication',{item: {'item': {'isPatient':false}}} )}}/>
                 </View>
             </Animatable.View>
         </KeyboardAvoidingView>

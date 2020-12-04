@@ -21,20 +21,21 @@ import { firebase } from '../components/Firebase/config';
 const PatientDetailScreen = ({route, navigation}) => {
     const { item } = route.params;
     const [medications, setMedications] = useState([]);
-    const [loading, setLoading] = useState([]);
+    const [patient, setPatient] = useState();
+    const [loading, setLoading] = useState();
 
     useEffect(()=>{
-        const subscriber = firebase.firestore().collection("users").doc(item.id).collection("medications")
+        const subscriber = firebase.firestore().collection("users").doc(item.patientId).collection("medications")
         .onSnapshot(querySnapshot => {
             const meds = [];
             querySnapshot.forEach(documentSnapshot =>{
                 let id = documentSnapshot.id;
                 let data = documentSnapshot.data();
                 meds.push({
-                    'docId' : id,
-                    'medication': data,
-                    'isPatient': true,
-                    'patientId': item.id,
+                    'docId' : id, // medication document id
+                    'medication': data, // the medication object (information and settings)
+                    'isPatient': true, // medication is for patient. used for route.params patient vs hp
+                    'patientId': item.patientId, // id of patient user document
                 })
             });
             setMedications(meds);

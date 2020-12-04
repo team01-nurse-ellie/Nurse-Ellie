@@ -151,6 +151,7 @@ export async function getallPatients(hpUserId) {
                 querySnapshot.forEach( async doc => {
                     if (doc.id != hpUserId){
                         userObj = doc.data();
+                        userObj['patientId'] = userObj['id'];
                         userObj.isPatient = 'true';
                         patients.push(userObj);
                     }
@@ -163,4 +164,9 @@ export async function getallPatients(hpUserId) {
     } catch (error) {
         throw error;
     }
+}
+
+// Create Medication intake
+export async function intakeMedication(hpUserId) {
+    return null;
 }

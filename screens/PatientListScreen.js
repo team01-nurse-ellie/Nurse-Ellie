@@ -49,7 +49,7 @@ const PatientListScreen = ({navigation}) => {
                 {fsPatients.length > 0? (
                 <FlatList
                 data={fsPatients} 
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item.patientId}
                 renderItem={({item}) => (
                     <TouchableOpacity style={styles.searchButton} onPress={()=>navigation.navigate('Patient', {item: item})}>
                         <MedicationCard>

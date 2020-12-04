@@ -45,7 +45,7 @@ import { getAllByConcepts, getDrugsByIngredientBrand} from '../utils/medication'
 import { ActivityIndicator } from 'react-native-paper';
 
 const AddMedicationScreen = ({route, navigation }) => {
-  const { item } = route.params ?? {'item':{'isPatient':false}};
+  const { item } = route.params;
   const [user, setUser] = useState('');
   const autoCompleteRef = useRef();
   const { currentUser } = useContext(FirebaseAuthContext);
@@ -84,15 +84,14 @@ const AddMedicationScreen = ({route, navigation }) => {
 
   useEffect(() => {
     // moment(endDate) < moment(startDate) || moment(endDate) < moment(currentTime)
-    // console.log(firstName)
     let current = true;
-    const user = item.isPatient ? item.id : currentUser.uid;
+    const user = item.isPatient ? item.patientId : currentUser.uid;
+    // console.log('user hook:' + user)
     setUser(user);
     const unsubscribe = navigation.addListener('blur', () => {
       resetUserInput();
       // console.log("unmounting med screen");
     });
-    
     load();
 
     return () => {
@@ -100,7 +99,7 @@ const AddMedicationScreen = ({route, navigation }) => {
       unsubscribe();
     };
 
-  }, []);
+  },[item]);
 
   // load master list of molecules and brand-names
   async function load() {
@@ -203,11 +202,12 @@ const AddMedicationScreen = ({route, navigation }) => {
     Object.assign(medicationToAdd, medSettings);
     // console.log(medicationToAdd);
     if (alarm == true) {   
+          console.log('alarm addmedicationuser : ' + user);
           // Clear user input components if addition to DB successful 
           await fsFn.addMedication(user, medicationToAdd)
             .then(async (medicationDocID) => {
             // console.log(medicationDocID, `addMedication DATA RETURNED FROM FIRESTORE`);
-            await scheduleNotifications(medicationToAdd, medicationDocID, timestamp, selectDoW, firstName).then(async alarm => {
+            await scheduleNotifications(medicationToAdd, medicationDocID, timestamp, selectDoW, (item.isPatient ? item.fullName: firstName) ).then(async alarm => {
               // once notifications scheduled, add details of notification object into user's medication's alarm object.
               const { content, notifications } = alarm;
               await alarmsRef.doc(user).collection("medicationAlarms").add({
@@ -234,7 +234,7 @@ const AddMedicationScreen = ({route, navigation }) => {
           });
 
     } else {
-
+      console.log('else addmedication user: ' + user);
       await fsFn.addMedication(user, medicationToAdd
         // Clear user input components if addition to DB successful 
       ).then(() => {
@@ -276,8 +276,8 @@ const AddMedicationScreen = ({route, navigation }) => {
   
   return (
     <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
-      {console.log('is patient: ' + item.isPatient)}
       <Background />
+      {console.log('first name : ' + firstName)}
       <TouchableOpacity style={PatientStyles.menuButton} onPress={() => navigation.openDrawer()}>
         <MenuIcon />
       </TouchableOpacity>

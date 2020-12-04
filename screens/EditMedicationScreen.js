@@ -278,7 +278,6 @@ const EditMedicationScreen = ({route, navigation }) => {
 
   const resetUserInput = () => {
     setMedIcon(item.medication.medIcon);
-    // console.log(item.medication.intakeTime)
     setScheduledTime(item.medication.scheduledTime);
     setTimestamp({
         startDate: item.medication.startDateTimestamp,

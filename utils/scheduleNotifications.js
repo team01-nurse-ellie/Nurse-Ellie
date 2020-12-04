@@ -1,7 +1,7 @@
 import * as Notifications from 'expo-notifications';
 
 const scheduleNotifications = async (medicationToAdd, medicationDocID, timestamp, selectDoW, firstName = null) => {
-
+  console.log('shcedule notifications first name: ' + firstName);
     try {
       console.log(`***SCHEDULING ALARMS***`);
       // calculateLocalTimezone(year, month, day, scheduledTime.hour, scheduledTime.minute, scheduledTime.AM_PM);
