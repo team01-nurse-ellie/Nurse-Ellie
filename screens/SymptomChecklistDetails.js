@@ -4,13 +4,11 @@ import { ScrollView, TouchableOpacity} from 'react-native';
 import * as Animatable from 'react-native-animatable'
 import CheckBox from '@react-native-community/checkbox';
 
-import Background from '../components/background';
-import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
-import * as fsSymptomChecklist  from '../utils/firestoreSymptomChecklist';
+import Background from '../components/BackgroundHP';
 
-import PatientStyles from '../styles/PatientStyleSheet';
+import HProStyles from '../styles/HealthProfessionalStyleSheet';
 
-import MenuIcon from '../assets/images/menu-icon.svg';
+import MenuIcon from '../assets/images/hp-menu-icon.svg';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 import ClipboardIcon from '../assets/images/clipboard-icon.svg';
 import VeryDissatisfiedIcon from '../assets/images/scale-very-dissatisfied-icon.svg';
@@ -19,19 +17,20 @@ import NeutralIcon from '../assets/images/scale-neutral-icon.svg';
 import SatisfiedIcon from '../assets/images/scale-satisfied-icon.svg';
 import VerySatisfiedIcon from '../assets/images/scale-very-satisified-icon.svg';
 
-const SymptomChecklist = ({navigation}) => {
+const SymptomChecklistDetails = ({navigation, route}) => {
+    const { item } = route.params;
+
     const FEELINGS = { TERRIBLE: 1, NOTWELL: 2, NEUTRAL: 3, OKAY: 4, BETTER: 5}
     const DISCOMFORT_AREAS = ['Head', 'Chest', 'Stomach', 'Back', 'Other'];
     const DISCOMFORT_TYPES = ['Sore', 'Burning', 'Sudden', 'Severe', 'Tightness/Pressure', 'Sharp', 'Other'];
 
-    const { currentUser } = useContext(FirebaseAuthContext);
-    const [feeling, setFeeling] = useState();
-    const [isDiscomfort, setDiscomfort] = useState(undefined);
-    const [discomfortAreas, setDiscomfortAreas] = useState([]);
-    const [additionalAreas, setAdditionalAreas] = useState('Additional Details.');
-    const [discomfortTypes, setDiscomfortTypes] = useState([]);
-    const [additionalTypes, setAdditionalTypes] = useState('Additional Details.');
-    const [additionalDetails, setAdditionalDetails] = useState('Additional Details.');
+    const [feeling, setFeeling] = useState(item.checklist.feeling);
+    const [isDiscomfort, setDiscomfort] = useState(item.checklist.isDiscomfort);
+    const [discomfortAreas, setDiscomfortAreas] = useState(item.checklist.discomfortAreas);
+    const [additionalAreas, setAdditionalAreas] = useState(item.checklist.additionalAreas);
+    const [discomfortTypes, setDiscomfortTypes] = useState(item.checklist.discomfortTypes);
+    const [additionalTypes, setAdditionalTypes] = useState(item.checklist.additionalTypes);
+    const [additionalDetails, setAdditionalDetails] = useState(item.checklist.additionalDetails);
 
     let selectedArea = new Set(discomfortAreas);
     let selectedType = new Set(discomfortTypes);
@@ -66,56 +65,20 @@ const SymptomChecklist = ({navigation}) => {
         }
     }
 
-    const resetUserInput = () => {
-        setFeeling();
-        setDiscomfort();
-        setDiscomfortAreas([]);
-        setAdditionalAreas('Additional Details');
-        setDiscomfortTypes([]);
-        setAdditionalTypes('Additional Details');
-        setAdditionalDetails('Additional Details');
-    }
-    
-    const addSymptomChecklistToDB = async () => {
-        if (feeling == undefined) {
-            Alert.alert('', '\nPlease select how you are feeling!');
-            return;
-        } 
-        var symptomChecklist = {
-            'dateSubmitted': new Date(),
-            'feeling': feeling, 
-            'isDiscomfort': isDiscomfort, 
-            'discomfortAreas': discomfortAreas, 
-            'additionalAreas': additionalAreas, 
-            'discomfortTypes': discomfortTypes, 
-            'additionalTypes': additionalTypes, 
-            'additionalDetails': additionalDetails
-        }
-        await fsSymptomChecklist.addSymptomChecklist(currentUser.uid, Object(symptomChecklist))
-        .then(()=>{
-            resetUserInput();
-            navigation.goBack();
-            Alert.alert('Success', '\nYour symptom checklist has been submitted!');
-        })
-        .catch(e =>{
-            Alert.alert('', '\n Unable to submit your feedback. Please try again!');
-            console.log(e);
-        })
-    } 
-
     return (
-        <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
+        <KeyboardAvoidingView style={HProStyles.background} behaviour="padding" enabled>
+<           Text>{console.log(isDiscomfort)}</Text>
             <Background />
-            <TouchableOpacity style={PatientStyles.menuButton} onPress={()=> navigation.openDrawer()}>
+            <TouchableOpacity style={HProStyles.menuButton} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
             </TouchableOpacity>
-            <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig"> 
+            <Animatable.View style={HProStyles.drawer} animation="fadeInUpBig"> 
             <View style={styles.rowContainer}>
                 <View style={{flexDirection:'row', alignItems:'center'}}>
                     <TouchableOpacity onPress={()=> navigation.goBack()}>
                         <ReturnIcon/>
                     </TouchableOpacity>
-                    <Text style={[PatientStyles.title, {paddingHorizontal: 5}]}>
+                    <Text style={[HProStyles.title, {paddingHorizontal: 5}]}>
                         Symptom Checklist
                     </Text>
                 </View>
@@ -124,19 +87,19 @@ const SymptomChecklist = ({navigation}) => {
             <ScrollView>
                 <Text style={styles.questionFont}>How are you feeling?</Text>
                 <View style={styles.rowContainer}>
-                    <TouchableOpacity onPress={()=>setFeeling(FEELINGS.TERRIBLE)} style={[styles.baseButton, feeling===1 && styles.selectedButton]}>
+                    <TouchableOpacity style={[styles.baseButton, feeling===1 && styles.selectedButton]}>
                         <VeryDissatisfiedIcon/>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>setFeeling(FEELINGS.NOTWELL)} style={[styles.baseButton, feeling===2 && styles.selectedButton]}>
+                    <TouchableOpacity style={[styles.baseButton, feeling===2 && styles.selectedButton]}>
                         <DissatisfiedIcon/>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>setFeeling(FEELINGS.NEUTRAL)} style={[styles.baseButton, feeling===3 && styles.selectedButton]}>
+                    <TouchableOpacity style={[styles.baseButton, feeling===3 && styles.selectedButton]}>
                         <NeutralIcon/>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>setFeeling(FEELINGS.OKAY)} style={[styles.baseButton, feeling===4 && styles.selectedButton]}>
+                    <TouchableOpacity style={[styles.baseButton, feeling===4 && styles.selectedButton]}>
                         <SatisfiedIcon/>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>setFeeling(FEELINGS.BETTER)} style={[styles.baseButton, feeling===5 && styles.selectedButton]}>
+                    <TouchableOpacity style={[styles.baseButton, feeling===5 && styles.selectedButton]}>
                         <VerySatisfiedIcon/>
                     </TouchableOpacity>
                 </View>
@@ -146,10 +109,10 @@ const SymptomChecklist = ({navigation}) => {
                 </View>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingVertical:5}}>
                     <Text style={styles.questionFont}>Are you feeling any discomfort?</Text>
-                    <TouchableOpacity onPress={()=>setDiscomfort(true)}>
+                    <TouchableOpacity>
                         <Text style={[styles.baseText, isDiscomfort === true && styles.selectedText]}>YES</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>setDiscomfort(false)}>
+                    <TouchableOpacity>
                         <Text style={[styles.baseText, isDiscomfort === false && styles.selectedText]}>NO</Text>
                     </TouchableOpacity>
                 </View>
@@ -157,7 +120,7 @@ const SymptomChecklist = ({navigation}) => {
                 <View style={{flexDirection:'row'}}>
                 {DISCOMFORT_AREAS.map((area, index) => (
                     <View key={area} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <CheckBox value={selectedArea.has(index)} onValueChange={()=>onSelectArea(index)} />
+                    <CheckBox disabled={true} value={selectedArea.has(index)} onValueChange={()=>onSelectArea(index)} />
                     <Text> {area} </Text>
                     </View>
                 ))}
@@ -170,19 +133,20 @@ const SymptomChecklist = ({navigation}) => {
                 <View style={{flexDirection:'row', flexWrap: 'wrap'}}>
                 {DISCOMFORT_TYPES.map((type, index) => (
                     <View key={type} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <CheckBox value={selectedType.has(index)} onValueChange={()=>onSelectType(index)} />
+                    <CheckBox disabled={true} value={selectedType.has(index)} onValueChange={()=>onSelectType(index)} />
                     <Text> {type} </Text>
                     </View>
                 ))}
                 </View>
                 <View style={styles.singleLineInput}>
-                    <TextInput onChangeText={text=> setAdditionalTypes(text)} value={additionalTypes}/>
+                    <TextInput editable={false} onChangeText={text=> setAdditionalTypes(text)} value={additionalTypes}/>
                 </View>
                 <View style={{paddingVertical: 5}}/>
                 <Text style={styles.questionFont}>Additional details you would like your health professional to know. More details can help your health professional give you better care or treatment. </Text>
                 <View style={{padding: 2}}/>
                 <View style={styles.textInputBox}>
                     <TextInput
+                        editable={false}
                         multiline 
                         numberOfLines={5}
                         onChangeText={text=> setAdditionalDetails(text)}
@@ -191,7 +155,6 @@ const SymptomChecklist = ({navigation}) => {
                 </View>
                 <View style={{padding: 5}}/>
             </ScrollView>
-            <Button title="SUBMIT SYMPTOM CHECKLIST" color="#42C86A" onPress={addSymptomChecklistToDB} /> 
             </Animatable.View>
         </KeyboardAvoidingView>
     )
@@ -222,14 +185,14 @@ const styles = StyleSheet.create({
     }, 
     selectedText: {
         fontFamily: 'roboto-medium',
-        color: '#42C86A'
+        color: '#4285C8'
     }, 
     baseButton: {
         borderRadius: 20
     }, 
     selectedButton: {
-        backgroundColor: '#42C86A'
+        backgroundColor: '#4285C8'
     }
 
 });
-export default SymptomChecklist;
+export default SymptomChecklistDetails;
