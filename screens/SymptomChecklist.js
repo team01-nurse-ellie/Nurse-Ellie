@@ -18,10 +18,12 @@ import SatisfiedIcon from '../assets/images/scale-satisfied-icon.svg';
 import VerySatisfiedIcon from '../assets/images/scale-very-satisified-icon.svg';
 
 const SymptomChecklist = ({navigation}) => {
+    const FEELINGS = { TERRIBLE: 1, NOTWELL: 2, NEUTRAL: 3, OKAY: 4, BETTER: 5}
     const DISCOMFORT_AREAS = ['Head', 'Chest', 'Stomach', 'Back', 'Other'];
     const DISCOMFORT_TYPES = ['Sore', 'Burning', 'Sudden', 'Severe', 'Tightness/Pressure', 'Sharp', 'Other'];
 
-    const [feeling, setFeeling] = useState('Not Selected');
+    const [feeling, setFeeling] = useState();
+    const [isDiscomfort, setDiscomfort] = useState(undefined);
     const [additionalDetails, setAdditionalDetails] = useState('Additional Details.');
     const [discomfortAreas, setDiscomfortAreas] = useState([]);
     const [additionalAreas, setAdditionalAreas] = useState('Additional Details.');
@@ -82,11 +84,11 @@ const SymptomChecklist = ({navigation}) => {
             <ScrollView>
                 <Text style={styles.questionFont}>How are you feeling?</Text>
                 <View style={styles.rowContainer}>
-                    <TouchableOpacity onPress={()=>setFeeling('Terrible')}><VeryDissatisfiedIcon/></TouchableOpacity>
-                    <TouchableOpacity onPress={()=>setFeeling('Not Well')}><DissatisfiedIcon/></TouchableOpacity>
-                    <TouchableOpacity onPress={()=>setFeeling('Neutral')}><NeutralIcon/></TouchableOpacity>
-                    <TouchableOpacity onPress={()=>setFeeling('Okay')}><SatisfiedIcon/></TouchableOpacity>
-                    <TouchableOpacity onPress={()=>setFeeling('Better')}><VerySatisfiedIcon/></TouchableOpacity>
+                    <TouchableOpacity onPress={()=>setFeeling(FEELINGS.TERRIBLE)}><VeryDissatisfiedIcon/></TouchableOpacity>
+                    <TouchableOpacity onPress={()=>setFeeling(FEELINGS.NOTWELL)}><DissatisfiedIcon/></TouchableOpacity>
+                    <TouchableOpacity onPress={()=>setFeeling(FEELINGS.NEUTRAL)}><NeutralIcon/></TouchableOpacity>
+                    <TouchableOpacity onPress={()=>setFeeling(FEELINGS.OKAY)}><SatisfiedIcon/></TouchableOpacity>
+                    <TouchableOpacity onPress={()=>setFeeling(FEELINGS.BETTER)}><VerySatisfiedIcon/></TouchableOpacity>
                 </View>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                     <Text>Terrible</Text>
@@ -94,8 +96,12 @@ const SymptomChecklist = ({navigation}) => {
                 </View>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingVertical:5}}>
                     <Text style={styles.questionFont}>Are you feeling any discomfort?</Text>
-                    <TouchableOpacity><Text>YES</Text></TouchableOpacity>
-                    <TouchableOpacity><Text>NO</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={()=>setDiscomfort(true)}>
+                        <Text style={[styles.baseText, isDiscomfort === true && styles.selectedText]}>YES</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=>setDiscomfort(false)}>
+                        <Text style={[styles.baseText, isDiscomfort === false && styles.selectedText]}>NO</Text>
+                    </TouchableOpacity>
                 </View>
                 <Text style={styles.questionFont}>Where are you experiencing the pain or discomfort?</Text>
                 <View style={{flexDirection:'row'}}>
@@ -159,6 +165,15 @@ const styles = StyleSheet.create({
     questionFont: {
         fontFamily: 'roboto-regular',
         fontSize: 15,
+    }, 
+    baseText: {
+        fontFamily: 'roboto-medium',
+        color: '#000000'
+    }, 
+    selectedText: {
+        fontFamily: 'roboto-medium',
+        color: '#42C86A'
     }
+
 });
 export default SymptomChecklist;
