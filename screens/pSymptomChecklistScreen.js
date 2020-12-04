@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Image, StyleSheet, FlatList, Button, Dimensions } from 'react-native';
+import { KeyboardAvoidingView, View, Text, TextInput, Image, StyleSheet, Button, Dimensions } from 'react-native';
 import { ScrollView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import * as Animatable from 'react-native-animatable'
 import CheckBox from '@react-native-community/checkbox';
-import Background from '../components/background';
+import BackgroundHP from '../components/BackgroundHP';
+import MenuIcon from '../assets/images/hp-menu-icon';
 
-import ClipboardIcon from '../assets/images/clipboard-icon.svg';
 import VeryDissatisfiedIcon from '../assets/images/scale-very-dissatisfied-icon.svg';
 import DissatisfiedIcon from '../assets/images/scale-dissatisfied-icon.svg';
 import NeutralIcon from '../assets/images/scale-neutral-icon.svg';
@@ -14,161 +14,30 @@ import VerySatisfiedIcon from '../assets/images/scale-very-satisified-icon.svg';
 import { firebase } from '../components/Firebase/config';
 
 
-const SymptomChecklistScreen = ({ navigation }) => {
+const pSymptomChecklistScreen = ({ route, navigation }) => {
 
-    // Variable to store value of 'HOW ARE YOU FEELING EMOTIONAL ICONS'
-    let emotions_icon_value = 'No Feelings';
-    let pname = 'I dont have';
-
-    const emotionClicked = (value) => {
-        console.log("==>inside value: " + value);
-        if (value == 'VDI') {
-            emotions_icon_value = 'Terrible'
-        } else if (value == 'DI') {
-            emotions_icon_value = 'Not Good'
-        } else if (value == 'NI') {
-            emotions_icon_value = 'Okay'
-        } else if (value == 'SI') {
-            emotions_icon_value = 'Good'
-        } else if (value == 'VSI') {
-            emotions_icon_value = 'Better'
-        }
-        console.log("==>inside value: " + emotions_icon_value);
-    }
-
-    //Having Pain or Discomfort
-    let pain_Discomfort = 'No';
-    const havingPain = (value) => {
-        if (value == 'YES') {
-            pain_Discomfort = 'Yes';
-        } else {
-            pain_Discomfort = 'No';
-        }
-    }
-
-    /** Get Experiencing the pain or discomfort */
-    const [headSelected, setHeadSelection] = useState(false);
-    const [chestSelected, setChestSelection] = useState(false);
-    const [stomachSelected, setStomachSelection] = useState(false);
-    const [backSelected, setBackSelection] = useState(false);
-    const [otherSelected, setOtherSelection] = useState(false);
-    const [inputLineOneText, setLineOneText] = useState('');
-
-    const [achySelected, setAchySelection] = useState(false);
-    const [burningSelected, setBurningSelection] = useState(false);
-    const [suddenSelected, setSuddenSelection] = useState(false);
-    const [severeSelected, setSevereSelection] = useState(false);
-    const [squeezingSelected, setSqueezingSelection] = useState(false);
-    const [sharpSelected, setSharpSelection] = useState(false);
-    const [other2Selected, setOther2Selection] = useState(false);
-    const [inputLineTwoText, setLineTwoText] = useState('');
-
-    /**Additional Detail value */
-    const [additionalText, setAdditionalText] = useState('');
-
-    /** Button Clicked Function */
-    const symptomRef = firebase.firestore().collection('symptom')
-
-    const getFormValue = async(res) => {
-        let current_date = new Date();
-
-        const patient_id = await firebase.auth().currentUser.uid
-        
-
-        const obj = {
-            current_date,
-            patient_id,
-            emotions_icon_value,
-            pain_Discomfort,
+    const { item } = route.params;
     
-            headSelected,
-            chestSelected,
-            stomachSelected,
-            backSelected,
-            otherSelected,
-            inputLineOneText,
-    
-            achySelected,
-            burningSelected,
-            suddenSelected,
-            severeSelected,
-            squeezingSelected,
-            sharpSelected,
-            other2Selected,
-            inputLineTwoText,
-    
-            additionalText,
-        };
-
-        const symptomRef = firebase.firestore().collection('symptom')
-        symptomRef.add(obj)
-
-
-        /** printing codes */
-        console.log("\n------------------\n");
-        console.log("its uid: " + patient_id);
-        console.log("Date: " + current_date);
-        console.log('Emotion Icons Value: ' + emotions_icon_value);
-        console.log('Having Pain or Discomfort: ' + pain_Discomfort);
-
-        headSelected == true ? console.log('Head YES') : console.log('Head NO');
-        chestSelected == true ? console.log('Chest YES') : console.log('Chest NO');
-        stomachSelected == true ? console.log('Stomach YES') : console.log('Stomach NO');
-        backSelected == true ? console.log('Back YES') : console.log('Back NO');
-        otherSelected == true ? console.log('Other YES') : console.log('Other NO');
-        console.log("Input 01: " + inputLineOneText);
-        console.log("pname before: " + pname);
-        console.log("pname after: " + pname);
-
-        achySelected == true ? console.log('Achy YES') : console.log('Achy NO');
-        burningSelected == true ? console.log('Burning YES') : console.log('Burning NO');
-        suddenSelected == true ? console.log('Sudden YES') : console.log('Sudden NO');
-        severeSelected == true ? console.log('Severe YES') : console.log('Severe NO');
-        squeezingSelected == true ? console.log('Squeezing YES') : console.log('Squeezing NO');
-        sharpSelected == true ? console.log('Sharp YES') : console.log('Sharp NO');
-        other2Selected == true ? console.log('Other2 YES') : console.log('Other2 NO');
-        console.log("Input 02: " + inputLineTwoText)
-
-        console.log("Additional Value: " + additionalText);
-
-    }
-
-
-    const [patients, setPatients] = useState ([
-        
-        {
-            inputLineOneText: "This is line 1",
-            inputLineTwoText: "This is line 2",
-            additionalText: "This is additional text",
-
-            headSelected : true,
-            chestSelected : true,
-            stomachSelected : true,
-            backSelected : true,
-            otherSelected : true,
-
-            achySelected : true,
-            burningSelected : true,
-            suddenSelected : true,
-            severeSelected : true,
-            squeezingSelected : true,
-            sharpSelected : true,
-            other2Selected : true,
-        }
-    ]);
-
-
     return (
-        <>
-            <Background />
+        <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+            <BackgroundHP />
+
+            <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
+                <MenuIcon/>
+            </TouchableOpacity>
+            
             <Animatable.View style={styles.drawer} animation="fadeInUpBig">
 
                 <ScrollView >
+                    <View>
+                        <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Text style = {styles.crossIcon}> X </Text>
+                        </TouchableOpacity>
+                    </View>
                     <View style = { styles.screenHeader } >
                         <Text style = { styles.headerFont } > 
                             { `Symptom Checklist` } 
                         </Text> 
-                        <ClipboardIcon fill = "#000000" style = { styles.headerImage }/> 
                     </View>
 
                     <View style = { styles.feelingView } >
@@ -177,25 +46,11 @@ const SymptomChecklistScreen = ({ navigation }) => {
                         </Text>
                         
                         <View style = { styles.feelingIcons } >
-                            <TouchableOpacity onPress = {() => emotionClicked('VDI') } >
-                                <VeryDissatisfiedIcon fill = "#000000" / >
-                            </TouchableOpacity>
-
-                            <TouchableOpacity onPress = {() => emotionClicked('DI') } >
-                                <DissatisfiedIcon fill = "#000000" / >
-                            </TouchableOpacity>
-
-                            <TouchableOpacity onPress = {() => emotionClicked('NI') } >
-                                <NeutralIcon fill = "#000000" / >
-                            </TouchableOpacity>
-
-                            <TouchableOpacity onPress = {() => emotionClicked('SI') } >
-                                <SatisfiedIcon fill = "#000000" / >
-                            </TouchableOpacity>
-                            
-                            <TouchableOpacity onPress = {() => emotionClicked('VSI') } >
-                                <VerySatisfiedIcon fill = "#000000" / >
-                            </TouchableOpacity> 
+                            <VeryDissatisfiedIcon fill = "#000000" / >
+                            <DissatisfiedIcon fill = "#000000" / >
+                            <NeutralIcon fill = "#000000" / >
+                            <SatisfiedIcon fill = "#000000" / >
+                            <VerySatisfiedIcon fill = "#000000" / >
                         </View>
 
                         <View style = { styles.feelingWords } >
@@ -214,17 +69,13 @@ const SymptomChecklistScreen = ({ navigation }) => {
                         </Text>
 
                         <View style = { styles.feelingYesNo } >
-                            <TouchableOpacity onPress = {() => havingPain('YES') } >
-                                <Text style = { styles.feelingPressed } > 
-                                    { `YES` } 
-                                </Text> 
-                            </TouchableOpacity>
-
-                            <TouchableOpacity onPress = {() => havingPain('NO') } >
-                                <Text style = { styles.feelingNo } > 
-                                    { `NO` } 
-                                </Text> 
-                            </TouchableOpacity> 
+                            <Text style = { styles.feelingPressed } > 
+                                { `YES` } 
+                            </Text> 
+                            
+                            <Text style = { styles.feelingNo } > 
+                                { `NO` } 
+                            </Text>  
                         </View> 
                     </View>
 
@@ -232,42 +83,38 @@ const SymptomChecklistScreen = ({ navigation }) => {
                         <Text style = { styles.simpleText } > 
                             { `Where are you experiencing the pain or discomfort?` } 
                         </Text>
+
                         <View style = { styles.discomfortCheckView } >
                             <View style = { styles.discomfortCheckSubView } >
-                                < CheckBox value = { headSelected } 
-                                    onValueChange = { setHeadSelection }
+                                < CheckBox value = { item.headSelected }
                                     style = { styles.checkbox }
                                 /> 
                                 <Text style = { styles.simpleTextF } > Head </Text> 
                             </View>
 
                             <View style = { styles.discomfortCheckSubView } >
-                                <CheckBox value = { chestSelected }
-                                    onValueChange = { setChestSelection }
+                                <CheckBox value = { item.chestSelected }
                                     style = { styles.checkbox }
                                 /> 
                                 <Text style = { styles.simpleTextF } > Chest </Text> 
                             </View>
 
                             <View style = { styles.discomfortCheckSubView } >
-                                <CheckBox value = { stomachSelected }
-                                    onValueChange = { setStomachSelection }
+                                <CheckBox value = { item.stomachSelected }
                                     style = { styles.checkbox }
                                 /> 
                                 <Text style = { styles.simpleTextF } > Stomach </Text> 
                             </View>
 
                             <View style = { styles.discomfortCheckSubView } >
-                                <CheckBox value = { backSelected }
-                                    onValueChange = { setBackSelection }
+                                <CheckBox value = { item.backSelected }
                                     style = { styles.checkbox }
                                 /> 
                                 <Text style = { styles.simpleTextF } > Back </Text> 
                             </View>
 
                             <View style = { styles.discomfortCheckSubView } >
-                                <CheckBox value = { otherSelected }
-                                    onValueChange = { setOtherSelection }
+                                <CheckBox value = { item.otherSelected }
                                     style = { styles.checkbox }
                                 /> 
                                 <Text style = { styles.simpleTextF } > Other </Text> 
@@ -277,8 +124,9 @@ const SymptomChecklistScreen = ({ navigation }) => {
                         <TextInput style = { styles.inputText2 }
                             numberOfLines = { 1 }
                             onChangeText={(text) => setLineOneText(text)}
-                            value={ inputLineOneText }
+                            value={ item.inputLineOneText }
                         /> 
+                        
                     </View>
 
                     <View style = { styles.discomfortView } >
@@ -288,32 +136,28 @@ const SymptomChecklistScreen = ({ navigation }) => {
 
                         <View style = { styles.discomfortCheckView } >
                             <View style = { styles.discomfortCheckSubView } >
-                                <CheckBox value = { achySelected }
-                                    onValueChange = { setAchySelection }
+                                <CheckBox value = { item.achySelected }
                                     style = { styles.checkbox }
                                 /> 
                                 <Text style = { styles.simpleTextF } > Achy or gnawing </Text> 
                             </View>
 
                             <View style = { styles.discomfortCheckSubView } >
-                                <CheckBox value = { burningSelected }
-                                    onValueChange = { setBurningSelection }
+                                <CheckBox value = { item.burningSelected }
                                     style = { styles.checkbox }
                                 /> 
                                 <Text style = { styles.simpleTextF } > Burning </Text> 
                             </View>
 
                             <View style = { styles.discomfortCheckSubView } >
-                                <CheckBox value = { suddenSelected }
-                                    onValueChange = { setSuddenSelection }
+                                <CheckBox value = { item.suddenSelected }
                                     style = { styles.checkbox }
                                 /> 
                                 <Text style = { styles.simpleTextF } > Sudden </Text> 
                             </View>
 
                             <View style = { styles.discomfortCheckSubView } >
-                                <CheckBox value = { severeSelected }
-                                    onValueChange = { setSevereSelection }
+                                <CheckBox value = { item.severeSelected }
                                     style = { styles.checkbox }
                                 /> 
                                 <Text style = { styles.simpleTextF } > Severe </Text> 
@@ -322,24 +166,21 @@ const SymptomChecklistScreen = ({ navigation }) => {
 
                         <View style = { styles.discomfortCheckView } >
                             <View style = { styles.discomfortCheckSubView } >
-                                <CheckBox value = { squeezingSelected }
-                                    onValueChange = { setSqueezingSelection }
+                                <CheckBox value = { item.squeezingSelected }
                                     style = { styles.checkbox }
                                 /> 
                                 <Text style = { styles.simpleTextF } > Squeezing or pressure </Text> 
                             </View>
 
                             <View style = { styles.discomfortCheckSubView } >
-                                <CheckBox value = { sharpSelected }
-                                    onValueChange = { setSharpSelection }
+                                <CheckBox value = { item.sharpSelected }
                                     style = { styles.checkbox }
                                 /> 
                                 <Text style = { styles.simpleTextF } > Sharp </Text> 
                             </View>
 
                             <View style = { styles.discomfortCheckSubView } >
-                                <CheckBox value = { other2Selected }
-                                    onValueChange = { setOther2Selection }
+                                <CheckBox value = { item.other2Selected }
                                     style = { styles.checkbox }
                                 /> 
                                 <Text style = { styles.simpleTextF } > Other </Text> 
@@ -349,8 +190,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                         <TextInput
                             style = { styles.inputText2 }
                             multiline = { true }
-                            onChangeText={(text) => setLineTwoText(text)}
-                            value={ inputLineTwoText }
+                            value={ item.inputLineTwoText }
                         /> 
                     </View>
 
@@ -361,30 +201,12 @@ const SymptomChecklistScreen = ({ navigation }) => {
                     <TextInput style = { styles.inputText }
                         multiline = { true }
                         numberOfLines = { 5 }
-                        onChangeText={(text) => setAdditionalText(text)}
-                        value={ additionalText }
+                        value={ item.additionalText }
                     />
-
-                    <Button title = "SUBMIT"
-                        color = "#42C86A"
-                        style = { styles.lastButton }
-                        onPress = {
-                            getFormValue
-                        }
-                    />
-
-<FlatList data={patients} renderItem={({item}) => (
-                        <TouchableOpacity style={styles.lastButton} onPress={()=>navigation.navigate('pSymptomChecklistScreen', {item: item})}>
-                        <View><Text>Button to send data</Text></View>
-                        
-                    </TouchableOpacity>
-)}/>
-                    
-
                 </ScrollView>
 
             </Animatable.View> 
-        </>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -392,6 +214,27 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
+
+    background: {
+        flex: 1,
+        backgroundColor: '#4285C8',
+    }, 
+
+    menuButton:{
+        position: 'absolute',
+        right: 30,
+        top: 40 
+    },
+
+    crossIcon:{
+        left: 300,
+        fontSize: 32,
+        color: 'grey',
+        paddingBottom: 0,
+        paddingTop: 0,
+        marginBottom: 0,
+        marginTop: 0,
+    },
 
     drawer: {
         backgroundColor: '#fff',
@@ -535,4 +378,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default SymptomChecklistScreen;
+export default pSymptomChecklistScreen;
