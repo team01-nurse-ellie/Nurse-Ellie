@@ -1,15 +1,17 @@
-import React, { useState, useContext,useEffect } from 'react';
-import { View, Text, KeyboardAvoidingView, TextInput, StyleSheet, Button } from 'react-native';
-import { ScrollView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { View, Text, KeyboardAvoidingView, TextInput, StyleSheet, Button, Alert } from 'react-native';
+import { ScrollView, TouchableOpacity} from 'react-native';
 import * as Animatable from 'react-native-animatable'
 import CheckBox from '@react-native-community/checkbox';
+
 import Background from '../components/background';
+import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
+import * as fsSymptomChecklist  from '../utils/firestoreSymptomChecklist';
 
 import PatientStyles from '../styles/PatientStyleSheet';
 
 import MenuIcon from '../assets/images/menu-icon.svg';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
-
 import ClipboardIcon from '../assets/images/clipboard-icon.svg';
 import VeryDissatisfiedIcon from '../assets/images/scale-very-dissatisfied-icon.svg';
 import DissatisfiedIcon from '../assets/images/scale-dissatisfied-icon.svg';
@@ -22,14 +24,15 @@ const SymptomChecklist = ({navigation}) => {
     const DISCOMFORT_AREAS = ['Head', 'Chest', 'Stomach', 'Back', 'Other'];
     const DISCOMFORT_TYPES = ['Sore', 'Burning', 'Sudden', 'Severe', 'Tightness/Pressure', 'Sharp', 'Other'];
 
+    const { currentUser } = useContext(FirebaseAuthContext);
     const [feeling, setFeeling] = useState();
     const [isDiscomfort, setDiscomfort] = useState(undefined);
-    const [additionalDetails, setAdditionalDetails] = useState('Additional Details.');
     const [discomfortAreas, setDiscomfortAreas] = useState([]);
     const [additionalAreas, setAdditionalAreas] = useState('Additional Details.');
     const [discomfortTypes, setDiscomfortTypes] = useState([]);
     const [additionalTypes, setAdditionalTypes] = useState('Additional Details.');
-    
+    const [additionalDetails, setAdditionalDetails] = useState('Additional Details.');
+
     let selectedArea = new Set(discomfortAreas);
     let selectedType = new Set(discomfortTypes);
     
@@ -51,7 +54,7 @@ const SymptomChecklist = ({navigation}) => {
     var onSelectType = index => {
         if (selectedType.has(index)) {
           if (selectedType.delete(index)){
-            setDiscomfortTypes(Array.from(selectedTypes));
+            setDiscomfortTypes(Array.from(selectedType));
             return;
           } else {
             console.log("error");
@@ -59,9 +62,46 @@ const SymptomChecklist = ({navigation}) => {
           }
         } else {
             selectedType.add(index);
-            setDiscomfortTypes(Array.from(selectedTypes));
+            setDiscomfortTypes(Array.from(selectedType));
         }
     }
+
+    const resetUserInput = () => {
+        setFeeling();
+        setDiscomfort();
+        setDiscomfortAreas([]);
+        setAdditionalAreas('Additional Details');
+        setDiscomfortTypes([]);
+        setAdditionalTypes('Additional Details');
+        setAdditionalDetails('Additional Details');
+    }
+    
+    const addSymptomChecklistToDB = async () => {
+        if (feeling == undefined) {
+            Alert.alert('', '\nPlease select how you are feeling!');
+            return;
+        } 
+        var symptomChecklist = {
+            'dateSubmitted': new Date(),
+            'feeling': feeling, 
+            'isDiscomfort': isDiscomfort, 
+            'discomfortAreas': discomfortAreas, 
+            'additionalAreas': additionalAreas, 
+            'discomfortTypes': discomfortTypes, 
+            'additionalTypes': additionalTypes, 
+            'additionalDetails': additionalDetails
+        }
+        await fsSymptomChecklist.addSymptomChecklist(currentUser.uid, Object(symptomChecklist))
+        .then(()=>{
+            resetUserInput();
+            navigation.navigate('Medications');
+            Alert.alert('Success', '\nYour symptom checklist has been submitted!');
+        })
+        .catch(e =>{
+            Alert.alert('', '\n Unable to submit your feedback. Please try again!');
+            console.log(e);
+        })
+    } 
 
     return (
         <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
@@ -141,7 +181,7 @@ const SymptomChecklist = ({navigation}) => {
                 </View>
                 <View style={{padding: 5}}/>
             </ScrollView>
-            <Button title="SUBMIT SYMPTOM CHECKLIST" color="#42C86A" onPress={()=>console.log("Symptom Checklist Submitted")} /> 
+            <Button title="SUBMIT SYMPTOM CHECKLIST" color="#42C86A" onPress={addSymptomChecklistToDB} /> 
             </Animatable.View>
         </KeyboardAvoidingView>
     )
