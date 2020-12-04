@@ -45,7 +45,7 @@ import { getAllByConcepts, getDrugsByIngredientBrand} from '../utils/medication'
 import { ActivityIndicator } from 'react-native-paper';
 
 const AddMedicationScreen = ({route, navigation }) => {
-  const { item } = route.params ?? {};
+  const { item } = route.params ?? {'item':{'isPatient':false}};
   const [user, setUser] = useState('');
   const autoCompleteRef = useRef();
   const { currentUser } = useContext(FirebaseAuthContext);
@@ -86,7 +86,7 @@ const AddMedicationScreen = ({route, navigation }) => {
     // moment(endDate) < moment(startDate) || moment(endDate) < moment(currentTime)
     // console.log(firstName)
     let current = true;
-    const user = item.isPatient ? item.id : user;
+    const user = item.isPatient ? item.id : currentUser.uid;
     setUser(user);
     const unsubscribe = navigation.addListener('blur', () => {
       resetUserInput();
@@ -223,7 +223,7 @@ const AddMedicationScreen = ({route, navigation }) => {
                     resetUserInput();
                     scrollViewRef.scrollTo({ x: 0, y: 0, animated: true });
                     Alert.alert('', '\nMedication Added!');
-                    navigation.navigate('Medications');
+                    navigation.navigate(item.isPatient ? 'Patient' : 'Medications');
                   }).catch(error => { throw error });
               }).catch(error => { throw error });
             }).catch(error => { throw error });
@@ -241,7 +241,7 @@ const AddMedicationScreen = ({route, navigation }) => {
         resetUserInput();
         scrollViewRef.scrollTo({x:0,y:0,animated:true});
         Alert.alert('', '\nMedication Added!');
-        navigation.navigate('Medications');
+        navigation.navigate(item.isPatient ? 'Patient' : 'Medications');
         setConfirmationModal(true);
       }
       ).catch(e => {
@@ -276,9 +276,7 @@ const AddMedicationScreen = ({route, navigation }) => {
   
   return (
     <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
-      {console.log(user)}
       {console.log('is patient: ' + item.isPatient)}
-      {console.log(user)}
       <Background />
       <TouchableOpacity style={PatientStyles.menuButton} onPress={() => navigation.openDrawer()}>
         <MenuIcon />
@@ -430,11 +428,9 @@ const AddMedicationScreen = ({route, navigation }) => {
               <TouchableOpacity 
               style={styles.searchButton} 
               onPress={()=>{
-                console.log(item);
                 setMedicationToAdd(item); 
                 setShowModal(false); 
                 setSearchResult('');}}>
-                {console.log(item)}
                 <MedicationCard>
                   <View style={{ justifyContent: 'center', flex: 2 }}>
                     <PinkMedication />

@@ -22,7 +22,7 @@ import { scheduleNotifications } from '../utils/scheduleNotifications';
 import { alarmsRef } from '../utils/databaseRefs';
 
 const EditMedicationScreen = ({route, navigation }) => {
-    const { item } = route.params;
+    const { item } = route.params ?? {'item':{'isPatient':false}};
     const { currentUser } = useContext(FirebaseAuthContext);
     const [user, setUser] = useState('');
     // --------------------------------------------------
@@ -55,7 +55,7 @@ const EditMedicationScreen = ({route, navigation }) => {
     })
     setLoading(true);
     // Determine if route.params passed patient's medication or the current user's medication
-    const user = item.isPatient ? item.patientId : user;
+    const user = item.isPatient ? item.patientId : currentUser.uid;
     setUser(user);
     // Subscribe to medication in firestore
     const subscriber = firebase.firestore()
