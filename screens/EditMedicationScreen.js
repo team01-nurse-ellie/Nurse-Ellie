@@ -19,7 +19,7 @@ import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 import { firebase } from '../components/Firebase/config';
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
 import { scheduleNotifications } from '../utils/scheduleNotifications';
-import { alarmsRef } from '../utils/databaseRefs';
+import { alarmsRef, usersRef } from '../utils/databaseRefs';
 
 const EditMedicationScreen = ({route, navigation }) => {
     const { item } = route.params ?? {'item':{'isPatient':false}};
@@ -58,8 +58,7 @@ const EditMedicationScreen = ({route, navigation }) => {
     const user = item.isPatient ? item.patientId : currentUser.uid;
     setUser(user);
     // Subscribe to medication in firestore
-    const subscriber = firebase.firestore()
-        .collection("users")
+    const subscriber = usersRef
         .doc(user)
         .collection("medications")
         .doc(item.docId)

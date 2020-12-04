@@ -185,13 +185,12 @@ export async function getDailyMedications(uid) {
         strength:,
         tty:,
     */
-    let notifMatches = []   // medications that still need to be taken today
-    let medNotif = {      // object in notifMatches that stores all notification info and medication (drug info + drug settings)
+    let medNotifMatches = []   // medications that still need to be taken today
+    let medNotif = {            // Stores both notification and medication info (see above comments)
         'notification': {},
         'medication' : {},
         'medID' : '', 
     }
-    // todayish in ms 1607096916779 Dec 4 3:49 pm utc
     const MS_TO_DAYS = 86400000.0;
     // get todays date in UTC epoch time
     let todayDate = new Date();
@@ -218,7 +217,7 @@ export async function getDailyMedications(uid) {
                     let matchMedNotif = {};
                     // console.log('matched notif: ' + notification.medicationID);
                     matchMedNotif.notification = notification;
-                    notifMatches.push(matchMedNotif);
+                    medNotifMatches.push(matchMedNotif);
                 }
             })
         })
@@ -226,14 +225,14 @@ export async function getDailyMedications(uid) {
         console.log(error)
     });
     
-    for (medNotif of notifMatches) {
+    for (medNotif of medNotifMatches) {
         // console.log('notif matches medication id: ' + medNotif.notification.medicationID);
     }
 
     const medRef = usersRef.doc(uid).collection("medications");
 
     // Add the medication object (has info & settings) from user collection to each medication notification
-    for (medNotif of notifMatches) {
+    for (medNotif of medNotifMatches) {
         let medId = medNotif.notification.medicationID;
         // console.log('searching for med info for: ' + medId);
         await medRef.doc(medId).get().then(querySnapshot => {
@@ -244,16 +243,18 @@ export async function getDailyMedications(uid) {
 
     }
 
-    // console.log('Number of medication notif matches for today: ' + notifMatches.length);
-    // console.log('final matches names: ');
-    // for (medNotif of notifMatches) {
-    //     console.log('medication object match nameDisplay: ' + medNotif.medication.nameDisplay);
-    //     console.log('medication object match rxcui: ' + medNotif.medication.rxcui);
-    // }
+    console.log('\nNumber of medication notif matches for today: ' + medNotifMatches.length);
+    console.log('\nfinal matches names: ');
+    for (medNotif of medNotifMatches) {
+        console.log('medNotif medID: ' + medNotif.medID);
+        console.log('medNotif notification object notificationID: ' + medNotif.notification.medicationID);
+        console.log('medNotif medication object nameDisplay: ' + medNotif.medication.nameDisplay);
+        console.log('medNotif medication object rxcui: ' + medNotif.medication.rxcui + '\n');
+    }
     // console.log('medNotif of first: ');
-    // console.log(notifMatches[0]);
+    // console.log(medNotifMatches[0]);
     // console.log(notifMatches);
-    return notifMatches;
+    return medNotifMatches;
 
     // For each match get medication information (ie strength, name, settings) from user's medications collection
 }

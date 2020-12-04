@@ -9,6 +9,7 @@ import ProgressCircle from 'react-native-progress-circle';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { calculateLocalTimezone } from '../utils/dateHelpers';
+import {alarmsRef, usersRef} from '../utils/databaseRefs.js'
 
 import * as Animatable from 'react-native-animatable';
 
@@ -80,11 +81,9 @@ const HomeScreen = ({ navigation }) => {
                 
             // })
 
-
+            // Daily medication listener
         })();
-        
         // sendPushNotif();
-        fsFn.getDailyMedications(currentUser.uid);
         var hours = new Date().getHours();
         if (hours < 12) {
             setGreeting('Good morning');
@@ -93,22 +92,23 @@ const HomeScreen = ({ navigation }) => {
         } else {
             setGreeting('Good evening');
         }
-       
-        const medSubscriber = firebase.firestore().collection("users").doc(currentUser.uid
-            ).collection("medications"
-            ).onSnapshot(function(querySnapshot) {
+        // Listener for changes in user's alarm notification collection
+        const alarmNotifSubscriber = alarmsRef.doc(currentUser.uid
+            ).collection("medicationAlarms"
+            ).onSnapshot(async function(querySnapshot) {
+                loadTodayMedNotifs();
+            }
+        );
+        // Listener for changes in user's user document
+        const nameSubscriber = usersRef.doc(currentUser.uid
+            ).onSnapshot(async function(querySnapshot) {
                 loadUserInfo();
             }
         );
-        const nameSubscriber = firebase.firestore().collection("users").doc(currentUser.uid
-            ).onSnapshot(function(querySnapshot) {
-                loadUserInfo();
-            }
-        );
-        
-        // Unsubscribe from listener when no longer in use
+        // Unsubscribe from all listeners when no longer in use
         return () => {
-            medSubscriber(); 
+            // medSubscriber(); 
+            alarmNotifSubscriber();
             nameSubscriber();
             Notifications.removeNotificationSubscription(notificationListener);
             Notifications.removeNotificationSubscription(responseListener);
@@ -117,7 +117,6 @@ const HomeScreen = ({ navigation }) => {
             // console.log(new Date(Date.UTC(2020, 10, 18, 20, 41)))
             // console.log(Date.now() + 60 * 60 * 1000)
         }
-
     }, []);
 
     const scheduleAlarms = async () => {
@@ -285,12 +284,18 @@ const HomeScreen = ({ navigation }) => {
     }
     // Load user's full name and current medications
     async function loadUserInfo() {
-        const user = await firebase.firestore().collection("users").doc(currentUser.uid).get();
+        const user = await usersRef.doc(currentUser.uid).get();
         setfullName(user.data().fullName);
-        let meds = await fsFn.getCurrentMedications(currentUser.uid);
-        setMedications(meds);
+        // let meds = await fsFn.getCurrentMedications(currentUser.uid);
+        // setMedications(meds);
     }
-
+    // Load user's full name and current medications
+    async function loadTodayMedNotifs() {
+        const medNotifs = await fsFn.getDailyMedications(currentUser.uid);
+        setMedications(medNotifs);
+        console.log(medNotifs[0]);
+    }
+    
     return (
         <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
             <Background />
@@ -298,6 +303,7 @@ const HomeScreen = ({ navigation }) => {
              <TouchableOpacity style={PatientStyles.menuButton} onPress={()=> navigation.openDrawer()}> 
                 <MenuIcon/>
             </TouchableOpacity>
+            {}
             <Text style={styles.time}> {greeting} </Text>
             <Text style={styles.user}> {fullName} </Text>
             <View style={styles.progressCircle}>
@@ -319,20 +325,20 @@ const HomeScreen = ({ navigation }) => {
             {medications ? (
                 <FlatList 
                 data={medications.sort((a,b)=>{
-                    return a.namePrescribe.localeCompare(b.namePrescribe);
+                    return a.medication.namePrescribe.localeCompare(b.medication.namePrescribe);
                 })}
-                keyExtractor={(item) => item.rxcui.toString()}
+                keyExtractor={(item) => item.medication.rxcui.toString()}
                 renderItem={({item}) => (
                     <Swipeable 
                     renderLeftActions={takenAction} 
                     renderRightActions={dismissAction}>
                         <MedicationCard>
                             <View style={styles.medicationInfoView}>
-                            <Text style={styles.medicationFont}>{item.nameDisplay}</Text>
-                            <Text style={styles.frequencyfont}>{item.strength}</Text>
+                            <Text style={styles.medicationFont}>{item.medication.nameDisplay}</Text>
+                            <Text style={styles.frequencyfont}>{item.medication.strength}</Text>
                             </View>
                             <View style={styles.timeView}>
-                                <Text style={styles.timeFont}>{getValueFormatted(item.intakeTime)}</Text>
+                                <Text style={styles.timeFont}>{getValueFormatted(item.medication.intakeTime)}</Text>
                             </View>
                         </MedicationCard>
                     </Swipeable>
