@@ -21,8 +21,8 @@ import { firebase } from '../components/Firebase/config';
 const PatientDetailScreen = ({route, navigation}) => {
     const { item } = route.params;
     const [medications, setMedications] = useState([]);
-    const [patient, setPatient] = useState();
-    const [loading, setLoading] = useState();
+    // const [checklist, setChecklist] = useState();
+
 
     useEffect(()=>{
         const subscriber = firebase.firestore().collection("users").doc(item.patientId).collection("medications")
@@ -41,7 +41,26 @@ const PatientDetailScreen = ({route, navigation}) => {
             setMedications(meds);
         });
 
-        return () => subscriber();
+        // Find most recently submitted symptom checklist
+        // const symptomSubscriber = firebase.firestore().collection("users").doc(item.patientId).collection("symptomChecklists")
+        // .onSnapshot(querySnapshot => {
+        //     // get the most recently submitted symptom checklist
+        //     // querySnapshot is array of checklist objects
+        //     let mostRecentChecklist;
+        //     querySnapshot.forEach(checklist => {
+        //         // date comparison
+        //         // if checklist date > m
+        //     })
+        //     });
+        //     // now have the most recently submitted symtptom checklist
+        //     setChecklist(mostRecentChecklist);
+        // });
+
+        // Unsubscribe from listeners when no longer in use
+        return () => {
+            subscriber();
+            // symptomSubscriber();
+        };
     },[item])
 
     return (

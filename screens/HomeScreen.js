@@ -84,7 +84,7 @@ const HomeScreen = ({ navigation }) => {
         })();
         
         // sendPushNotif();
-
+        fsFn.getDailyMedications(currentUser.uid);
         var hours = new Date().getHours();
         if (hours < 12) {
             setGreeting('Good morning');

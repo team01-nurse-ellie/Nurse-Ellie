@@ -232,7 +232,6 @@ const AddMedicationScreen = ({route, navigation }) => {
               (Alert.alert('', '\nYou have already added this medication'), resetUserInput()) :
               console.log(e);
           });
-
     } else {
       console.log('else addmedication user: ' + user);
       await fsFn.addMedication(user, medicationToAdd
@@ -277,7 +276,6 @@ const AddMedicationScreen = ({route, navigation }) => {
   return (
     <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
       <Background />
-      {console.log('first name : ' + firstName)}
       <TouchableOpacity style={PatientStyles.menuButton} onPress={() => navigation.openDrawer()}>
         <MenuIcon />
       </TouchableOpacity>
