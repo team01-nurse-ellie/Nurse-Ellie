@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Image, StyleSheet, FlatList, Button, Dimensions } from 'react-native';
-import { ScrollView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button, Dimensions } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable'
 import CheckBox from '@react-native-community/checkbox';
 import Background from '../components/background';
@@ -18,7 +18,6 @@ const SymptomChecklistScreen = ({ navigation }) => {
 
     // Variable to store value of 'HOW ARE YOU FEELING EMOTIONAL ICONS'
     let emotions_icon_value = 'No Feelings';
-    let pname = 'I dont have';
 
     const emotionClicked = (value) => {
         console.log("==>inside value: " + value);
@@ -33,8 +32,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
         } else if (value == 'VSI') {
             emotions_icon_value = 'Better'
         }
-        console.log("==>inside value: " + emotions_icon_value);
-    }
+            }
 
     //Having Pain or Discomfort
     let pain_Discomfort = 'No';
@@ -102,60 +100,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
 
         const symptomRef = firebase.firestore().collection('symptom')
         symptomRef.add(obj)
-
-
-        /** printing codes */
-        console.log("\n------------------\n");
-        console.log("its uid: " + patient_id);
-        console.log("Date: " + current_date);
-        console.log('Emotion Icons Value: ' + emotions_icon_value);
-        console.log('Having Pain or Discomfort: ' + pain_Discomfort);
-
-        headSelected == true ? console.log('Head YES') : console.log('Head NO');
-        chestSelected == true ? console.log('Chest YES') : console.log('Chest NO');
-        stomachSelected == true ? console.log('Stomach YES') : console.log('Stomach NO');
-        backSelected == true ? console.log('Back YES') : console.log('Back NO');
-        otherSelected == true ? console.log('Other YES') : console.log('Other NO');
-        console.log("Input 01: " + inputLineOneText);
-        console.log("pname before: " + pname);
-        console.log("pname after: " + pname);
-
-        achySelected == true ? console.log('Achy YES') : console.log('Achy NO');
-        burningSelected == true ? console.log('Burning YES') : console.log('Burning NO');
-        suddenSelected == true ? console.log('Sudden YES') : console.log('Sudden NO');
-        severeSelected == true ? console.log('Severe YES') : console.log('Severe NO');
-        squeezingSelected == true ? console.log('Squeezing YES') : console.log('Squeezing NO');
-        sharpSelected == true ? console.log('Sharp YES') : console.log('Sharp NO');
-        other2Selected == true ? console.log('Other2 YES') : console.log('Other2 NO');
-        console.log("Input 02: " + inputLineTwoText)
-
-        console.log("Additional Value: " + additionalText);
-
     }
-
-
-    const [patients, setPatients] = useState ([
-        
-        {
-            inputLineOneText: "This is line 1",
-            inputLineTwoText: "This is line 2",
-            additionalText: "This is additional text",
-
-            headSelected : true,
-            chestSelected : true,
-            stomachSelected : true,
-            backSelected : true,
-            otherSelected : true,
-
-            achySelected : true,
-            burningSelected : true,
-            suddenSelected : true,
-            severeSelected : true,
-            squeezingSelected : true,
-            sharpSelected : true,
-            other2Selected : true,
-        }
-    ]);
 
 
     return (
@@ -371,15 +316,7 @@ const SymptomChecklistScreen = ({ navigation }) => {
                         onPress = {
                             getFormValue
                         }
-                    />
-
-<FlatList data={patients} renderItem={({item}) => (
-                        <TouchableOpacity style={styles.lastButton} onPress={()=>navigation.navigate('pSymptomChecklistScreen', {item: item})}>
-                        <View><Text>Button to send data</Text></View>
-                        
-                    </TouchableOpacity>
-)}/>
-                    
+                    />                  
 
                 </ScrollView>
 
