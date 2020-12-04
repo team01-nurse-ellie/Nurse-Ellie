@@ -26,8 +26,10 @@ export async function addMedication (userId, medObj){
         throw Error('Cannot add medication, object does not contain "rxcui" property');
     }
     // Checks passed, ready to add medication to user collection
-    await userCollection.doc(userId).collection("medications").add(medObj
-        ).catch(error => {
+    return await userCollection.doc(userId).collection("medications").add(medObj)
+        .then(docRef => {
+            return docRef.id;
+        }).catch(error => {
             alert("Failed to add medication!");
         });
 }
