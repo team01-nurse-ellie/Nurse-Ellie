@@ -90,7 +90,6 @@ const EditMedicationScreen = ({route, navigation }) => {
             subscriber(); 
             unsubscribe();
         }
-
     }, [item]);
 
   const deleteMedication = async () => {

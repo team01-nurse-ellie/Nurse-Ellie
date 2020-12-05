@@ -282,6 +282,25 @@ const HomeScreen = ({ navigation }) => {
             </View>
         )
     }
+    // intakeMedication (uid, rxcui, timestamp, status, notifID)
+    // Swipeable completely to right, medication intake recorded as 'taken' and notification removed
+    const medTaken = (rxcui, notifID) => {
+        console.log('taken');
+        fsFn.intakeMedication(currentUser.uid, rxcui, (new Date()).getTime(), 'taken',notifID);
+    }
+    // Swipeable  completely to left, medication intake recored as 'missed' and notification removed
+    const medDismissed = (rxcui, notifID) => {
+        console.log('not taken');
+        fsFn.intakeMedication(currentUser.uid, rxcui, (new Date()).getTime(), 'missed',notifID);
+    }
+
+    const actionWillOpen = () => {
+        console.log('action will open');
+    }
+    const actionWillClose = () => {
+        console.log('action will close');
+    }
+
     // Load user's full name and current medications
     async function loadUserInfo() {
         const user = await usersRef.doc(currentUser.uid).get();
@@ -291,9 +310,9 @@ const HomeScreen = ({ navigation }) => {
     }
     // Load user's full name and current medications
     async function loadTodayMedNotifs() {
+        // see getDailyMedications definition for medNotif object properties
         const medNotifs = await fsFn.getDailyMedications(currentUser.uid);
         setMedications(medNotifs);
-        console.log(medNotifs[0]);
     }
     
     return (
@@ -331,7 +350,9 @@ const HomeScreen = ({ navigation }) => {
                 renderItem={({item}) => (
                     <Swipeable 
                     renderLeftActions={takenAction} 
-                    renderRightActions={dismissAction}>
+                    renderRightActions={dismissAction}
+                    onSwipeableLeftOpen={() => {medTaken(item.medication.rxcui, item.notification.id)}} 
+                    onSwipeableRightOpen={() => {medDismissed(item.medication.rxcui, item.notification.id)}}>
                         <MedicationCard>
                             <View style={styles.medicationInfoView}>
                             <Text style={styles.medicationFont}>{item.medication.nameDisplay}</Text>

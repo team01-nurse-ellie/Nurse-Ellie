@@ -21,47 +21,31 @@ import { firebase } from '../components/Firebase/config';
 const PatientDetailScreen = ({route, navigation}) => {
     const { item } = route.params;
     const [medications, setMedications] = useState([]);
-    // const [checklist, setChecklist] = useState();
-
 
     useEffect(()=>{
+        // Listener for current patient medications
         const subscriber = firebase.firestore().collection("users").doc(item.patientId).collection("medications")
         .onSnapshot(querySnapshot => {
             const meds = [];
             querySnapshot.forEach(documentSnapshot =>{
                 let id = documentSnapshot.id;
                 let data = documentSnapshot.data();
+                // in addition to medication obj, add additional props for AddMedication and EditMedication
                 meds.push({
-                    'docId' : id, // medication document id
-                    'medication': data, // the medication object (information and settings)
-                    'isPatient': true, // medication is for patient. used for route.params patient vs hp
+                    'docId' : id, // medication document id (in user collection)
+                    'medication': data, // the actual medication object (information and settings)
+                    'isPatient': true, // for screens to know if patient or HP (ie Add/Edit medication for HP or patient)
                     'patientId': item.patientId, // id of patient user document
                 })
             });
             setMedications(meds);
         });
 
-        // Find most recently submitted symptom checklist
-        // const symptomSubscriber = firebase.firestore().collection("users").doc(item.patientId).collection("symptomChecklists")
-        // .onSnapshot(querySnapshot => {
-        //     // get the most recently submitted symptom checklist
-        //     // querySnapshot is array of checklist objects
-        //     let mostRecentChecklist;
-        //     querySnapshot.forEach(checklist => {
-        //         // date comparison
-        //         // if checklist date > m
-        //     })
-        //     });
-        //     // now have the most recently submitted symtptom checklist
-        //     setChecklist(mostRecentChecklist);
-        // });
-
         // Unsubscribe from listeners when no longer in use
         return () => {
             subscriber();
-            // symptomSubscriber();
         };
-    },[item])
+    },[item]);
 
     return (
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
