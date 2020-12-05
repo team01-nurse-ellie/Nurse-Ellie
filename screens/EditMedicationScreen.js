@@ -307,7 +307,7 @@ const EditMedicationScreen = ({route, navigation }) => {
                         </Text>
                     </View>
                     <TouchableOpacity onPress={()=>setEditWarning(true)}>
-                        <Text style={styles.saveText}> SAVE </Text>
+                        <Text style={styles.saveText}> SAVE d</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ paddingBottom: 18 }} />

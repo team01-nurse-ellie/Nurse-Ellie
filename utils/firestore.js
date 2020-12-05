@@ -1,5 +1,7 @@
+import { take } from 'lodash';
 import { firebase } from '../components/Firebase/config';
 import { usersRef, alarmsRef } from './databaseRefs.js';
+import * as Notifications from 'expo-notifications';
 
 // Adds a medication to user collection
 const addMedication =  async (userId, medObj) => {
@@ -166,7 +168,7 @@ const getallPatients = async (hpUserId) => {
 
 // Retrieve todays medications from users medicationAlarms collection of Expo notifications
 const getDailyMedications = async (uid) => {
-    /*
+    /* 
     medNotif:
     {
         notification: 
@@ -176,7 +178,6 @@ const getDailyMedications = async (uid) => {
             rxcui: <rxNorm unique identifier for drug. property in medication>
             trigger: <millisecond UTC timestamp of intake time of notification>
         }
-        // (see medication.js, AddMedication orEditMedication screen for more complete object format)
         medication:  // the medication object (see medication.js for complete fields)
         {
             nameDisplay:,
@@ -191,6 +192,7 @@ const getDailyMedications = async (uid) => {
         medId: '' // the doc id of medication in user's collection
     }
     */
+
     let medNotifMatches = []   // medications that still need to be taken today
     let medNotif = {            // Stores both notification and medication info (see above comments)
         'notification': {},
@@ -230,9 +232,7 @@ const getDailyMedications = async (uid) => {
     }).catch(error => {
         console.log(error)
     });
-    // for (medNotif of medNotifMatches) {
-    //     // console.log('notif matches medication id: ' + medNotif.notification.medicationID);
-    // }
+
     const medRef = usersRef.doc(uid).collection("medications");
     // Add the medication object (has info & settings) from user collection to each medication notification
     for (medNotif of medNotifMatches) {
@@ -241,26 +241,25 @@ const getDailyMedications = async (uid) => {
         await medRef.doc(medId).get().then(querySnapshot => {
             medNotif.medication = querySnapshot.data();
             medNotif.medID = querySnapshot.id;
-            // console.log('medication data found for: ' + medNotif.medication.nameDisplay);
+
         })
     }
-    // console.log('\nNumber of medication notif matches for today: ' + medNotifMatches.length);
-    // console.log('\nfinal matches names: ');
-    // for (medNotif of medNotifMatches) {
-    //     console.log('medNotif medID: ' + medNotif.medID);
-    //     console.log('medNotif notification object notificationID: ' + medNotif.notification.medicationID);
-    //     console.log('medNotif medication object nameDisplay: ' + medNotif.medication.nameDisplay);
-    //     console.log('medNotif medication object rxcui: ' + medNotif.medication.rxcui + '\n');
-    // }
     return medNotifMatches;
 }
 
 // Records intake for medication scheduled for today. Checks if intake already recorded for medication
-const intakeMedication = async (uid, rxcui, timestamp, status, notifID) => {
+// dayOverride is for generating dummy data with generateIntakeDummyData
+const intakeMedication = async (
+    uid, // userId
+    rxcui, // unique drug identifer in each medication document
+    timestamp, // current time when time swipped. (new Date()).getTime()
+    status, // string of 'taken' or 'missed'
+    notifID = null, // Expo notification ID
+    dayOverride = null) => { // for use only with generateIntakeDummyData()
     /*
     medicationIntake: // Records intake history for one scheduled medication
-        timeTaken:
-        dayTaken:
+        timestampStatus:
+        dayStatus:
         rxcui:
         status:
     */
@@ -268,19 +267,19 @@ const intakeMedication = async (uid, rxcui, timestamp, status, notifID) => {
     // get todays date in UTC epoch time
     const MS_TO_DAYS = 86400000.0;
     let todayMs = (new Date()).getTime();
-    let todayDays = Math.floor(todayMs / MS_TO_DAYS);
+    let todayDays = dayOverride == null? Math.floor(todayMs / MS_TO_DAYS) : dayOverride;
     // Create intake object for intake history
     let intakeDoc = {
-        'dayTaken': todayDays,  // # days calculated from UTC milliseconds
+        'dayStatus': todayDays,  // # days calculated from UTC milliseconds
         'rxcui': rxcui,         // user independent unique identifier for each medication.
         'status': status,       // medication taken or not. 'taken'||'missed'
-        'timeTaken': timestamp, // UTC time in milliseconds
+        'timestampStatus': timestamp, // UTC time in milliseconds
     }
     usersRef.doc(uid).collection("medicationIntakes");
     // Check if medicationIntake of medication alreay exists for today
     await usersRef.doc(uid).collection("medicationIntakes")
         .where("rxcui", "==", rxcui)
-        .where("dayTaken", "==", todayDays)
+        .where("dayStatus", "==", todayDays)
         .get()
         .then(async querySnapshot => {
             if (!querySnapshot.empty) {
@@ -288,27 +287,64 @@ const intakeMedication = async (uid, rxcui, timestamp, status, notifID) => {
                 // console.log('Medication already has intake status for today!');
             }}
         ).catch(error => {
+            console.log('add intake error: rxcui = ' + rxcui);
+            console.log('add intake error: todayDays = ' + todayDays);
             console.log(error);
         });
     // If intake for today not already set then add today's intake history for scheduled medication
     if (!medNotifExists) {
         await usersRef.doc(uid).collection("medicationIntakes").add(intakeDoc)
-            .then(docRef => {
-                /********** Delete Notifcation in medicationAlarms and in Expo Notification */
+            .then(async docRef => {
+                /********** Delete Notifcation in  in Expo Notification */
+                await Notifications.cancelScheduledNotificationAsync(notifID).then(()=> {
+                    console.log(`cancelled notifs`);
+                }).catch(error => { throw error; });
+                /********** Delete Notifcation in  medicationAlarms *****/
 
-
-                /*************************************************************************** */
-                return docRef.id; // document id of successfully created intake
+                return;
             }).catch(error => {
                 console.log("Failed to add intake!");
             });
     }
 }
 
+// Inserts # Days of intake dummy data including today
+const generateIntakeDummyData = async (uid) => {
+    const NUM_DAYS = 8;     // specify # days to generate dummy data for, 
+    var days = [], timestamps = [], rxcuis = [], takenMissed =[];
 
-// TODO: Function to Insert 7 Days intake dummy data
+    // get unique rxcuis scheduled for user for today (all 7 days historical will use todays medications)
+    const dailyMeds = await getDailyMedications(uid);
+    rxcuis = dailyMeds.map(med =>{return med.medication.rxcui;});
 
+    // get todays date in UTC epoch time
+    const MS_TO_DAYS = 86400000.0;
+    let todayMs = (new Date()).getTime();
+    let todayDays = Math.floor(todayMs / MS_TO_DAYS);
 
+    // get last NUM_DAYS as UTC milliseconds and days
+    for (let day = 0; day < NUM_DAYS; day++) {
+        days.push(todayDays - day);
+        timestamps.push( (todayDays - day) * MS_TO_DAYS);
+    }
+    // console.log('generateDummy(): ' + days);
+    // console.log('generateDummy(): ' + timestamps);
+
+    // Fill takenMissed randomly with 1 (taken) or 0 (missed)
+    for (let i = 0; i < rxcuis.length; i++) {
+        takenMissed.push(Math.round(Math.random()));
+    }
+    // console.log('generateDummy(): takenMissed = ' + takenMissed);
+
+    // Create dummy intake for each medication for last NUM_DAYS days
+    for (let day = 0; day < NUM_DAYS; day++) {
+        // Set random status for each medication (rxcui)
+        for (let rx = 0; rx < rxcuis.length; rx++) {
+            let status = takenMissed[rx] == 0 ? 'missed' : 'taken';
+            intakeMedication(uid, rxcuis[rx], timestamps[day], status, null, days[day]);
+        }
+    }
+}
 
 
 /*
@@ -318,11 +354,6 @@ const intakeMedication = async (uid, rxcui, timestamp, status, notifID) => {
 const data = [
     { day: 'Sun', taken: 2, total: 2, label: "2"}, 
     { day: 'Mon', taken: 3, total: 3, label: "3"}, 
-    { day: 'Tue', taken: 1, total: 2, label: "1"}, 
-    { day: 'Wed', taken: 3, total: 3, label: "3"},
-    { day: 'Thr', taken: 3, total: 4, label: "3"}, 
-    { day: 'Fri', taken: 1, total: 2, label: "1"}, 
-    { day: 'Sat', taken: 3, total: 2, label: "3"},
 ] 
 */
 
@@ -345,4 +376,5 @@ export {
     getDailyMedications,
     intakeMedication,
     getWeekIntakeStats,
+    generateIntakeDummyData,
 }
