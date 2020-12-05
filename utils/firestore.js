@@ -2,6 +2,7 @@ import { take } from 'lodash';
 import { firebase } from '../components/Firebase/config';
 import { usersRef, alarmsRef } from './databaseRefs.js';
 import * as Notifications from 'expo-notifications';
+import { not } from 'react-native-reanimated';
 
 // Adds a medication to user collection
 const addMedication =  async (userId, medObj) => {
@@ -358,8 +359,8 @@ const generateIntakeDummyData = async (uid, allMeds=true) => {
         days.push(todayDays - day);
         timestamps.push( (todayDays - day) * MS_TO_DAYS);
     }
-    console.log('\ngenerateDummy(): for timestamps =' + timestamps);
-    console.log('generateDummy(): for days (from timestamps) =' + days);
+    console.log('\ngenerateDummy(): for timestamps = ' + timestamps);
+    console.log('generateDummy(): for days (from timestamps) = ' + days);
 
     // Fill takenMissed randomly with 1 (taken) or 0 (missed)
     for (let i = 0; i < rxcuis.length; i++) {
@@ -367,7 +368,8 @@ const generateIntakeDummyData = async (uid, allMeds=true) => {
     }
     // console.log('generateDummy(): takenMissed = ' + takenMissed);
 
-    console.log('generateDummy(): num rxcuis generating dummy data for ' + rxcuis.length);
+    console.log('generateDummy(): num rxcuis generating dummy data for = ' + rxcuis.length);
+    console.log('generateDummy(): num days generating dummy data for = ' + NUM_DAYS + '\n');
     // Create dummy intake for each medication for last NUM_DAYS days
     for (let day = 1; day < NUM_DAYS; day++) {
         // Set random status for each medication (rxcui)
@@ -414,8 +416,8 @@ const getTodayIntakePercentage = async (uid) => {
                     // 'No Time' = Remove time values (minutes, etc.) from firestore notification timestamp
                     let triggerNoTime = (Math.floor(notification.trigger / MS_TO_DAYS)) * MS_TO_DAYS;
                     // Count todays 'pending' notifications (need status), excluding those with have status 
-                    // Need check if rxcui has status,because user can reschedule a notification for drug that already has an intake 
-                    if (triggerNoTime == todayDaysNoTime && !rxcuisWithIntakeToday.includes(notification.rxui)) {
+                    // Need check if rxcui has status, because user can reschedule a notification for drug that already has an intake 
+                    if (triggerNoTime == todayDaysNoTime && !rxcuisWithIntakeToday.includes(notification.rxcui)) {
                         todayPendingNotif++;
                     }
                 })
@@ -425,11 +427,11 @@ const getTodayIntakePercentage = async (uid) => {
     
     // Calculate percentage. taken / ( missed + remaining)
     let intakePercentage = (takenCount / (missedCount + takenCount + todayPendingNotif)) * 100;
-    // console.log('\ntodayIntake%(): rxcuisWithIntakeToday = ' + rxcuisWithIntakeToday);
-    // console.log('todayIntake%(): taken = ' + takenCount + ' missed = ' + missedCount);
-    // console.log('todayIntake%(): todayPendingNotif = ' + todayPendingNotif);
-    // console.log('todayIntake%(): intakePercentage = taken / (missed + taken + pending)' );
-    // console.log('todayIntake%(): intakePercentage = ' + intakePercentage + '\n');
+    console.log('\ntodayIntake%(): rxcuisWithIntakeToday = ' + rxcuisWithIntakeToday);
+    console.log('todayIntake%(): taken = ' + takenCount + ' missed = ' + missedCount);
+    console.log('todayIntake%(): todayPendingNotif = ' + todayPendingNotif);
+    console.log('todayIntake%(): intakePercentage = taken / (missed + taken + pending)' );
+    console.log('todayIntake%(): intakePercentage = ' + intakePercentage + '\n');
     return isNaN(intakePercentage) ? 0 : Math.round(intakePercentage);
 }
 

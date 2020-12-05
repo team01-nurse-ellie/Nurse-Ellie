@@ -59,6 +59,13 @@ const HomeScreen = ({ navigation }) => {
     
     useEffect(()=> {
         (async ()=> {
+            // **********************************  DUMMY DATA GENERATOR **************************************************//
+            // Generate historical intake dummy data (excluding today!)  for current user (can specify num days in function)
+            // Simply uncomment -> save -> run -> re-comment below line
+            fsFn.generateIntakeDummyData(currentUser.uid);
+            // ***********************************************************************************************************//
+
+            
             let time = calculateLocalTimezone(1606435200000);
             console.log(time, "time");
             await registerForPushNotificationsAsync()
@@ -81,11 +88,6 @@ const HomeScreen = ({ navigation }) => {
                 
             // })
 
-            // **********************************  DUMMY DATA GENERATOR **************************************************//
-            // Generate historical intake dummy data (excluding today!)  for current user (can specify num days in function)
-            // Simply uncomment -> save + run -> re-comment
-            // fsFn.generateIntakeDummyData(currentUser.uid);
-            // ***********************************************************************************************************//
 
         })();
         // sendPushNotif();
