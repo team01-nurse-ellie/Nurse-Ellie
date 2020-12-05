@@ -299,8 +299,22 @@ const intakeMedication = async (
                 await Notifications.cancelScheduledNotificationAsync(notifID).then(()=> {
                     console.log(`cancelled notifs`);
                 }).catch(error => { throw error; });
-                /********** Delete Notifcation in  medicationAlarms *****/
-
+                /********** Delete notification in  medicationAlarms *****/
+                await alarmsRef.doc(uid).collection("medicationAlarms").get(
+                ).then(querySnapshot => {
+                    querySnapshot.forEach(alarm => {
+                        var notificationToDelete;
+                        alarm.notifications.forEach(notification => {
+                            if(notification.id == notifID) {
+                                notificationToDelete = notification.id
+                            }
+                        });
+                        // Delete notification by passing the notification object
+                        alarm.update({
+                            notifications: firebase.firestore.FieldValue.arrayRemove(notificationToDelete);
+                        })
+                    })
+                }) 
                 return;
             }).catch(error => {
                 console.log("Failed to add intake!");
