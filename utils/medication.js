@@ -1,5 +1,4 @@
 // medication.js
-
 /* Drug (rxcui) With Info
    Example: Monopril 10mg
         Object {
@@ -136,13 +135,6 @@ async function getRxcuisTermInfo(rxcuis) {
     if(rxcuis != undefined) {
         var rxcui;
         for (const element of rxcuis) {
-/*             rxcui = rxterms[element];
-            if (rxcui != undefined) rxcuisTermInfo.push(parseRxcuiTermInfo(rxcui)); */
-/*             const rxcui = await rxCollection.where('RXCUI', '==', element).get().then(querySnapshot => {
-                querySnapshot.forEach(e => {
-                    console.log(e.data());
-                });
-            }); */
             await rxCollection.doc(element).get().then(doc => rxcuisTermInfo.push(parseRxcuiTermInfo(doc.data())));
         }
     }
