@@ -4,14 +4,12 @@ import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
 import Background from '../components/background.js';
 import MenuIcon from '../assets/images/menu-icon.svg';
-import EntryIcon from '../assets/images/g-entry-arrow-icon.svg'
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 import RNPickerSelect from 'react-native-picker-select';
-import DatePicker from '../components/DatePicker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import ImagePicker from '../components/ImagePicker';
 
 const EditUserProfileScreen = ({navigation}) => {
     //state declare
@@ -20,10 +18,10 @@ const EditUserProfileScreen = ({navigation}) => {
     const usersRef = firebase.firestore().collection('users')
     const [gender, setGender] = useState('none')
    // const [bdate, setDate] = useState('2020-11-24T05:00:00.000Z');
-    const [image, setImage] = useState(null);
     const [dateVisi, setDateVisi] = useState(false);
     const [date, setDate] = useState('');
- 
+    const [image, setImage] = useState('1');
+
     //update user profile to firebase
    const onEditUser = async (res) => {
    const data = await firebase.auth().currentUser.uid
@@ -136,9 +134,13 @@ return (
     </TouchableOpacity>
     <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: screenHeight / 10 }}>
-        <NurseEllieLogo height={75} style={{ flex: 1, marginRight: '5%' }} />
+    <TouchableOpacity style={styles.menuButton}>
+    <ImagePicker selected={image} onSelect={setImage} height={75} style={{ flex: 1, marginRight: '5%' }} />
+
+    </TouchableOpacity>
         <Text style={{ fontFamily: 'roboto-regular', fontSize: 25, paddingRight: 30}}> {`Edit User Profile`}</Text>
     </View>
+  
     <Text>Full Name: </Text>
     <TextInput style={styles.textInput} placeholder={user && user?.fullName} autoCapitalize="none"  onChangeText={(text) => setFullName(text)}
                     value={fullName} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
@@ -146,10 +148,8 @@ return (
      <TextInput style={styles.textInput} typep="email" placeholder={user && user?.email} autoCapitalize="none"  onChangeText={(text) => setEmail(text)}
                     value={email} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>               
 
-    
-        
-        <Text></Text>
-        <View style={{
+
+            <View style={{
                     paddingVertical: 0,
                     paddingHorizontal: 0,
                     flexDirection: "row",
@@ -205,7 +205,6 @@ return (
                  
                 </TouchableOpacity>
         </View>
-
 
 
         <View style={styles.container}>

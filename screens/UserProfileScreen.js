@@ -1,5 +1,5 @@
 import React, { useState, useEffect }from 'react';
-import { View, Text, TouchableOpacity, Image, Dimensions, StyleSheet} from 'react-native';
+import { View, Text, TouchableOpacity, Image, Dimensions, StyleSheet, FlatList} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
 import Background from '../components/background.js';
@@ -8,12 +8,25 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 import EditIcon from '../assets/images/edit-icon.svg';
-import moment from 'moment';
-
+import ImagePicker from '../components/ImagePicker';
+import UserIconIndex from '../components/UserImages';
 const UserProfileScreen = ({navigation}) => {
     //state declare
+
     const [user, setUser] = useState();
-    const [newdate, setgetDate] = useState();
+    const [images, setimages] = useState([
+        require('../assets/images/dp1.svg'),
+        require('../assets/images/dp2.svg'),
+        require('../assets/images/dp3.svg'),
+        require('../assets/images/dp4.svg'),
+        require('../assets/images/dp5.svg'),
+        require('../assets/images/dp6.svg'),
+        require('../assets/images/dp7.svg'),
+        require('../assets/images/dp8.svg'),
+        require('../assets/images/dp9.svg')
+      ]);
+    
+
     const onEditUser = () => {
         navigation.navigate('EditUserProfileScreen');
     };
@@ -29,7 +42,6 @@ const UserProfileScreen = ({navigation}) => {
   
         const userData = documentSnapshot.data();
         console.log(userData);
-        console.log(userData.date.toDate());
 
         setUser(userData);
       } catch(error) {
@@ -55,18 +67,23 @@ return (
         <NurseEllieLogo height={75} style={{ flex: 1, marginRight: '5%' }} />
         <Text style={{ fontFamily: 'roboto-regular', fontSize: 25, paddingRight: 30}}> {`User Profile`}</Text>
         <TouchableOpacity onPress={() => { onEditUser(); }}>
-<EditIcon />
+            <EditIcon />
     </TouchableOpacity>
     </View>
     <View>
-   
+
     <Text style={{fontSize: 18, color: "black", alignContent: "flex-start", paddingLeft: 0}}>Full name: {user && user?.fullName}</Text>
     <Text style={{fontSize: 18, color: "black", alignContent: "flex-start", paddingLeft: 0}}>Email : {user && user?.email}</Text>
     <Text style={{fontSize: 18, color: "black", alignContent: "flex-start", paddingLeft: 0}}>Gender : {user && user?.gender}</Text>
     <Text style={{fontSize: 18, color: "black", alignContent: "flex-start", paddingLeft: 0}}>
-    Date Of Birth: {user && user.date && user.date.seconds && new Date(user.date.seconds * 1000).toLocaleDateString("en-US")}
-</Text>
-        
+        Date Of Birth: {user && user.date && user.date.seconds && new Date(user.date.seconds * 1000).toLocaleDateString("en-US")}
+    </Text>
+   
+                                    
+                           
+   
+   
+   
     </View>
     
     <View style={styles.whitePadding}/>

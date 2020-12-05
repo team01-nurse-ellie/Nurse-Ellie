@@ -2,7 +2,7 @@ import React from 'react';
 import { Easing, StyleSheet, Dimensions, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import Modal from 'react-native-modalbox';
 import PropTypes from 'prop-types';
-import UserImage from '../components/UserImages';
+import UserIconIndex from '../components/UserImages';
 
 class Component extends React.Component {
     constructor(props){
@@ -13,7 +13,7 @@ class Component extends React.Component {
         };
     }
 
-    onImagePress = (medKey) => {
+    onIconPress = (medKey) => {
         this.setState({ selected: medKey });
     };
 
@@ -39,7 +39,7 @@ class Component extends React.Component {
         return (
             <React.Fragment>
                 <TouchableWithoutFeedback onPress={this.onModalOpen} >
-                    {selected ? UserImage.index[this.props.selected] : UserImage.index[1]}
+                    {selected ? UserIconIndex.index[this.props.selected] : UserIconIndex.index[1]}
                 </TouchableWithoutFeedback>
                 <Modal
                     animationDuration={300}
@@ -53,11 +53,11 @@ class Component extends React.Component {
                     swipeToClose={false}
                 >
                     <View style={styles.innerModal}>
-                        <Text style={styles.headerText}> Select a User Image </Text>
+                        <Text style={styles.headerText}> Select a Medication Icon </Text>
                         <View style={styles.iconContainer}>
-                            {Object.keys(UserImage.index).map((key) => (
-                                <TouchableOpacity key={key} onPress={()=> this.onImagePress(key)} style={styles.medicationIcon}>
-                                    {UserImage.index[key]}
+                            {Object.keys(UserIconIndex.index).map((key) => (
+                                <TouchableOpacity key={key} onPress={()=> this.onIconPress(key)} style={styles.medicationIcon}>
+                                    {UserIconIndex.index[key]}
                                 </TouchableOpacity>
                             ))}
                         </View>
