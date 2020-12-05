@@ -378,11 +378,11 @@ const generateIntakeDummyData = async (uid, allMeds=true) => {
     }
 }
 
-// Return percentage (whole number) of daily medications 'taken' / total daily medications scheduled
+// Return percentage (whole number) of daily medications ('taken' / total daily medications scheduled)
 const getTodayIntakePercentage = async (uid) => {
     let takenCount = 0  // # medicationIntake with 'taken' status for today
     , missedCount = 0   // # medicationIntake with 'missed' status for today
-    , todayPendingNotif = 0; // # notifications for today (if notification exists, then there is no medicationIntake for it)
+    , todayPendingNotif = 0; // # notifications for today (does not count rxcuis that already medicationIntake status for today )
     let rxcuisWithIntakeToday = []; // drugs (rxcuis) which already have a medicationIntake status for today
     // get todays date in UTC epoch time
     const MS_TO_DAYS = 86400000;
@@ -390,7 +390,7 @@ const getTodayIntakePercentage = async (uid) => {
     // let todayDays = Math.floor(todayMs / MS_TO_DAYS);
     let todayDays = Math.floor(todayMs / MS_TO_DAYS);
     let todayDaysNoTime  = todayDays * MS_TO_DAYS;
-    // get intake history for today
+    // get counts of intake history for today
     await usersRef.doc(uid).collection("medicationIntakes").where("dayStatus", "==", todayDays).get()
     .then(async querySnapshot => {
         if (!querySnapshot.empty) {
@@ -405,7 +405,7 @@ const getTodayIntakePercentage = async (uid) => {
         }}
     ).catch(error => {console.log(error);});
     
-    // get # of remaining notifications with no intake status
+    // get # of pending notifications (where rxcui doesn't already have a medicationIntake status for today)
     await alarmsRef.doc(uid).collection('medicationAlarms').get().then(async querySnapshot => {
         querySnapshot.forEach(alarm => {
             if (!querySnapshot.empty) {

@@ -292,22 +292,11 @@ const HomeScreen = ({ navigation }) => {
     // intakeMedication (uid, rxcui, timestamp, status, notifID)
     // Swipeable completely to right, medication intake recorded as 'taken' and notification removed
     const medTaken = (rxcui, notifID) => {
-        console.log('taken');
-        console.log('medTaken: trying to delete notifID: ' + notifID);
         fsFn.intakeMedication(currentUser.uid, rxcui, (new Date()).getTime(), 'taken',notifID);
     }
     // Swipeable  completely to left, medication intake recored as 'missed' and notification removed
     const medDismissed = (rxcui, notifID) => {
-        console.log('not taken');
-        console.log('medTaken: trying to delete notifID: ' + notifID);
         fsFn.intakeMedication(currentUser.uid, rxcui, (new Date()).getTime(), 'missed',notifID);
-    }
-
-    const actionWillOpen = () => {
-        console.log('action will open');
-    }
-    const actionWillClose = () => {
-        console.log('action will close');
     }
 
     // Load user's full name and current medications
