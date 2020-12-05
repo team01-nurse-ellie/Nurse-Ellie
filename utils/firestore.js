@@ -1,3 +1,4 @@
+// firestore.js - firestore functions for medications
 import { take } from 'lodash';
 import { firebase } from '../components/Firebase/config';
 import { usersRef, alarmsRef } from './databaseRefs.js';
@@ -116,18 +117,6 @@ const updateMedication = async (userId, medId, medObj) => {
         console.log("Could not update medication document" + medId + error);
     })
 }
-
-// get user's full name
-const getUserName = async (userId) => {
-    usersRef.doc(userId).get().then(doc => {
-        if (!doc.exists) {
-            console.log('No such user document!');
-        } else {
-            return doc.data();
-        }
-    })
-}
-
 
 // Return array of patients with their medications
 const getallPatients = async (hpUserId) => {
@@ -375,11 +364,51 @@ const data = [
 */
 
 // Retrieve intake statistics for: last 7 days, yesterday, today, tomorrow
-const getWeekIntakeStats = async (rxcui, timestamp,status) => {
+const getWeekIntakeStats = async (uid) => {
+    /*
+    last7Days : {
+        { day: 'Sat', taken: 3, , missed: 0, total: 2, label: "3"}
+        ....
+        { day: 'Sat', taken: 3, , missed: 0, total: 2, label: "3"}
+    }
+    yesterdayStatus : 'Completed / # missed'
+    todayStatus: 'Completed / # missed'
+    tomorrowStatus: # medications
+    generalStatus: 90% Excellent, Needs Improvement
+    */
+
+    // get medication intake stats for last 7 days, today
+    // {rxcui: 2139234, missed: 2, taken:4, total:6 }
+    const intake = await usersRef.doc(uid).collection("medicationIntakes").get().then()
+
+
+    // get week stats
+    // get alarms for user -> go into medicationAlarms  ->
+    const stats = await alarmsRef.doc(uid).collection("medicationAlarms").get()
+        .then( async querySnapshot => {
+            // for each alarm/medication get medication intake for last 7, today
+            
+        })
+
     // User -> medicationIntake -> intake docs
+    // Get last 8 days of status of medication intakes (taken, missed, both)
+
+
+    // Get today's and tomorrows number of notifications - 
+
+
+    // 
     return null;
 }
 
+// Get days status
+// { day: 'Sat', taken: 3, , missed: 0, total: 2, label: "3"}
+const getDayStats= (uid, day) => {
+    // get alarms for user -> go into medicationAlarms  ->
+
+    // 
+
+}
 
 export {
     addMedication,
@@ -388,10 +417,9 @@ export {
     getMedication,
     removeMedication,
     updateMedication,
-    getUserName,
     getallPatients,
     getDailyMedications,
     intakeMedication,
-    getWeekIntakeStats,
     generateIntakeDummyData,
+    getWeekIntakeStats,
 }

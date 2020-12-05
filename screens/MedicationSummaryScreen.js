@@ -70,7 +70,7 @@ const MedicationSummary = ({ navigation }) => {
                     </View>
                 </Card>
                 <View style={{paddingVertical: 4}} />
-                <Card>
+                {/* <Card>
                     <View>
                         <Text style={styles.cardTitle}> Blood Glucose Level </Text>
                         <Text style={styles.descriptionFont}> Last Recorded: </Text>
@@ -83,7 +83,7 @@ const MedicationSummary = ({ navigation }) => {
                     <View style={styles.timeView}>
                         <Text style={styles.measurement}>140mg/dl</Text>
                     </View>
-                </Card>
+                </Card> */}
                 <View style={{paddingVertical: 4}} />
                 <Button
                     title="Share Results"
