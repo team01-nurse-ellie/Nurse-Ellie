@@ -12,16 +12,16 @@ import MenuIcon from '../assets/images/hp-menu-icon';
 import EditIcon from '../assets/images/edit-icon';
 import PlusIcon from '../assets/images/plus-icon';
 import EnterIcon from '../assets/images/entry-triangle-icon.svg';
-import DissatisifiedIcon from '../assets/images/scale-dissatisfied-icon';
 import TempAvatar from '../assets/images/temp-avatar';
 
 import { getValueFormatted, dateFromToday } from '../utils/utils';
 import { firebase } from '../components/Firebase/config';
+import { all } from 'q';
 
 const PatientDetailScreen = ({route, navigation}) => {
     const { item } = route.params;
     const [medications, setMedications] = useState([]);
-
+    const [checklist, setChecklist] = useState();
     useEffect(()=>{
         // Listener for current patient medications
         const subscriber = firebase.firestore().collection("users").doc(item.patientId).collection("medications")
@@ -41,14 +41,53 @@ const PatientDetailScreen = ({route, navigation}) => {
             setMedications(meds);
         });
 
+        // Find most recently submitted symptom checklist
+        const symptomSubscriber = firebase.firestore().collection("users").doc(item.patientId).collection("symptomChecklists")
+        .onSnapshot(querySnapshot => {
+            loadMostRecentSnapshot();
+        });
+
         // Unsubscribe from listeners when no longer in use
         return () => {
             subscriber();
+            symptomSubscriber();
         };
     },[item]);
 
+
+    // Load user's full name and current medications
+    async function loadMostRecentSnapshot() {
+        firebase.firestore().collection("users").doc(item.patientId).collection("symptomChecklists")
+        .get().then(querySnapshot => {
+            const allChecklists = [];
+            let mostRecentChecklist;
+            let comparisonChecklist;
+            querySnapshot.forEach(documentSnapshot => {
+                let id = documentSnapshot.id;
+                let data = documentSnapshot.data();
+                allChecklists.push({
+                    'docId': id, 
+                    'checklist': data
+                 })
+            });
+            allChecklists.forEach(list => {
+                if (mostRecentChecklist === undefined){
+                    mostRecentChecklist = list;
+                } else {
+                    comparisonChecklist = list;
+                       if (comparisonChecklist.checklist.dateSubmitted.seconds > mostRecentChecklist.checklist.dateSubmitted.seconds){
+                         mostRecentChecklist = list;
+                     }
+                 }
+             })
+            setChecklist(mostRecentChecklist);
+        });
+    }
+
     return (
+
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
+            <Text>{console.log(checklist)}</Text>
             <Background/>
             <TouchableOpacity style={styles.menuButton} onPress={()=> navigation.openDrawer()}>
                 <MenuIcon/>
@@ -116,15 +155,14 @@ const PatientDetailScreen = ({route, navigation}) => {
                         Symptom Checklist
                     </Text>
                 </View>
-                <Card>
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                        <Text style={styles.apptFont}> Completed Date: </Text>
-                        <Text style={styles.dateFont}> Monday, October 12, 2020 </Text>
-                    </View>
-                    <View style={{alignItems: 'center', paddingTop: 3}}>
-                        <DissatisifiedIcon/>
-                    </View>
-                </Card>
+                <TouchableOpacity onPress={()=>{navigation.navigate('SymptomChecklistDetail', {item: checklist})}}>
+                    <Card>
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap'}}>
+                            <Text style={styles.dateFont}> Last Complaint: </Text>
+                            <Text style={styles.dateFont}> {checklist ? checklist.checklist.additionalDetails: 'placeholder'}</Text>
+                        </View>
+                    </Card>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={()=>Alert.alert("requesting symptom checklist...")}>
                     <View style={{flexDirection: 'row'}}>
                         <Text style={styles.clickableFont}> 
