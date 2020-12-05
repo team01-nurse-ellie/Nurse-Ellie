@@ -364,19 +364,68 @@ const generateIntakeDummyData = async (uid) => {
 }
 
 
-/*
-    // label == taken
-    { day: 'Sat', taken: 3, , missed: 0, total: 2, label: "3"},
 
+
+/*
 const data = [
     { day: 'Sun', taken: 2, total: 2, label: "2"}, 
     { day: 'Mon', taken: 3, total: 3, label: "3"}, 
 ] 
 */
 
-// Retrieve intake statistics for: last 7 days, yesterday, today, tomorrow
-const getWeekIntakeStats = async (rxcui, timestamp,status) => {
-    // User -> medicationIntake -> intake docs
+// Retrieve intake statistics for: last 7 days, today and tomorrow
+// Should return in format that VictorChart and VictoryBar in MedicationSummary requires:
+//     { day: 'Sun', taken: 2, total: 2, label: "2"}
+const getWeekIntakeStats = async (uid) => {
+    // drpark@gmail.com pass:CPAF2020 has 7 days of dummy data for 6 medications 
+    /*
+    in users->medicationIntakes
+    medicationIntake: {
+        dayStatus: (day = timeStampStatus / 86400000)
+        rxcui:
+        status: missed||taken
+        timeStampStatus: timestamp(ms) 
+    }
+    */
+
+
+    /*
+    // final return object for getWeekIntakeStats():
+        // allIntakeStats: {
+            last7Days : {
+                { day: 'Sat', taken: 3, total: 2, label: "3"}
+                ....
+                { day: 'Sat', taken: 3, total: 2, label: "3"}
+            },
+            yesterdayStatus : , // 'Completed / # missed'
+            todayStatus: ,      // 'Completed / # missed'
+            tomorrowStatus: ,   // # medications
+            generalStatus: ,    // >= 90% Excellent, otherwise Needs Improvement
+        }
+        */
+
+    // TODO: get medication intake stats for last 7 days, today
+    // {missed: 2, taken:4, total:6 }
+    const intake = await usersRef.doc(uid).collection("medicationIntakes").get().then()
+
+
+    // Need to retrieve data depending if it is previous days, today, or tomorrow:
+
+    // For Previous 7 days need only:
+    //   1. (taken/missed). user->medicationIntakes
+    // For Today, need to get both:
+    //   1. (taken/missed). user->medicationIntakes
+    //   2. (not yet taken/missed). medicationAlarms->notifications 
+    // For Tomorrow need only:
+    //   1. (not yet taken/missed) medicationAlarms->notifications 
+    const stats = await alarmsRef.doc(uid).collection("medicationAlarms").get()
+        .then( async querySnapshot => {
+            // for each alarm/medication get medication intake for last 7, today
+            
+        })
+
+
+
     return null;
 }
 
