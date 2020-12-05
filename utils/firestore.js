@@ -365,14 +365,6 @@ const generateIntakeDummyData = async (uid) => {
 
 
 
-
-/*
-const data = [
-    { day: 'Sun', taken: 2, total: 2, label: "2"}, 
-    { day: 'Mon', taken: 3, total: 3, label: "3"}, 
-] 
-*/
-
 // Retrieve intake statistics for: last 7 days, today and tomorrow
 // Should return in format that VictorChart and VictoryBar in MedicationSummary requires:
 //     { day: 'Sun', taken: 2, total: 2, label: "2"}
@@ -404,13 +396,10 @@ const getWeekIntakeStats = async (uid) => {
         }
         */
 
-    // TODO: get medication intake stats for last 7 days, today
-    // {missed: 2, taken:4, total:6 }
-    const intake = await usersRef.doc(uid).collection("medicationIntakes").get().then()
-
-
+    // TODO: get medication intake stats for last 7 days, today, tomorrow
+    
     // Need to retrieve data depending if it is previous days, today, or tomorrow:
-
+    
     // For Previous 7 days need only:
     //   1. (taken/missed). user->medicationIntakes
     // For Today, need to get both:
@@ -418,6 +407,7 @@ const getWeekIntakeStats = async (uid) => {
     //   2. (not yet taken/missed). medicationAlarms->notifications 
     // For Tomorrow need only:
     //   1. (not yet taken/missed) medicationAlarms->notifications 
+    const intake = await usersRef.doc(uid).collection("medicationIntakes").get().then()
     const stats = await alarmsRef.doc(uid).collection("medicationAlarms").get()
         .then( async querySnapshot => {
             // for each alarm/medication get medication intake for last 7, today
