@@ -205,17 +205,14 @@ const getDailyMedications = async (uid) => {
     let todayMs = todayDate.getTime();
     let todayDays = Math.floor(todayMs /MS_TO_DAYS);
 
-    // An alarm document corresponds to one user. It's doc id matches it's user's doc id
-    // A medicationAlarm document corresponds to single mediction.
-    // A medicationAlarm contain an array of the daily notifications for that medication
+    // An alarm document corresponds to one user. It's document id matches it's user's document id
+    // A medicationAlarm document corresponds to single mediction and has array of all daily notifications for that medication
 
     // Find medications notifications that need to be taken today
     await alarmsRef.doc(uid).collection("medicationAlarms").get(     
     ).then(async querySnapshot => {
         // Check all medication alarms
         querySnapshot.forEach( medAlarm => {
-            // console.log('medAlarm document ids: ' + medAlarm.id);
-            // console.log('medAlarm notification length is: ' + medAlarm.data().notifications.length);
             // check single medication's notifications if scheduled for today
             let dailyNotifications = medAlarm.data().notifications;
             dailyNotifications.forEach( notification => {
@@ -254,16 +251,12 @@ const intakeMedication = async (
     rxcui, // unique drug identifer in each medication document
     timestamp, // current time when time swipped. (new Date()).getTime()
     status, // string of 'taken' or 'missed'
-    notifID = null, // Expo notification ID
-    dayOverride = null) => { // for use only with generateIntakeDummyData()
-    /*
-    medicationIntake: // Records intake history for one scheduled medication
-        timestampStatus:
-        dayStatus:
-        rxcui:
-        status:
-    */
-    var medNotifExists = false;
+    notifID = null, // Expo notification ID of notification to be removed after intake successful
+    dayOverride = null // for use only with generateIntakeDummyData()
+    ) => { 
+        
+    console.log('entered intake');    
+    var medIntakeExists = false;
     // get todays date in UTC epoch time
     const MS_TO_DAYS = 86400000.0;
     let todayMs = (new Date()).getTime();
@@ -283,53 +276,60 @@ const intakeMedication = async (
         .get()
         .then(async querySnapshot => {
             if (!querySnapshot.empty) {
-                medNotifExists = true;
+                medIntakeExists = true;
                 // console.log('Medication already has intake status for today!');
             }}
         ).catch(error => {
-            console.log('add intake error: rxcui = ' + rxcui);
-            console.log('add intake error: todayDays = ' + todayDays);
             console.log(error);
         });
-    // If intake for today not already set then add today's intake history for scheduled medication
-    if (!medNotifExists) {
+    // If medication not taken today, add intake and delete notification
+    if (!medIntakeExists) {
+        var alarmID, filteredNotifications, notificationIDFound;
         await usersRef.doc(uid).collection("medicationIntakes").add(intakeDoc)
-            .then(async docRef => {
-                /********** Delete Notifcation in  in Expo Notification */
+        .then(async docRef => {
+            if (notifID!=null){
+                // Delete Expo Notification for taken/missed medication
                 await Notifications.cancelScheduledNotificationAsync(notifID).then(()=> {
-                    console.log(`cancelled notifs`);
                 }).catch(error => { throw error; });
-                /********** Delete notification in  medicationAlarms *****/
+                // Delete medicationAlarms notification for taken/missed medication
                 await alarmsRef.doc(uid).collection("medicationAlarms").get(
-                ).then(querySnapshot => {
-                    querySnapshot.forEach(alarm => {
-                        var notificationToDelete;
-                        alarm.notifications.forEach(notification => {
-                            if(notification.id == notifID) {
-                                notificationToDelete = notification.id
-                            }
-                        });
-                        // Delete notification by passing the notification object
-                        alarm.update({
-                            notifications: firebase.firestore.FieldValue.arrayRemove(notificationToDelete);
+                    ).then(querySnapshot => {
+                        // find id of alarm document that contains notification to be removed
+                        querySnapshot.forEach(alarm => {
+                            alarm.data().notifications.forEach(notification => {
+                                if(notification.id == notifID) {
+                                    notificationIDFound = true;
+                                    alarmID = alarm.id;
+                                    filteredNotifications = alarm.data().notifications.filter(n=> n.id != notifID);
+                                }})
                         })
-                    })
-                }) 
+                    });
+                // Delete take/missed medication's notification from alarm
+                if (notificationIDFound == true) { 
+                    alarmsRef.doc(uid).collection("medicationAlarms").doc(alarmID).update({ notifications: filteredNotifications});
+                }
                 return;
-            }).catch(error => {
-                console.log("Failed to add intake!");
-            });
+            }
+        }).catch(error => {
+            console.log("Failed to add intake!");
+            console.log(error);
+        });
+    } else {
+
     }
 }
 
 // Inserts # Days of intake dummy data including today
 const generateIntakeDummyData = async (uid) => {
+    console.log('generating dummy data');
     const NUM_DAYS = 8;     // specify # days to generate dummy data for, 
     var days = [], timestamps = [], rxcuis = [], takenMissed =[];
 
-    // get unique rxcuis scheduled for user for today (all 7 days historical will use todays medications)
+    // get unique rxcuis scheduled for user for today (generate dummy data based on rxcui retreived)
     const dailyMeds = await getDailyMedications(uid);
     rxcuis = dailyMeds.map(med =>{return med.medication.rxcui;});
+    // const dailyMeds = await getAllMedications(uid);
+    // rxcuis = dailyMeds.map(med =>{return med.rxcui;});
 
     // get todays date in UTC epoch time
     const MS_TO_DAYS = 86400000.0;
@@ -341,8 +341,8 @@ const generateIntakeDummyData = async (uid) => {
         days.push(todayDays - day);
         timestamps.push( (todayDays - day) * MS_TO_DAYS);
     }
-    // console.log('generateDummy(): ' + days);
-    // console.log('generateDummy(): ' + timestamps);
+    console.log('generateDummy(): ' + days);
+    console.log('generateDummy(): ' + timestamps);
 
     // Fill takenMissed randomly with 1 (taken) or 0 (missed)
     for (let i = 0; i < rxcuis.length; i++) {
@@ -350,10 +350,13 @@ const generateIntakeDummyData = async (uid) => {
     }
     // console.log('generateDummy(): takenMissed = ' + takenMissed);
 
+    console.log('num rxcuis ' + rxcuis.length);
     // Create dummy intake for each medication for last NUM_DAYS days
-    for (let day = 0; day < NUM_DAYS; day++) {
+    for (let day = 1; day < NUM_DAYS; day++) {
+        console.log('day ' + day);
         // Set random status for each medication (rxcui)
         for (let rx = 0; rx < rxcuis.length; rx++) {
+            console.log(rx);
             let status = takenMissed[rx] == 0 ? 'missed' : 'taken';
             intakeMedication(uid, rxcuis[rx], timestamps[day], status, null, days[day]);
         }

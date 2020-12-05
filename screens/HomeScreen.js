@@ -81,10 +81,8 @@ const HomeScreen = ({ navigation }) => {
                 
             // })
 
-            // Daily medication listener
-
             // testing dummy data
-            fsFn.generateIntakeDummyData('BnrZvzMr3bcm3ZXKh7W6f4EYnTH3');
+            // fsFn.generateIntakeDummyData('BnrZvzMr3bcm3ZXKh7W6f4EYnTH3');
 
         })();
         // sendPushNotif();
