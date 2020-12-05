@@ -244,8 +244,8 @@ const getDailyMedications = async (uid) => {
     return medNotifMatches;
 }
 
-// Records intake for medication scheduled for today. Checks if intake already recorded for medication
-// dayOverride is for generating dummy data with generateIntakeDummyData
+// Records intake for medication scheduled for today. 
+// Checks if intake already recorded for medication (rxcui cannot have more than on record per day)
 const intakeMedication = async (
     uid, // userId
     rxcui, // unique drug identifer in each medication document
@@ -254,9 +254,9 @@ const intakeMedication = async (
     notifID = null, // Expo notification ID of notification to be removed after intake successful
     dayOverride = null // for use only with generateIntakeDummyData()
     ) => { 
-        
-    console.log('entered intake');    
+    
     var medIntakeExists = false;
+    var existingIntakeDoc;
     // get todays date in UTC epoch time
     const MS_TO_DAYS = 86400000.0;
     let todayMs = (new Date()).getTime();
@@ -268,7 +268,6 @@ const intakeMedication = async (
         'status': status,       // medication taken or not. 'taken'||'missed'
         'timestampStatus': timestamp, // UTC time in milliseconds
     }
-    usersRef.doc(uid).collection("medicationIntakes");
     // Check if medicationIntake of medication alreay exists for today
     await usersRef.doc(uid).collection("medicationIntakes")
         .where("rxcui", "==", rxcui)
@@ -277,59 +276,77 @@ const intakeMedication = async (
         .then(async querySnapshot => {
             if (!querySnapshot.empty) {
                 medIntakeExists = true;
-                // console.log('Medication already has intake status for today!');
+                querySnapshot.forEach( intake => {
+                    // get reference to existing intake doc, so its status and time can be overwritten
+                    existingIntakeDoc = intake.id;
+                    // console.log('data of existing medication' + intake.data());
+                    // console.log('Medication already has intake status for today!');
+                })
             }}
         ).catch(error => {
             console.log(error);
         });
-    // If medication not taken today, add intake and delete notification
+    // If medication has no intake record for today, add intake record
     if (!medIntakeExists) {
-        var alarmID, filteredNotifications, notificationIDFound;
         await usersRef.doc(uid).collection("medicationIntakes").add(intakeDoc)
         .then(async docRef => {
-            if (notifID!=null){
-                // Delete Expo Notification for taken/missed medication
-                await Notifications.cancelScheduledNotificationAsync(notifID).then(()=> {
-                }).catch(error => { throw error; });
-                // Delete medicationAlarms notification for taken/missed medication
-                await alarmsRef.doc(uid).collection("medicationAlarms").get(
-                    ).then(querySnapshot => {
-                        // find id of alarm document that contains notification to be removed
-                        querySnapshot.forEach(alarm => {
-                            alarm.data().notifications.forEach(notification => {
-                                if(notification.id == notifID) {
-                                    notificationIDFound = true;
-                                    alarmID = alarm.id;
-                                    filteredNotifications = alarm.data().notifications.filter(n=> n.id != notifID);
-                                }})
-                        })
-                    });
-                // Delete take/missed medication's notification from alarm
-                if (notificationIDFound == true) { 
-                    alarmsRef.doc(uid).collection("medicationAlarms").doc(alarmID).update({ notifications: filteredNotifications});
-                }
-                return;
-            }
+            // medication intake is added
         }).catch(error => {
             console.log("Failed to add intake!");
             console.log(error);
         });
-    } else {
+    } 
+    // If medication has intake record, overwrite record
+    else {
+        await usersRef.doc(uid).collection("medicationIntakes").doc(existingIntakeDoc).set(intakeDoc
+            ).catch(error => {console.log(error);});
+    }
 
+    // Delete today's notification data for medication
+    if (notifID!=null){
+        // Delete Expo Notification for taken/missed medication
+        await Notifications.cancelScheduledNotificationAsync(notifID).then(()=> {
+        }).catch(error => { throw error; });
+        // Only delete Expo notification and medicationAlarms notification
+        // console.log('intake(): intake status exists. trying to delete notifID');
+        let alarmID, filteredNotifications, notificationIDFound;
+        // Delete medicationAlarms notification for taken/missed medication
+        await alarmsRef.doc(uid).collection("medicationAlarms").get().then(querySnapshot => {
+            // find id of alarm document that contains notification to be removed
+            querySnapshot.forEach(alarm => {
+                alarm.data().notifications.forEach(notification => {
+                    if(notification.id == notifID) {
+                        notificationIDFound = true;
+                        alarmID = alarm.id;
+                        // console.log('intake(): deleting inside alarmID = ' + alarmID);
+                        // console.log('intake(): deleting notificationID = ' + notifID);
+                        // console.log('intake(): notification trigger = ' + notification.trigger);
+                        filteredNotifications = alarm.data().notifications.filter(n=> n.id != notifID);
+                    }})
+            })}).catch(error => { throw error; });;
+            // Delete take/missed medication's notification from alarm
+            if (notificationIDFound == true) { 
+                alarmsRef.doc(uid).collection("medicationAlarms").doc(alarmID).update({ notifications: filteredNotifications})
+                .catch(error => { throw error; });;
+            }
     }
 }
 
-// Inserts # Days of intake dummy data including today
-const generateIntakeDummyData = async (uid) => {
+// Inserts NUM_DAYS days of intake dummy data EXCLUDING today
+// Can generate dummy data based on all of users medications, or only those medications scheduled for today
+const generateIntakeDummyData = async (uid, allMeds=true) => {
     console.log('generating dummy data');
     const NUM_DAYS = 8;     // specify # days to generate dummy data for, 
     var days = [], timestamps = [], rxcuis = [], takenMissed =[];
 
-    // get unique rxcuis scheduled for user for today (generate dummy data based on rxcui retreived)
-    const dailyMeds = await getDailyMedications(uid);
-    rxcuis = dailyMeds.map(med =>{return med.medication.rxcui;});
-    // const dailyMeds = await getAllMedications(uid);
-    // rxcuis = dailyMeds.map(med =>{return med.rxcui;});
+    // get rxcuis for all medications or only medications scheduled for today
+    if (allMeds) {
+        const dailyMeds = await getAllMedications(uid);
+        rxcuis = dailyMeds.map(med =>{return med.rxcui;});
+    } else {
+        const dailyMeds = await getDailyMedications(uid);
+        rxcuis = dailyMeds.map(med =>{return med.medication.rxcui;});
+    }
 
     // get todays date in UTC epoch time
     const MS_TO_DAYS = 86400000.0;
@@ -341,8 +358,8 @@ const generateIntakeDummyData = async (uid) => {
         days.push(todayDays - day);
         timestamps.push( (todayDays - day) * MS_TO_DAYS);
     }
-    console.log('generateDummy(): ' + days);
-    console.log('generateDummy(): ' + timestamps);
+    console.log('\ngenerateDummy(): for timestamps =' + timestamps);
+    console.log('generateDummy(): for days (from timestamps) =' + days);
 
     // Fill takenMissed randomly with 1 (taken) or 0 (missed)
     for (let i = 0; i < rxcuis.length; i++) {
@@ -350,17 +367,70 @@ const generateIntakeDummyData = async (uid) => {
     }
     // console.log('generateDummy(): takenMissed = ' + takenMissed);
 
-    console.log('num rxcuis ' + rxcuis.length);
+    console.log('generateDummy(): num rxcuis generating dummy data for ' + rxcuis.length);
     // Create dummy intake for each medication for last NUM_DAYS days
     for (let day = 1; day < NUM_DAYS; day++) {
-        console.log('day ' + day);
         // Set random status for each medication (rxcui)
         for (let rx = 0; rx < rxcuis.length; rx++) {
-            console.log(rx);
             let status = takenMissed[rx] == 0 ? 'missed' : 'taken';
             intakeMedication(uid, rxcuis[rx], timestamps[day], status, null, days[day]);
         }
     }
+}
+
+// Return percentage (whole number) of daily medications 'taken' / total daily medications scheduled
+const getTodayIntakePercentage = async (uid) => {
+    let takenCount = 0  // # medicationIntake with 'taken' status for today
+    , missedCount = 0   // # medicationIntake with 'missed' status for today
+    , todayPendingNotif = 0; // # notifications for today (if notification exists, then there is no medicationIntake for it)
+    let rxcuisWithIntakeToday = []; // drugs (rxcuis) which already have a medicationIntake status for today
+    // get todays date in UTC epoch time
+    const MS_TO_DAYS = 86400000;
+    let todayMs = (new Date()).getTime();
+    // let todayDays = Math.floor(todayMs / MS_TO_DAYS);
+    let todayDays = Math.floor(todayMs / MS_TO_DAYS);
+    let todayDaysNoTime  = todayDays * MS_TO_DAYS;
+    // get intake history for today
+    await usersRef.doc(uid).collection("medicationIntakes").where("dayStatus", "==", todayDays).get()
+    .then(async querySnapshot => {
+        if (!querySnapshot.empty) {
+            querySnapshot.forEach( async intake => {
+                rxcuisWithIntakeToday.push(intake.data().rxcui);
+                if (intake.data().status == "taken") {
+                    takenCount++;
+                } else if (intake.data().status == "missed") {
+                    missedCount++;
+                }
+            })
+        }}
+    ).catch(error => {console.log(error);});
+    
+    // get # of remaining notifications with no intake status
+    await alarmsRef.doc(uid).collection('medicationAlarms').get().then(async querySnapshot => {
+        querySnapshot.forEach(alarm => {
+            if (!querySnapshot.empty) {
+                // console.log('alarm notifications length = ' + alarm.data().notifications.length);
+                alarm.data().notifications.forEach(notification => {
+                    // 'No Time' = Remove time values (minutes, etc.) from firestore notification timestamp
+                    let triggerNoTime = (Math.floor(notification.trigger / MS_TO_DAYS)) * MS_TO_DAYS;
+                    // Count todays 'pending' notifications (need status), excluding those with have status 
+                    // Need check if rxcui has status,because user can reschedule a notification for drug that already has an intake 
+                    if (triggerNoTime == todayDaysNoTime && !rxcuisWithIntakeToday.includes(notification.rxui)) {
+                        todayPendingNotif++;
+                    }
+                })
+            }
+        })
+    }).catch(error => { console.log(error);});
+    
+    // Calculate percentage. taken / ( missed + remaining)
+    let intakePercentage = (takenCount / (missedCount + takenCount + todayPendingNotif)) * 100;
+    // console.log('\ntodayIntake%(): rxcuisWithIntakeToday = ' + rxcuisWithIntakeToday);
+    // console.log('todayIntake%(): taken = ' + takenCount + ' missed = ' + missedCount);
+    // console.log('todayIntake%(): todayPendingNotif = ' + todayPendingNotif);
+    // console.log('todayIntake%(): intakePercentage = taken / (missed + taken + pending)' );
+    // console.log('todayIntake%(): intakePercentage = ' + intakePercentage + '\n');
+    return isNaN(intakePercentage) ? 0 : Math.round(intakePercentage);
 }
 
 
@@ -419,7 +489,6 @@ const getWeekIntakeStats = async (uid) => {
     return null;
 }
 
-
 export {
     addMedication,
     getAllMedications,
@@ -431,6 +500,7 @@ export {
     getallPatients,
     getDailyMedications,
     intakeMedication,
+    getTodayIntakePercentage,
     getWeekIntakeStats,
     generateIntakeDummyData,
 }

@@ -81,8 +81,11 @@ const HomeScreen = ({ navigation }) => {
                 
             // })
 
-            // testing dummy data
-            // fsFn.generateIntakeDummyData('BnrZvzMr3bcm3ZXKh7W6f4EYnTH3');
+            // **********************************  DUMMY DATA GENERATOR **************************************************//
+            // Generate historical intake dummy data (excluding today!)  for current user (can specify num days in function)
+            // Simply uncomment -> save + run -> re-comment
+            // fsFn.generateIntakeDummyData(currentUser.uid);
+            // ***********************************************************************************************************//
 
         })();
         // sendPushNotif();
@@ -99,6 +102,8 @@ const HomeScreen = ({ navigation }) => {
             ).collection("medicationAlarms"
             ).onSnapshot(async function(querySnapshot) {
                 loadTodayMedNotifs();
+                var percentage = await fsFn.getTodayIntakePercentage(currentUser.uid);
+                setMedicationTaken(percentage);
             }
         );
         // Listener for changes in user's user document
@@ -288,11 +293,13 @@ const HomeScreen = ({ navigation }) => {
     // Swipeable completely to right, medication intake recorded as 'taken' and notification removed
     const medTaken = (rxcui, notifID) => {
         console.log('taken');
+        console.log('medTaken: trying to delete notifID: ' + notifID);
         fsFn.intakeMedication(currentUser.uid, rxcui, (new Date()).getTime(), 'taken',notifID);
     }
     // Swipeable  completely to left, medication intake recored as 'missed' and notification removed
     const medDismissed = (rxcui, notifID) => {
         console.log('not taken');
+        console.log('medTaken: trying to delete notifID: ' + notifID);
         fsFn.intakeMedication(currentUser.uid, rxcui, (new Date()).getTime(), 'missed',notifID);
     }
 
