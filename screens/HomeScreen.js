@@ -62,7 +62,7 @@ const HomeScreen = ({ navigation }) => {
             // **********************************  DUMMY DATA GENERATOR **************************************************//
             // Generate historical intake dummy data (excluding today!)  for current user (can specify num days in function)
             // Simply uncomment -> save -> run -> re-comment below line
-            fsFn.generateIntakeDummyData(currentUser.uid);
+            // fsFn.generateIntakeDummyData(currentUser.uid);
             // ***********************************************************************************************************//
 
             

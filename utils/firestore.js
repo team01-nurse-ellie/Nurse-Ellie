@@ -427,11 +427,11 @@ const getTodayIntakePercentage = async (uid) => {
     
     // Calculate percentage. taken / ( missed + remaining)
     let intakePercentage = (takenCount / (missedCount + takenCount + todayPendingNotif)) * 100;
-    console.log('\ntodayIntake%(): rxcuisWithIntakeToday = ' + rxcuisWithIntakeToday);
-    console.log('todayIntake%(): taken = ' + takenCount + ' missed = ' + missedCount);
-    console.log('todayIntake%(): todayPendingNotif = ' + todayPendingNotif);
-    console.log('todayIntake%(): intakePercentage = taken / (missed + taken + pending)' );
-    console.log('todayIntake%(): intakePercentage = ' + intakePercentage + '\n');
+    // console.log('\ntodayIntake%(): rxcuisWithIntakeToday = ' + rxcuisWithIntakeToday);
+    // console.log('todayIntake%(): taken = ' + takenCount + ' missed = ' + missedCount);
+    // console.log('todayIntake%(): todayPendingNotif = ' + todayPendingNotif);
+    // console.log('todayIntake%(): intakePercentage = taken / (missed + taken + pending)' );
+    // console.log('todayIntake%(): intakePercentage = ' + intakePercentage + '\n');
     return isNaN(intakePercentage) ? 0 : Math.round(intakePercentage);
 }
 
