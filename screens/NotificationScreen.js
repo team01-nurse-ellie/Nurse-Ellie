@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 
 import Background from '../components/background';
@@ -8,9 +8,37 @@ import AcceptIcon from '../assets/images/accept-icon';
 import DismissIcon from '../assets/images/dismiss-icon';
 
 import GreenMedication from '../assets/images/green-medication-icon';
+import IconPicker from '../components/IconPicker';
 
-const NotificationScreen = ({navigation}) => {
+const NotificationScreen = ({navigation, route}) => {
+    // route.params = {
+    //         medicationDocID: 123,
+    //         scheduledTime: {hour: 2, minute: 3, AM_PM: 'PM'},
+    //         medIcon: "4",
+    //         nameDisplay: "Monoprul",
+    //         medFunction: "high blood function"
+    // };
+    const { medicationDocID, scheduledTime, medIcon, nameDisplay, medFunction } = route.params;
     const [medicationTaken, setMedicationTaken] = useState('false');
+
+    useEffect(()=> {
+
+        console.log("NOTIFICATION-SCREEN");
+
+        let unsubscribe = navigation.addListener('beforeRemove', (e) => {
+            console.log('Block screen change')
+            e.preventDefault();
+        });
+        
+
+        return ()=> {
+            console.log("UNMOUNT")
+            unsubscribe();
+        }
+
+
+
+    }, [navigation]);
 
     const onTaken = () => {
         setMedicationTaken(true);
@@ -22,22 +50,32 @@ const NotificationScreen = ({navigation}) => {
         navigation.navigate('Home');
     }
 
+    const formatMinuteDisplay = (minute) => {
+        // format to double digits if minute number is 0 - 9
+        if (minute < 10) {
+            return `0${minute}`;
+        } else {
+            return `${minute}`;
+        }
+
+    }
 
     return (
         <View style={styles.container}>
             <Background/>
             <View style={styles.centerCircle}>
-                <Text style={styles.alarmText}> 10:00AM </Text>
-                <GreenMedication />
-                <Text style={styles.medicationText}> Monopril </Text>
-                <Text>High Blood Pressure</Text>
+                <Text style={styles.alarmText}> {`${scheduledTime.hour}:${formatMinuteDisplay(scheduledTime.minute)}${scheduledTime.AM_PM}`} </Text>
+                {/* <GreenMedication /> */}
+                <IconPicker disabled selected={medIcon} onSelect={() => { }} />
+                <Text style={styles.medicationText}> {nameDisplay} </Text>
+                <Text>{medFunction}</Text>
             </View>
             <View style={styles.alarmIconCircle}>
                 <AlarmIcon/>    
             </View>
-            <TouchableOpacity style={styles.snoozeButton}>
+            {/* <TouchableOpacity style={styles.snoozeButton}>
                 <Text style={styles.snoozeText}> SNOOZE 10 MINUTE </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity onPress={onTaken} style={styles.acceptCircle}>
                 <AcceptIcon/>
             </TouchableOpacity>

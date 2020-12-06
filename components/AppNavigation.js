@@ -60,8 +60,9 @@ const AppNavigation = () => {
                 <Drawer.Screen name="UserLinkScreen" component={UserLinkScreen} />
                 <Drawer.Screen name="HealthProfessional" component={HealthProfessionalScreen} />
                 <Drawer.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen} />
-                <Drawer.Screen name="NotificationScreen" component={NotificationScreen}/>
-                <Drawer.Screen name="EditMedication" component={EditMedicationScreen}/>
+                <Drawer.Screen name="EditMedication" options={{
+                    unmountOnBlur: false
+                }} component={EditMedicationScreen}/>
                 <Drawer.Screen name="MedicationSummary" component={MedicationSummaryScreen}/>
                 <Drawer.Screen name="HomeScreenHP" component={HomeScreenHP} />
                 <Drawer.Screen name="EditUserProfileScreen" component={EditUserProfileScreen} options={{unmountOnBlur:true}}/>
@@ -82,6 +83,11 @@ const AppNavigation = () => {
                         {currentUser ? (
                             <>
                                 <RootStack.Screen name="HomeScreen" component={DrawerRoutes} options={{ headerShown: false }} />
+                                <RootStack.Screen name="NotificationScreen" options={{
+                                    swipeEnabled: false,
+                                    unmountOnBlur: true,
+                                    headerShown: false
+                                }} component={NotificationScreen}/>
                                 <RootStack.Screen name="QRScreen" component={QRScreen} options={{ 
                                     transitionSpec: {
                                         // Disables the animation when pushing the screen. 

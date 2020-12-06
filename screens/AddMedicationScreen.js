@@ -36,6 +36,8 @@ import MenuIcon from '../assets/images/menu-icon.svg';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 import PinkMedication from '../assets/images/pink-medication-icon.svg';
 import SuccessIcon from '../assets/images/success-icon.svg';
+import WarningIcon from '../assets/images/warning.svg';
+import ErrorIcon from '../assets/images/error.svg';
 import MedicationCard from '../components/MedicationCard';
 
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
@@ -67,9 +69,15 @@ const AddMedicationScreen = ({ navigation }) => {
     startDate: null,
     endDate: null
   });
+  const [addMedLoading, setAddMedLoading] = useState(false);
+  const [confirmationModal, setConfirmationModal] = useState(false);
+  const [status, setStatus] = useState({
+    success: false,
+    error: false,
+    warning: false,
+  });
   const [alarm, setAlarm] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [confirmationModal, setConfirmationModal] = useState(false);
   const [drugFunction, setDrugFunction] = useState('');
   const [directions, setDirections] = useState('');
   const toggleSwitch = () => setAlarm(previousState => !previousState);
@@ -79,15 +87,19 @@ const AddMedicationScreen = ({ navigation }) => {
   const [drugList, setDrugList] = useState([]);
   const [searchResult, setSearchResult] = useState('');
   const [medicationToAdd, setMedicationToAdd] = useState("Add Medication");
-  // const [medicationNotifications, setNotifications] = useState([]);
 
   useEffect(() => {
     // moment(endDate) < moment(startDate) || moment(endDate) < moment(currentTime)
-    // console.log(firstName)
     let current = true;
     const unsubscribe = navigation.addListener('blur', () => {
       resetUserInput();
-      // console.log("unmounting med screen");
+      setConfirmationModal(false);
+      setAddMedLoading(false);
+      setStatus(() => ({
+        success: false,
+        warning: false,
+        error: false
+      }));
     });
     
     load();
@@ -95,6 +107,7 @@ const AddMedicationScreen = ({ navigation }) => {
     return () => {
       (current = false)
       unsubscribe();
+      // console.log("unmounting med screen");
     };
 
   }, []);
@@ -198,24 +211,10 @@ const AddMedicationScreen = ({ navigation }) => {
 
     // Merge medication information from APIs and user specified medication settings
     Object.assign(medicationToAdd, medSettings);
-    // console.log(medicationToAdd);
+    setAddMedLoading(true);
+    setConfirmationModal(true);
     if (alarm == true) {
 
-    //   scheduleNotifications(medicationToAdd,timestamp, selectDoW, firstName).then(async alarm => {
-    //     const { content, notifications } = alarm;
-    //     // console.log(alarm, `line 260`);
-    //     await alarmsRef.doc(currentUser.uid).collection("medicationAlarms").add({
-    //       alarmTitle: content.title,
-    //       alarmBody: content.body,
-    //       notifications: notifications
-    //     }).then(async docRef => {
-    //       medicationToAdd.alarmRef = docRef.id;
-    //       // console.log(medicationToAdd, "---MED BEFORE ADDING---");
-    //       // console.log(medicationToAdd);
-
-    //     }).catch(error => { throw error; });
-    //   });
-    
           // Clear user input components if addition to DB successful 
           await fsFn.addMedication(currentUser.uid, medicationToAdd)
             .then(async (medicationDocID) => {
@@ -235,15 +234,43 @@ const AddMedicationScreen = ({ navigation }) => {
                     // Once done, navigate to medication list.
                     resetUserInput();
                     scrollViewRef.scrollTo({ x: 0, y: 0, animated: true });
-                    Alert.alert('', '\nMedication Added!');
-                    navigation.navigate('Medications');
+                    // Alert.alert('', '\nMedication Added!');
+                    setAddMedLoading(false);
+                    // navigation.navigate('Medications');
+                    // setConfirmationModal(true);
+                    setStatus(() => ({
+                      success: true,
+                      warning: false,
+                      error: false
+                    }));
                   }).catch(error => { throw error });
               }).catch(error => { throw error });
             }).catch(error => { throw error });
           }).catch(e => {
-            e.toString() == 'Error: Medication already in user collection' ?
-              (Alert.alert('', '\nYou have already added this medication'), resetUserInput()) :
-              console.log(e);
+            if (e.toString() == 'Error: Medication already in user collection') {
+              setStatus(() => ({
+                success: false,
+                warning: true,
+                error: false
+              }));
+              resetUserInput();
+              setAddMedLoading(false);
+              return;
+            }
+            
+            setStatus(() => ({
+              success: false,
+              warning: false,
+              error: true
+            }));
+            
+            setAddMedLoading(false);
+
+            console.log(e);
+            
+            // e.toString() == 'Error: Medication already in user collection' ?
+            //   (Alert.alert('', '\nYou have already added this medication'), resetUserInput()) :
+            //   console.log(e);
           });
 
     } else {
@@ -253,14 +280,41 @@ const AddMedicationScreen = ({ navigation }) => {
       ).then(() => {
         resetUserInput();
         scrollViewRef.scrollTo({x:0,y:0,animated:true});
-        Alert.alert('', '\nMedication Added!');
-        navigation.navigate('Medications');
-        setConfirmationModal(true);
+        // Alert.alert('', '\nMedication Added!');
+        setAddMedLoading(false);
+        // navigation.navigate('Medications');
+        // setConfirmationModal(true);
+        setStatus(() => ({
+          success: true,
+          warning: false,
+          error: false
+        }));
       }
       ).catch(e => {
-        e.toString() == 'Error: Medication already in user collection' ?
-          (Alert.alert('', '\nYou have already added this medication'), resetUserInput()) :
-          console.log(e);
+        
+        if (e.toString() == 'Error: Medication already in user collection') {
+          setStatus(() => ({
+            success: false,
+            warning: true,
+            error: false
+          }));
+          resetUserInput();
+          setAddMedLoading(false);
+          return;
+        }
+
+        setStatus(() => ({
+          success: false,
+          warning: false,
+          error: true
+        }));
+
+        setAddMedLoading(false);
+
+        console.log(e);
+        // e.toString() == 'Error: Medication already in user collection' ?
+        //   (Alert.alert('', '\nYou have already added this medication'), resetUserInput()) :
+        //   console.log(e);
       });
     }
     
@@ -393,18 +447,51 @@ const AddMedicationScreen = ({ navigation }) => {
             isVisible={confirmationModal}
             animationIn="slideInUp"
             animationOut="slideOutDown"
-            onBackButtonPress={()=> setConfirmationModal(false)}
+            onBackButtonPress={()=> {}}
             backdropOpacity={0}
             >
               <View style={styles.centeredView}>
                 <View style={styles.confirmationModal}>
-                  <SuccessIcon/>
-                  <Text style={styles.confirmationFont}>Success!</Text> 
-                  <Text styles={styles.confirmationFont}>You have added a new medication.</Text>
-                  <View style={{paddingVertical: 2}}/>
-                  <TouchableOpacity onPress={()=> setConfirmationModal(false)}>
-                    <Text style={styles.confirmationTouchable}>CLOSE</Text>
-                  </TouchableOpacity>
+                {addMedLoading ?
+                  <>
+                  <Text style={styles.confirmationFont}>Adding Medication...</Text>
+                  <View style={{paddingVertical: 10}}/>
+                  <ActivityIndicator color="green" size={65}/>
+                  </> : (status.success == true) ?
+                    <>
+                            <SuccessIcon width={75} height={75} />
+                            <Text style={styles.confirmationFont}>Success!</Text>
+                            <View style={{ paddingVertical: 2 }} />
+                            <Text style={styles.confirmationFontSmall}>You have added a new medication!</Text>
+                            <View style={{ paddingVertical: 8 }} />
+                            <TouchableOpacity onPress={() => setConfirmationModal(false)}>
+                              <Text style={styles.confirmationTouchable}>CLOSE</Text>
+                            </TouchableOpacity>
+                    </>
+                          : (status.warning == true) ? 
+                          <>
+                              <WarningIcon width={75} height={75} />
+                              <Text style={styles.confirmationFont}>Warning!</Text>
+                              <View style={{ paddingVertical: 2 }} />
+                              <Text style={styles.confirmationFontSmall}>The medication already exists in your list!</Text>
+                              <View style={{ paddingVertical: 8 }} />
+                              <TouchableOpacity onPress={() => setConfirmationModal(false)}>
+                                <Text style={styles.confirmationTouchable}>CLOSE</Text>
+                              </TouchableOpacity>
+                          </>
+                          : (status.error == true) ? 
+                          <>
+                                <ErrorIcon height={75} width={75} />
+                              <Text style={styles.confirmationFont}>Error!</Text>
+                              <View style={{ paddingVertical: 2 }} />
+                              <Text style={styles.confirmationFontSmall}>Your medication could not be added!</Text>
+                              <View style={{ paddingVertical: 8 }} />
+                              <TouchableOpacity onPress={() => setConfirmationModal(false)}>
+                                <Text style={styles.confirmationTouchable}>CLOSE</Text>
+                              </TouchableOpacity>
+
+                          </> : <View><Text>No Status</Text></View>
+                }
                 </View>
               </View>
           </Modal>
@@ -521,6 +608,11 @@ const styles = StyleSheet.create({
   confirmationFont: {
     fontFamily: 'roboto-regular',
     fontSize: 24,
+    color: 'rgba(0, 0, 0, 0.95)',
+  },
+  confirmationFontSmall: {
+    fontFamily: 'roboto-regular',
+    fontSize: 14,
     color: 'rgba(0, 0, 0, 0.95)',
   },
   confirmationTouchable: {
