@@ -46,8 +46,9 @@ import * as fsFn  from '../utils/firestore';
 import { getAllByConcepts, getDrugsByIngredientBrand} from '../utils/medication';
 import { ActivityIndicator } from 'react-native-paper';
 
-const AddMedicationScreen = ({ navigation }) => {
-
+const AddMedicationScreen = ({route, navigation }) => {
+  const { item } = route.params;
+  const [user, setUser] = useState('');
   const autoCompleteRef = useRef();
   const { currentUser } = useContext(FirebaseAuthContext);
   const { firstName } = useContext(UserContext);
@@ -90,7 +91,12 @@ const AddMedicationScreen = ({ navigation }) => {
 
   useEffect(() => {
     // moment(endDate) < moment(startDate) || moment(endDate) < moment(currentTime)
+    // console.log('user hook:' + user)
     let current = true;
+    const user = item.isPatient ? item.patientId : currentUser.uid;
+    setUser(user);
+    load();
+
     const unsubscribe = navigation.addListener('blur', () => {
       resetUserInput();
       setConfirmationModal(false);
@@ -101,16 +107,13 @@ const AddMedicationScreen = ({ navigation }) => {
         error: false
       }));
     });
-    
-    load();
 
     return () => {
       (current = false)
       unsubscribe();
-      // console.log("unmounting med screen");
     };
 
-  }, []);
+  },[item]);
 
   // load master list of molecules and brand-names
   async function load() {
@@ -213,23 +216,24 @@ const AddMedicationScreen = ({ navigation }) => {
     Object.assign(medicationToAdd, medSettings);
     setAddMedLoading(true);
     setConfirmationModal(true);
-    if (alarm == true) {
-
+    // console.log(medicationToAdd);
+    if (alarm == true) {   
+          console.log('alarm addmedicationuser : ' + user);
           // Clear user input components if addition to DB successful 
-          await fsFn.addMedication(currentUser.uid, medicationToAdd)
+          await fsFn.addMedication(user, medicationToAdd)
             .then(async (medicationDocID) => {
             // console.log(medicationDocID, `addMedication DATA RETURNED FROM FIRESTORE`);
-            await scheduleNotifications(medicationToAdd, medicationDocID, timestamp, selectDoW, firstName).then(async alarm => {
+            await scheduleNotifications(medicationToAdd, medicationDocID, timestamp, selectDoW, (item.isPatient ? item.fullName: firstName) ).then(async alarm => {
               // once notifications scheduled, add details of notification object into user's medication's alarm object.
               const { content, notifications } = alarm;
-              await alarmsRef.doc(currentUser.uid).collection("medicationAlarms").add({
+              await alarmsRef.doc(user).collection("medicationAlarms").add({
                 alarmTitle: content.title,
                 alarmBody: content.body,
                 notifications: notifications
               }).then(async docRef => {
                 // once medication is added and scheduled notifications, use the alarm's ID and update the medication alarmRef property.
                 medicationToAdd.alarmRef = docRef.id; 
-                await fsFn.updateMedication(currentUser.uid, medicationDocID, medicationToAdd)
+                await fsFn.updateMedication(user, medicationDocID, medicationToAdd)
                   .then(async () => {
                     // Once done, navigate to medication list.
                     resetUserInput();
@@ -243,6 +247,7 @@ const AddMedicationScreen = ({ navigation }) => {
                       warning: false,
                       error: false
                     }));
+                    // navigation.navigate(item.isPatient ? 'Patient' : 'Medications');
                   }).catch(error => { throw error });
               }).catch(error => { throw error });
             }).catch(error => { throw error });
@@ -272,10 +277,9 @@ const AddMedicationScreen = ({ navigation }) => {
             //   (Alert.alert('', '\nYou have already added this medication'), resetUserInput()) :
             //   console.log(e);
           });
-
     } else {
-
-      await fsFn.addMedication(currentUser.uid, medicationToAdd
+      console.log('else addmedication user: ' + user);
+      await fsFn.addMedication(user, medicationToAdd
         // Clear user input components if addition to DB successful 
       ).then(() => {
         resetUserInput();
@@ -289,6 +293,7 @@ const AddMedicationScreen = ({ navigation }) => {
           warning: false,
           error: false
         }));
+        // navigation.navigate(item.isPatient ? 'Patient' : 'Medications');
       }
       ).catch(e => {
         
@@ -350,7 +355,7 @@ const AddMedicationScreen = ({ navigation }) => {
       <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig">
         <View style={styles.header}>
           <View style={{ flexDirection: 'row' }}>
-            <TouchableOpacity style={{ paddingTop: 5, paddingRight: 10 }} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={{ paddingTop: 5, paddingRight: 10 }} onPress={() => navigation.navigate(item.isPatient ? 'Patient' : 'Medications')}>
               <ReturnIcon />
             </TouchableOpacity>
             <Text 
@@ -430,6 +435,7 @@ const AddMedicationScreen = ({ navigation }) => {
                       />
               </View>
               <Switch
+                style={{marginRight:40,}}
                 trackColor={{ false: '#767577', true: '#42C86A' }}
                 thumbColor={alarm ? '#F4F3F4' : '#F4F3F4'}
                 ios_backgroundColor="#3e3e3e"
@@ -524,11 +530,11 @@ const AddMedicationScreen = ({ navigation }) => {
             data={drugList}
             renderItem={({ item }) => (
               <TouchableOpacity 
-                style={styles.searchButton} 
-                onPress={()=>{
-                  setMedicationToAdd(item); 
-                  setShowModal(false); 
-                  setSearchResult('');}}>
+              style={styles.searchButton} 
+              onPress={()=>{
+                setMedicationToAdd(item); 
+                setShowModal(false); 
+                setSearchResult('');}}>
                 <MedicationCard>
                   <View style={{ justifyContent: 'center', flex: 2 }}>
                     <PinkMedication />

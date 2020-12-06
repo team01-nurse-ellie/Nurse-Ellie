@@ -3,7 +3,7 @@ import React, {useState, useEffect, useRef, useContext} from 'react';
 import { View, Text, KeyboardAvoidingView, TouchableOpacity, Dimensions, StyleSheet, Platform, FlatList, ActivityIndicator } from 'react-native';
 import { firebase } from '../components/Firebase/config';
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
-import { getValueFormatted } from '../utils/timeConvert';
+import { getValueFormatted } from '../utils/utils';
 
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
@@ -12,6 +12,7 @@ import * as fsFn  from '../utils/firestore';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import ProgressCircle from 'react-native-progress-circle';
 
+import {alarmsRef, usersRef} from '../utils/databaseRefs.js'
 
 import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
@@ -45,12 +46,20 @@ const HomeScreen = ({ navigation }) => {
     
     useEffect(()=> {
         (async ()=> {
+            // **********************************  DUMMY DATA GENERATOR **************************************************//
+            // Generate historical intake dummy data (excluding today!)  for current user (can specify num days in function)
+            // Simply uncomment -> save -> run -> re-comment below line
+            // fsFn.generateIntakeDummyData(currentUser.uid);
+            // ***********************************************************************************************************//
+            
+            
             // await registerForPushNotificationsAsync()
             // notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
             //     console.log(`====ReceivedListener====`);
             //     console.log(notification);
             //     console.log(`========================`);
             // });
+            
 
             responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
                 console.log(`====ResponseReceivedListener====`);
@@ -70,28 +79,30 @@ const HomeScreen = ({ navigation }) => {
         } else {
             setGreeting('Good evening');
         }
-       
-        const medSubscriber = firebase.firestore().collection("users").doc(currentUser.uid
-            ).collection("medications"
-            ).onSnapshot(function(querySnapshot) {
+        // Listener for changes in user's alarm notification collection
+        const alarmNotifSubscriber = alarmsRef.doc(currentUser.uid
+            ).collection("medicationAlarms"
+            ).onSnapshot(async function(querySnapshot) {
+                loadTodayMedNotifs();
+                var percentage = await fsFn.getTodayIntakePercentage(currentUser.uid);
+                setMedicationTaken(percentage);
+            }
+        );
+        // Listener for changes in user's user document
+        const nameSubscriber = usersRef.doc(currentUser.uid
+            ).onSnapshot(async function(querySnapshot) {
                 loadUserInfo();
             }
         );
-        const nameSubscriber = firebase.firestore().collection("users").doc(currentUser.uid
-            ).onSnapshot(function(querySnapshot) {
-                loadUserInfo();
-            }
-        );
-        
-        // Unsubscribe from listener when no longer in use
+        // Unsubscribe from all listeners when no longer in use
         return () => {
-            medSubscriber(); 
+            // medSubscriber(); 
+            alarmNotifSubscriber();
             nameSubscriber();
             // Notifications.removeNotificationSubscription(notificationListener);
             Notifications.removeNotificationSubscription(responseListener);
             console.log("PATIENT HOME SCREEN UN-MOUNTED")
         }
-
     }, []);
 
     /*Swipeable when User takes medication*/
@@ -114,14 +125,30 @@ const HomeScreen = ({ navigation }) => {
             </View>
         )
     }
-    // Load user's full name and current medications
-    async function loadUserInfo() {
-        const user = await firebase.firestore().collection("users").doc(currentUser.uid).get();
-        setfullName(user.data().fullName);
-        let meds = await fsFn.getCurrentMedications(currentUser.uid);
-        setMedications(meds);
+    // intakeMedication (uid, rxcui, timestamp, status, notifID)
+    // Swipeable completely to right, medication intake recorded as 'taken' and notification removed
+    const medTaken = (rxcui, notifID) => {
+        fsFn.intakeMedication(currentUser.uid, rxcui, (new Date()).getTime(), 'taken',notifID);
+    }
+    // Swipeable  completely to left, medication intake recored as 'missed' and notification removed
+    const medDismissed = (rxcui, notifID) => {
+        fsFn.intakeMedication(currentUser.uid, rxcui, (new Date()).getTime(), 'missed',notifID);
     }
 
+    // Load user's full name and current medications
+    async function loadUserInfo() {
+        const user = await usersRef.doc(currentUser.uid).get();
+        setfullName(user.data().fullName);
+        // let meds = await fsFn.getCurrentMedications(currentUser.uid);
+        // setMedications(meds);
+    }
+    // Load user's full name and current medications
+    async function loadTodayMedNotifs() {
+        // see getDailyMedications definition for medNotif object properties
+        const medNotifs = await fsFn.getDailyMedications(currentUser.uid);
+        setMedications(medNotifs);
+    }
+    
     return (
         <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
             <Background />
@@ -129,6 +156,7 @@ const HomeScreen = ({ navigation }) => {
              <TouchableOpacity style={PatientStyles.menuButton} onPress={()=> navigation.openDrawer()}> 
                 <MenuIcon/>
             </TouchableOpacity>
+            {}
             <Text style={styles.time}> {greeting} </Text>
             <Text style={styles.user}> {fullName} </Text>
             <View style={styles.progressCircle}>
@@ -150,20 +178,22 @@ const HomeScreen = ({ navigation }) => {
             {medications ? (
                 <FlatList 
                 data={medications.sort((a,b)=>{
-                    return a.namePrescribe.localeCompare(b.namePrescribe);
+                    return a.medication.namePrescribe.localeCompare(b.medication.namePrescribe);
                 })}
-                keyExtractor={(item) => item.rxcui.toString()}
+                keyExtractor={(item) => item.medication.rxcui.toString()}
                 renderItem={({item}) => (
                     <Swipeable 
                     renderLeftActions={takenAction} 
-                    renderRightActions={dismissAction}>
+                    renderRightActions={dismissAction}
+                    onSwipeableLeftOpen={() => {medTaken(item.medication.rxcui, item.notification.id)}} 
+                    onSwipeableRightOpen={() => {medDismissed(item.medication.rxcui, item.notification.id)}}>
                         <MedicationCard>
                             <View style={styles.medicationInfoView}>
-                            <Text style={styles.medicationFont}>{item.nameDisplay}</Text>
-                            <Text style={styles.frequencyfont}>{item.strength}</Text>
+                            <Text style={styles.medicationFont}>{item.medication.nameDisplay}</Text>
+                            <Text style={styles.frequencyfont}>{item.medication.strength}</Text>
                             </View>
                             <View style={styles.timeView}>
-                                <Text style={styles.timeFont}>{getValueFormatted(item.intakeTime)}</Text>
+                                <Text style={styles.timeFont}>{getValueFormatted(item.medication.intakeTime)}</Text>
                             </View>
                         </MedicationCard>
                     </Swipeable>
