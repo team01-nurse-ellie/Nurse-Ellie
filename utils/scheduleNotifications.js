@@ -19,6 +19,7 @@ const scheduleNotifications = async (medicationToAdd, medicationDocID, timestamp
 
       const data = {  
         medicationDocID: medicationDocID,
+        rxcui: medicationToAdd.rxcui,
         scheduledTime: medicationToAdd.scheduledTime,
         medIcon: medicationToAdd.medIcon,
         nameDisplay: medicationToAdd.nameDisplay,

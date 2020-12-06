@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
+import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
+import * as fsFn from '../utils/firestore';
 
 import Background from '../components/background';
 
@@ -18,12 +20,15 @@ const NotificationScreen = ({navigation, route}) => {
     //         nameDisplay: "Monoprul",
     //         medFunction: "high blood function"
     // };
-    const { medicationDocID, scheduledTime, medIcon, nameDisplay, medFunction } = route.params;
+    const notifID = route.params.notifID;
+    const { medicationDocID, rxcui, scheduledTime, medIcon, nameDisplay, medFunction } = route.params.notifData;
     const [medicationTaken, setMedicationTaken] = useState('false');
+    const { currentUser } = useContext(FirebaseAuthContext);
 
     useEffect(()=> {
 
         console.log("NOTIFICATION-SCREEN");
+        console.log(notifID, '\n', rxcui)
 
         let unsubscribe = navigation.addListener('beforeRemove', (e) => {
             console.log('Block screen change')
@@ -40,14 +45,20 @@ const NotificationScreen = ({navigation, route}) => {
 
     }, [navigation]);
 
-    const onTaken = () => {
-        setMedicationTaken(true);
-        navigation.navigate('Home');
+    const medTaken = async (rxcui, notifID) => {
+        await fsFn.intakeMedication(currentUser.uid, rxcui, (new Date()).getTime(), 'taken', notifID).then(()=> {
+            alert("Medication taken");
+            navigation.navigate('Home');
+        });
+        // setMedicationTaken(true);
     }
 
-    const onDismiss = () => {
-        setMedicationTaken(false);
-        navigation.navigate('Home');
+    const medDismissed = async (rxcui, notifID) => {
+        await fsFn.intakeMedication(currentUser.uid, rxcui, (new Date()).getTime(), 'missed', notifID).then(()=>{
+            alert("Medication dismissed");
+            navigation.navigate('Home');
+        });
+        // setMedicationTaken(false);
     }
 
     const formatMinuteDisplay = (minute) => {
@@ -76,10 +87,14 @@ const NotificationScreen = ({navigation, route}) => {
             {/* <TouchableOpacity style={styles.snoozeButton}>
                 <Text style={styles.snoozeText}> SNOOZE 10 MINUTE </Text>
             </TouchableOpacity> */}
-            <TouchableOpacity onPress={onTaken} style={styles.acceptCircle}>
+            <TouchableOpacity onPress={async () => {
+                await medTaken(rxcui, notifID);
+            }} style={styles.acceptCircle}>
                 <AcceptIcon/>
             </TouchableOpacity>
-            <TouchableOpacity onPress={onDismiss} style={styles.dismissCircle}>
+            <TouchableOpacity onPress={async () => { 
+                await medDismissed(rxcui, notifID);
+            }} style={styles.dismissCircle}>
                 <DismissIcon/>
             </TouchableOpacity>
         </View>

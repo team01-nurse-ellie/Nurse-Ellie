@@ -65,8 +65,12 @@ const HomeScreen = ({ navigation }) => {
                 console.log(`====ResponseReceivedListener====`);
                 console.log(response);
                 // .navigate if on same screen it might not send new params???
-                navigation.push("NotificationScreen", response.notification.request.content.data);
-                console.log(`========================`); 
+                // send 2 params for id of the notification being clicked on, and data needed to populate NotificationScreen
+                navigation.push("NotificationScreen", {
+                    notifID: response.notification.request.identifier,
+                    notifData: response.notification.request.content.data,
+                });
+                console.log(`========================`);
             });
             
         })();
