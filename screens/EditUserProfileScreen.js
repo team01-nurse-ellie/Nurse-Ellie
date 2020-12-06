@@ -134,10 +134,7 @@ return (
     </TouchableOpacity>
     <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: screenHeight / 10 }}>
-    <TouchableOpacity style={styles.menuButton}>
-    <ImagePicker selected={image} onSelect={setImage} height={75} style={{ flex: 1, marginRight: '5%' }} />
-
-    </TouchableOpacity>
+        <NurseEllieLogo height={75} style={{ flex: 1, marginRight: '5%' }} />
         <Text style={{ fontFamily: 'roboto-regular', fontSize: 25, paddingRight: 30}}> {`Edit User Profile`}</Text>
     </View>
   

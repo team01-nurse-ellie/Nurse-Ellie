@@ -14,7 +14,7 @@ import MedicationsIcon from '../assets/images/medications-icon.svg';
 import SearchIcon from '../assets/images/search-icon.svg';
 
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
-import { getValueFormatted } from '../utils/timeConvert';
+import { getValueFormatted } from '../utils/utils';
 import { ActivityIndicator } from 'react-native-paper';
 
 const MedicationListScreen = ({navigation}) => {
@@ -65,7 +65,7 @@ const MedicationListScreen = ({navigation}) => {
                         <SearchIcon/>
                     </TouchableOpacity>
                 </View>
-                { loading ? (
+             { loading ? (
                     <View style={{flex:1, justifyContent:'center', padding:screenHeight *.5}}>
                         <ActivityIndicator/>
                     </View>
@@ -76,7 +76,8 @@ const MedicationListScreen = ({navigation}) => {
                         })}
                         keyExtractor={(item) => item.docId}
                         renderItem={({item}) => (
-                        <TouchableOpacity style={styles.searchButton} onPress={()=>navigation.navigate('Medication', {item: item})}>
+                        <TouchableOpacity style={styles.searchButton} onPress={()=>{
+                            navigation.navigate('Medication', {item: item})}}>
                             <MedicationCard>
                                 <View style={{justifyContent:'center', paddingHorizontal:6, width: 60}}>
                                     {MedIconIndex.index[item.medication.medIcon]}
@@ -94,7 +95,7 @@ const MedicationListScreen = ({navigation}) => {
                     )}/>
                 )}
                 <View style={styles.addMedicationButton}>
-                    <Button title="ADD NEW MEDICATION" color='#42C86A' onPress={()=>{navigation.navigate('AddMedication')}}/>
+                    <Button title="ADD NEW MEDICATION" color='#42C86A' onPress={()=>{navigation.navigate('AddMedication',{item: {'item': {'isPatient':false}}} )}}/>
                 </View>
             </Animatable.View>
         </KeyboardAvoidingView>
