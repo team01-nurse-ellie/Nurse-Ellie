@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="37.5" height="43.75" viewBox="0 0 37.5 43.75">
+<svg xmlns="http://www.w3.org/2000/svg" width="29" height="33.833" viewBox="0 0 29 33.833">
   <g id="Group_59" data-name="Group 59" transform="translate(-289 -120)">
-    <path id="Path_1038" data-name="Path 1038" d="M487.648,1528.506h33.471v32.5H487.648Z" transform="translate(-196.359 -1399.886)" fill="#b27f4b"/>
-    <rect id="Rectangle_618" data-name="Rectangle 618" width="26" height="29" transform="translate(295 129.25)" fill="#fff"/>
-    <path id="Icon_ionic-md-clipboard" data-name="Icon ionic-md-clipboard" d="M37.833,6.937H29.3a6.252,6.252,0,0,0-12.106,0H8.667A4.179,4.179,0,0,0,4.5,11.1V41.833A4.179,4.179,0,0,0,8.667,46H37.833A4.179,4.179,0,0,0,42,41.833V11.1A4.179,4.179,0,0,0,37.833,6.937Zm-14.583,0a2.083,2.083,0,1,1-2.083,2.083A2.09,2.09,0,0,1,23.25,6.937ZM38.094,42.094H8.406V10.844h3.906v7.031H34.187V10.844h3.906Z" transform="translate(284.5 117.75)"/>
+    <path id="Path_1038" data-name="Path 1038" d="M487.648,1528.506h25.884v25.132H487.648Z" transform="translate(-196.878 -1401.84)" fill="#b27f4b"/>
+    <rect id="Rectangle_618" data-name="Rectangle 618" width="20" height="22" transform="translate(294 127.333)" fill="#fff"/>
+    <path id="Icon_ionic-md-clipboard" data-name="Icon ionic-md-clipboard" d="M30.278,5.875h-6.6a4.835,4.835,0,0,0-9.362,0h-6.6A3.232,3.232,0,0,0,4.5,9.1V32.861a3.232,3.232,0,0,0,3.222,3.222H30.278A3.232,3.232,0,0,0,33.5,32.861V9.1A3.232,3.232,0,0,0,30.278,5.875ZM19,5.875a1.611,1.611,0,1,1-1.611,1.611A1.616,1.616,0,0,1,19,5.875ZM30.479,33.062H7.521V8.9h3.021v5.438H27.458V8.9h3.021Z" transform="translate(284.5 117.75)"/>
   </g>
 </svg>

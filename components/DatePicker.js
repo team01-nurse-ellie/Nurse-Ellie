@@ -5,6 +5,7 @@ import React from 'react';
 import { Easing, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Modal from 'react-native-modalbox';
+import { calculateLocalTimezone } from '../utils/dateHelpers';
 
 const CALENDAR_THEME = {
   textSectionTitleColor: '#707070', 
@@ -27,11 +28,18 @@ class Component extends React.Component {
     super(props);
     this.state = {
       isModalOpen: false,
+      dateTimestamp: null,
+      date: {
+        year: null,
+        month: null,
+        day: null
+      }
     };
   }
 
   UNSAFE_componentWillMount() {
     const { selected } = this.props;
+    // console.log(selected, `will mount`)
     if (selected) {
       const dateString = moment(selected).format('YYYY-MM-DD');
       this.setState({
@@ -40,9 +48,78 @@ class Component extends React.Component {
       });
     }
   }
+  componentDidMount() {
+    
+    
+    // let date = new Date(this.props.selected)
+    // console.log(date.getUTCSeconds())
+    // this.setState({day:})
+  }
+  
+  componentDidUpdate(prevProps) {
+    // console.log(prevProps, this.props);
+    if (this.props.hasOwnProperty(`screenType`)) {
+      if (this.props.screenType === `Edit Medication`) {
+        const { startDate, endDate } = this.props.timestamp;
+        if (startDate != null && this.props.placeholder === "Start Date") { 
+          if (this.state.date.day == null) {
+            let day = new Date(startDate);
+            this.setState({ date: { year: day.getFullYear(), month: day.getMonth() + 1, day: day.getDate() } });
+            console.log(`UPDATE START DATE.`) 
+          }
+        }
+        
+        if (endDate != null && this.props.placeholder === "End Date") { 
+          if (this.state.date.day == null) {
+            let day = new Date(endDate);
+            this.setState({ date: { year: day.getFullYear(), month: day.getMonth() + 1, day: day.getDate() } });
+            console.log(`UPDATE END DATE.`) 
+          }
+        }
+        
+        // this.setState({ date: { year: day.year, month: day.month, day: day.day } });
+          // this.setState({ selected: day.dateString });
+          // this.setState({ dateTimestamp: calculateLocalTimezone(day.timestamp) });
+      }
+    }
+    
+    if (prevProps.timestamp.startDate != this.props.timestamp.startDate || this.props.timestamp.endDate != this.props.timestamp.endDate) {
+
+      if (this.props.timestamp.startDate == null && this.props.timestamp.endDate == null) {
+        console.log("CLEARR calendar green select bubble");
+        this.clearDate();
+      }
+    }
+
+    // console.log(this.props, `COMP DID UPDATE`)
+    // console.log(this.state, `COMP DID UPDATE 222222`)
+    // console.log(this.props.selected, `SELECTED!!!!`)
+    // console.log(this.state.selected, `STATE SELECTED!!!!`)
+    // If a date is chosen, and user changes the time. 
+    if (this.state.date.day !== null && this.isTimeNotSame(this.props.time, prevProps.time)) {
+      console.log("go change!!!")
+      const { date } = this.state;
+      const { time } = this.props;
+      console.log(`BEFORE updateDateByTime`, date);
+      this.updateDateByTime(date, time);
+    }
+  }
+  
+  isTimeNotSame = (time, time2) => {        
+    return (time.AM_PM !== time2.AM_PM || time.hour !== time2.hour || time.minute !== time2.minute) ? true : false;
+  };
+
+  updateDateByTime(date, time) {
+    let updatedDateTimestamp = calculateLocalTimezone(null, date.year, date.month, date.day, time.hour, time.minute, time.AM_PM)
+    // console.log(updatedDateTimestamp, `updatedDate`);
+    this.props.dateTimestamp(updatedDateTimestamp);
+  }
 
   onDayPress = (day) => {
     this.setState({ selected: day.dateString });
+    this.setState({ date: { year: day.year, month: day.month, day: day.day } });
+    // console.log(day.timestamp)
+    this.setState({ dateTimestamp: calculateLocalTimezone(day.timestamp) });
   };
 
   onCancel = () => {
@@ -53,6 +130,11 @@ class Component extends React.Component {
 
   onSelect = () => {
     this.props.onSelect(moment(this.state.selected).toISOString());
+    // console.log(this.props)
+    // console.log(this.state.dateTimestamp)
+    // console.log(this.state.date, this.props.time);
+    this.updateDateByTime(this.state.date, this.props.time);
+    // this.props.dateTimestamp(this.state.dateTimestamp);
     this.onModalClose();
   };
 
@@ -79,13 +161,15 @@ class Component extends React.Component {
   };
 
   render() {
-    const { current, isModalOpen, selected: marked } = this.state;
+    const { current, isModalOpen, selected: marked, dateTimestamp } = this.state;
     const { selected } = this.props;
+    const { startDate, endDate } = this.props.timestamp;
     return (
       <React.Fragment>
         <TouchableWithoutFeedback onPress={this.onModalOpen} style={styles.container}>
           <Text style={[styles.fieldValue, !selected && styles.placeholderText]}>
-            {selected ? moment(selected).format('MMMM Do, YYYY') : this.props.placeholder}
+            {/* selected ? moment(selected).format('MMMM Do, YYYY') : this.props.placeholder */}
+            {((this.props.placeholder == "Start Date") ? startDate : endDate) ? moment(((this.props.placeholder == "Start Date") ? startDate : endDate)).format('MMMM Do, YYYY') : this.props.placeholder}
           </Text>
         </TouchableWithoutFeedback>
         <Modal
@@ -197,6 +281,7 @@ const styles = StyleSheet.create({
 
 Component.propTypes = {
   onSelect: PropTypes.func,
+  dateTimestamp: PropTypes.func,
   placeholder: PropTypes.string,
   selected: PropTypes.string,
 };

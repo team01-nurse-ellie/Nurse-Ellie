@@ -23,7 +23,8 @@ import PatientDetailScreen from '../screens/PatientDetailScreen';
 import MedicationListScreen from '../screens/MedicationListScreen';
 import MedicationDetailScreen from '../screens/MedicationDetailScreen';
 import HealthProfessionalScreen from '../screens/HealthProfessionalScreen';
-import SymptomChecklistScreen from '../screens/SymptomChecklistScreen';
+import SymptomChecklist from '../screens/SymptomChecklist';
+import SymptomChecklistDetail from '../screens/SymptomChecklistDetails';
 import NotificationScreen from '../screens/NotificationScreen';
 import MedicationSummaryScreen from '../screens/MedicationSummaryScreen';
 import HomeScreenHP from '../screens/HomeScreenHP';
@@ -59,7 +60,8 @@ const AppNavigation = () => {
                 <Drawer.Screen name="Patient" component={PatientDetailScreen} />
                 <Drawer.Screen name="UserLinkScreen" component={UserLinkScreen} />
                 <Drawer.Screen name="HealthProfessional" component={HealthProfessionalScreen} />
-                <Drawer.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen} />
+                <Drawer.Screen name="SymptomChecklist" component={SymptomChecklist}/>
+                <Drawer.Screen name="SymptomChecklistDetail" component={SymptomChecklistDetail}/>
                 <Drawer.Screen name="NotificationScreen" component={NotificationScreen}/>
                 <Drawer.Screen name="EditMedication" component={EditMedicationScreen}/>
                 <Drawer.Screen name="MedicationSummary" component={MedicationSummaryScreen}/>

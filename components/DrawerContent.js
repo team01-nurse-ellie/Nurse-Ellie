@@ -44,7 +44,7 @@ function DrawerContent(props) {
                 />
                 <DrawerItem
                     label="Symptom Checklist"
-                    onPress={() => { props.navigation.navigate('SymptomChecklistScreen') }}
+                    onPress={() => { props.navigation.navigate('SymptomChecklist') }}
                 />
                 <DrawerItem
                     label="Alarm"
