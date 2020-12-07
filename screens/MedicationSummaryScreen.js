@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {View, Text, Button, KeyboardAvoidingView, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
-
+import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
+import * as fsFn from '../utils/firestore';
 import * as Animatable from 'react-native-animatable';
 import { VictoryBar, VictoryLabel, VictoryAxis, VictoryLine, VictoryChart } from "victory-native";
 
@@ -10,21 +11,57 @@ import Card from '../components/MedicationCard';
 import MenuIcon from '../assets/images/menu-icon.svg';
 import EntryTriangle from '../assets/images/entry-triangle-icon.svg';
 
-const MedicationSummary = ({ navigation }) => {
+const MedicationSummary = ({ navigation, route }) => {
+
+    const { currentUser } = useContext(FirebaseAuthContext);
+    const [intakeStats, setIntakeStats] = useState({});
+
+    // state = {
+    //     modalVisible:false,
+    // };
+
+    useEffect(()=> {
+        // async function wrapper 
+        (async () => {
+ 
+            
+            await fsFn.getWeekIntakeStats(currentUser.uid).then((intakeStats) => {
+
+                // setIntakeStats(intakeStats);
+            
+            }); 
+           
+          
+        /*
+          // final return object for getWeekIntakeStats():
+              // allIntakeStats: {
+                  last7Days : [
+                      { day: 'Sat', taken: 3, total: 2, label: "3"}
+                      ....
+                      { day: 'Sat', taken: 3, total: 2, label: "3"}
+                  ], 
+                  yesterdayStatus : , // 'Completed / # missed'
+                  todayStatus: ,      // 'Completed / # missed'
+                  tomorrowStatus: ,   // # medications
+                  generalStatus: ,    // >= 90% Excellent, otherwise Needs Improvement
+              }
+        */
+
+
+
+
+        })();
+    }, []);
 
     const data = [
         { day: 'Sun', taken: 2, total: 2, label: "2"}, 
         { day: 'Mon', taken: 3, total: 3, label: "3"}, 
         { day: 'Tue', taken: 1, total: 2, label: "1"}, 
         { day: 'Wed', taken: 3, total: 3, label: "3"},
-        { day: 'Thr', taken: 3, total: 4, label: "3"}, 
+        { day: 'Thu', taken: 3, total: 4, label: "3"}, 
         { day: 'Fri', taken: 1, total: 2, label: "1"}, 
         { day: 'Sat', taken: 3, total: 2, label: "3"},
     ] 
-
-    state = {
-        modalVisible:false,
-    };
 
     return (
         <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
@@ -58,8 +95,11 @@ const MedicationSummary = ({ navigation }) => {
                     <View>
                         <Text style={styles.cardTitle}> Medication Intake </Text>
                         <Text style={styles.descriptionFont}> Yesterday: Completed </Text>
+                        {/* <Text style={styles.descriptionFont}> Yesterday: {intakeStats.yesterdayStatus} </Text> */}
                         <Text style={styles.descriptionFont}> Today: 3 Medications left</Text>
+                        {/* <Text style={styles.descriptionFont}> Today: {intakeStats.todayStatus}</Text> */}
                         <Text style={styles.descriptionFont}> Tomorrow: 4 Medications </Text>
+                         {/* <Text style={styles.descriptionFont}> Tomorrow: 4 Medications </Text> */}
                         <View style={{padding: 5}}/>
                         <TouchableOpacity style={{flexDirection:'row', alignItems: 'center', paddingHorizontal: 5}}>
                             <Text style={PatientStyles.clickableFont}>DETAILS</Text><EntryTriangle style={{paddingHorizontal:7}}/>
