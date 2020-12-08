@@ -284,7 +284,6 @@ export default EditUserProfileScreen = ({ navigation }) => {
                   flexDirection: "row",
                 //   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: 'lightblue'
               }}>
                   <Text style={{
                       fontSize: 16,
@@ -297,7 +296,7 @@ export default EditUserProfileScreen = ({ navigation }) => {
 
                   <TouchableOpacity style={styles.button} onPress={() => { onModalOpen(); }}>
                       {/* <Text style={styles.TextComponentStyle}>{user && user.date && user.date.seconds && new Date(user.date.seconds * 1000).toLocaleDateString("en-US")}</Text>  */}
-                      <View style={styles.inner} style={{ paddingRight: 0, top: 0, backgroundColor: 'red' }} >
+                      <View style={styles.inner} style={{ paddingRight: 0, top: 0, }} >
                           <Text style={styles.TextComponentStyle}>{date && moment(date).format('MMMM Do, YYYY')}</Text>
                       </View>
                   </TouchableOpacity>

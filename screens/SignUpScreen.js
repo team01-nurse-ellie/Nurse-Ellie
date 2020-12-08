@@ -53,11 +53,14 @@ const SignUpScreen = ({ navigation }) => {
 
                 const data = {
                     id: uid,
+                    gender: 'Other',
+                    date: new Date(),
+                    image: '1',
                     email,
                     fullName,
                     connectCode: code,
                     // Holds the reference ids to userlink table  
-                    userLinks: []
+                    userLinks: [],
                 };
 
                 usersRef
