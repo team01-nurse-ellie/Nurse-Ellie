@@ -190,6 +190,8 @@ class Component extends React.Component {
               onDayPress={this.onDayPress}
               style={styles.calendar}
               theme={CALENDAR_THEME}
+              minDate={new Date()}
+              // maxDate={new Date()}
             />
             <View style={styles.actions}>
               <View style={styles.left}>
