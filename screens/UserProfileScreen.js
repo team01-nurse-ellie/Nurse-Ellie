@@ -41,7 +41,7 @@ const UserProfileScreen = ({navigation}) => {
           .get();
   
         const userData = documentSnapshot.data();
-        console.log(userData);
+        // console.log(userData);
 
         setUser(userData);
       } catch(error) {
@@ -71,17 +71,13 @@ return (
     </TouchableOpacity>
     </View>
     <View>
-
+    {user && <ImagePicker disabled selected={user.image} onSelect={() => { }} />}
     <Text style={{fontSize: 18, color: "black", alignContent: "flex-start", paddingLeft: 0}}>Full name: {user && user?.fullName}</Text>
     <Text style={{fontSize: 18, color: "black", alignContent: "flex-start", paddingLeft: 0}}>Email : {user && user?.email}</Text>
     <Text style={{fontSize: 18, color: "black", alignContent: "flex-start", paddingLeft: 0}}>Gender : {user && user?.gender}</Text>
     <Text style={{fontSize: 18, color: "black", alignContent: "flex-start", paddingLeft: 0}}>
         Date Of Birth: {user && user.date && user.date.seconds && new Date(user.date.seconds * 1000).toLocaleDateString("en-US")}
     </Text>
-   
-                                    
-                           
-   
    
    
     </View>

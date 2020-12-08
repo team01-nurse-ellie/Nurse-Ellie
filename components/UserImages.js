@@ -6,7 +6,7 @@ import DP4 from '../assets/images/dp4.svg'
 import DP5 from '../assets/images/dp5.svg'
 import DP6 from '../assets/images/dp6.svg'
 import DP7 from '../assets/images/dp7.svg'
-import DP8 from '../assets/images/dp9.svg'
+import DP8 from '../assets/images/dp8.svg'
 import DP9 from '../assets/images/dp9.svg'
 
 const UserImages = {

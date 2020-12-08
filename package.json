@@ -11,9 +11,10 @@
   },
   "dependencies": {
     "@react-native-community/checkbox": "^0.5.5",
-    "@react-native-community/datetimepicker": "^3.0.6",
+    "@react-native-community/datetimepicker": "3.0.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-firebase/app": "^8.4.7",
+    "@react-native-picker/picker": "^1.9.4",
     "@react-navigation/drawer": "^5.9.2",
     "@react-navigation/native": "^5.7.5",
     "@react-navigation/stack": "^5.9.0",
@@ -24,6 +25,8 @@
     "expo": "^39.0.0",
     "expo-barcode-scanner": "~9.0.0",
     "expo-camera": "~9.0.0",
+    "expo-constants": "~9.2.0",
+    "expo-notifications": "~0.7.2",
     "expo-permissions": "~9.3.0",
     "expo-status-bar": "~1.0.2",
     "firebase": "7.9.0",
@@ -46,6 +49,7 @@
     "react-native-progress-circle": "^2.1.0",
     "react-native-qrcode-svg": "^6.0.6",
     "react-native-reanimated": "~1.13.0",
+    "react-native-reversed-flat-list": "^1.0.2",
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",
     "react-native-svg": "12.1.0",
@@ -56,8 +60,6 @@
     "react-redux": "^7.2.2",
     "redux": "^4.0.5",
     "styled-components": "^5.2.0",
-    "expo-notifications": "~0.7.2",
-    "expo-constants": "~9.2.0",
     "victory-native": "^35.3.0"
   },
   "devDependencies": {

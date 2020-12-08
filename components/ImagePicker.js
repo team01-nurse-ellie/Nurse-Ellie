@@ -38,7 +38,7 @@ class Component extends React.Component {
         const { isModalOpen, selected } = this.state;
         return (
             <React.Fragment>
-                <TouchableWithoutFeedback onPress={this.onModalOpen} >
+                <TouchableWithoutFeedback disabled={this.props?.disabled ? true : false} onPress={this.onModalOpen} >
                     {selected ? UserIconIndex.index[this.props.selected] : UserIconIndex.index[1]}
                 </TouchableWithoutFeedback>
                 <Modal
@@ -53,7 +53,7 @@ class Component extends React.Component {
                     swipeToClose={false}
                 >
                     <View style={styles.innerModal}>
-                        <Text style={styles.headerText}> Select a Medication Icon </Text>
+                        <Text style={styles.headerText}> Select an Avatar </Text>
                         <View style={styles.iconContainer}>
                             {Object.keys(UserIconIndex.index).map((key) => (
                                 <TouchableOpacity key={key} onPress={()=> this.onIconPress(key)} style={styles.medicationIcon}>
