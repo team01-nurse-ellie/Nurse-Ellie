@@ -14,9 +14,11 @@ import { firebase } from '../components/Firebase/config'
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
 import * as fsFn  from '../utils/firestore';
 import { dateFromToday } from '../utils/utils';
+import { UserContext } from '../components/UserProvider/UserContext';
 
 const HomeScreenHP = ({ navigation }) => {
     const {currentUser} = useContext(FirebaseAuthContext);
+    const { } = useContext(UserContext);
     const [fsPatients, setFsPatients] = useState ([]);
     const [fullName, setfullName] = useState('');
     const [greeting, setGreeting] = useState('');
@@ -36,8 +38,18 @@ const HomeScreenHP = ({ navigation }) => {
         } else {
             setGreeting('Good evening');
         }
-        loadUsername();
-        loadPatients();
+        
+        const unsubscribe = navigation.addListener('blur', () => {
+            
+            userSubscriber(); 
+            patientSubscriber();
+            
+        });
+
+        // Causes react state warning update
+        // loadUsername();
+        // loadPatients();
+        
         // listener for any changes to user account information
         const userSubscriber = firebase.firestore().collection("users").doc(currentUser.uid
             ).onSnapshot(function(querySnapshot) {
@@ -52,7 +64,7 @@ const HomeScreenHP = ({ navigation }) => {
             }
         );
         // Unsubscribe from listener when no longer in use
-        return () => {userSubscriber(); patientSubscriber();}
+        return () => { userSubscriber(); patientSubscriber(); unsubscribe(); }
     }, []);
 
 
@@ -93,7 +105,7 @@ const HomeScreenHP = ({ navigation }) => {
                 <MenuIcon/>
             </TouchableOpacity>
             <Text style={styles.time}> {greeting} </Text>
-            <Text style={styles.user}> Dr. Lee Fern </Text>
+            <Text style={styles.user}> Dr. {fullName} </Text>
             <View style={styles.progressCircle}>
                 <ProgressCircle
                     percent={patientsChecked}
@@ -118,7 +130,7 @@ const HomeScreenHP = ({ navigation }) => {
                                 <Text style={styles.patientFont}>{item.fullName? item.fullName: ''}</Text>
                                 <Text style={styles.lastSeenFont}>
                                     Last Seen:{'\n'} 
-                                    {item.fullName ? moment(dateFromToday(item.fullName.charCodeAt(0))).format('dddd MMMM Do YYYY'):''} 
+                                    {item.fullName ? moment(dateFromToday(item.fullName.charCodeAt(0))).format('dddd MMMM Do YYYY'):''}
                                 </Text>
                             </View>
                         </MedicationCard>

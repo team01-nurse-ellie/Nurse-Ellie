@@ -17,8 +17,11 @@ import * as Animatable from 'react-native-animatable';
 
 import Background from '../components/background.js';
 import MenuIcon from '../assets/images/menu-icon.svg';
+import BackgroundHP from '../components/BackgroundHP.js';
+import HPMenuIcon from '../assets/images/hp-menu-icon.svg';
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 import { backgroundColor } from 'react-native-calendars/src/style';
+import { UserContext } from '../components/UserProvider/UserContext';
 
 
 var screenHeight = Dimensions.get("window").height;
@@ -55,7 +58,7 @@ export default EditUserProfileScreen = ({ navigation }) => {
     
     // setMode(currentMode);
     // showMode('date');
-
+    const { accountType } = useContext(UserContext); 
     const [date, setDate] = useState();
     const [show, setShow] = useState(false);
     const [isModalOpen, setModalOpen] = useState(false);
@@ -201,9 +204,9 @@ export default EditUserProfileScreen = ({ navigation }) => {
 
   return (
       <View style={styles.container}>
-          <Background />
+      {(accountType === "HEALTH_PROFESSIONAL") ? <BackgroundHP /> : <Background />}
           <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
-              <MenuIcon />
+          {(accountType === "HEALTH_PROFESSIONAL") ? <HPMenuIcon /> : <MenuIcon />}
           </TouchableOpacity>
           <Animatable.View style={styles.drawer} animation="fadeInUpBig">
               <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: screenHeight / 10 }}>

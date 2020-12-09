@@ -8,12 +8,14 @@ import * as fsFn  from '../utils/firestore';
 
 import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
+import BackgroundHP from '../components/BackgroundHP.js';
+import MenuIcon from '../assets/images/menu-icon.svg';
+import HPMenuIcon from '../assets/images/hp-menu-icon.svg';
 import DayOfWeekPicker from '../components/DayOfWeekPicker';
 import DatePicker from '../components/DatePicker';
 import IconPicker from '../components/IconPicker';
 import TimePicker from '../components/TimePicker';
 
-import MenuIcon from '../assets/images/menu-icon.svg';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
@@ -24,7 +26,7 @@ import { alarmsRef, usersRef } from '../utils/databaseRefs';
 const EditMedicationScreen = ({route, navigation }) => {
     const { item } = route.params ?? {'item':{'isPatient':false}};
     const { currentUser } = useContext(FirebaseAuthContext);
-    const { firstName } = useContext(UserContext);
+    const { firstName, accountType } = useContext(UserContext);
     const [user, setUser] = useState('');
     // --------------------------------------------------
     const [scheduledTime, setScheduledTime] = useState(item.medication.scheduledTime);
@@ -297,9 +299,9 @@ const EditMedicationScreen = ({route, navigation }) => {
   
     return (
         <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
-            <Background/>
+            {(accountType === "HEALTH_PROFESSIONAL") ? <BackgroundHP /> : <Background />}
             <TouchableOpacity style={PatientStyles.menuButton} onPress={() => navigation.openDrawer()}>
-                <MenuIcon />
+                {(accountType === "HEALTH_PROFESSIONAL") ? <HPMenuIcon /> : <MenuIcon />}
             </TouchableOpacity>
             <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig">
                 <View style={styles.rowContainer}>

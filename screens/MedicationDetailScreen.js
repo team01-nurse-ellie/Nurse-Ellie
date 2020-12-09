@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { View, Text, KeyboardAvoidingView, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
@@ -7,25 +7,32 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
+import BackgroundHP from '../components/BackgroundHP.js';
+import HPMenuIcon from '../assets/images/hp-menu-icon.svg';
 import MedIconIndex from '../components/MedicationImages';
 import MenuIcon from '../assets/images/menu-icon.svg';
 import EditIcon from '../assets/images/edit-icon.svg';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 import EntryIcon from '../assets/images/entry-triangle-icon.svg';
 import { getValueFormatted } from '../utils/utils';
+import { UserContext } from '../components/UserProvider/UserContext';
 
 const MedicationDetailScreen = ({route, navigation}) => {
     const { item } = route.params;
+
+    const { accountType } = useContext(UserContext);
+
     return (
         <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
-            <Background />
+            {(accountType === "HEALTH_PROFESSIONAL") ? <BackgroundHP /> : <Background />}
             <TouchableOpacity style={PatientStyles.menuButton} onPress={()=> navigation.openDrawer()}>
-                <MenuIcon/>
+                {(accountType === "HEALTH_PROFESSIONAL") ? <HPMenuIcon /> : <MenuIcon />}
             </TouchableOpacity>
             <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig"> 
             <ScrollView>
             <View style={styles.rowContainer}>
-                <TouchableOpacity styes={styles.headerGoBack} onPress={()=> navigation.navigate("Medications")}>
+                {/* <TouchableOpacity styes={styles.headerGoBack} onPress={()=> navigation.navigate("Medications")}> */}
+                <TouchableOpacity styes={styles.headerGoBack} onPress={()=> navigation.goBack()}>
                     <ReturnIcon/>
                 </TouchableOpacity>
                 <Text style={styles.headerFont}>
@@ -74,12 +81,20 @@ const MedicationDetailScreen = ({route, navigation}) => {
                 </>
                 )}
 
-            <View style={{paddingVertical:10}}/>
-            <Text style={PatientStyles.descriptionFont}>Not feeling well after taking this medication?</Text>
-            <Text style={PatientStyles.descriptionFont}>Report it to your Health Professional</Text>
-            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text style={PatientStyles.clickableFont}>SYMPTOM CHECKLIST</Text><EntryIcon style={{paddingHorizontal: 8}}/>
-            </TouchableOpacity>
+                <View style={{ paddingVertical: 10 }} />
+
+                {(accountType === "PATIENT") &&
+                    <>
+                    <Text style={PatientStyles.descriptionFont}>Not feeling well after taking this medication?</Text>
+                    <Text style={PatientStyles.descriptionFont}>Report it to your Health Professional</Text>
+                    <TouchableOpacity onPress={()=> navigation.navigate('SymptomChecklist')} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={PatientStyles.clickableFont}>SYMPTOM CHECKLIST</Text><EntryIcon style={{ paddingHorizontal: 8 }} />
+                    </TouchableOpacity>
+                    </>
+                }
+            
+                    
+            
             </ScrollView>
             </Animatable.View>
         </KeyboardAvoidingView>

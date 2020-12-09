@@ -11,11 +11,11 @@
       "backgroundColor": "#42C86A"
     },
     "androidStatusBar": {
-      "translucent": true
+      "translucent": false
     },
     "notification": {
       "icon": "./assets/android/drawable-mdpi/test.png",  
-      "color": "#D2691E",
+      "color": "#42C86A",
       "iosDisplayInForeground": true
     },
     "updates": {

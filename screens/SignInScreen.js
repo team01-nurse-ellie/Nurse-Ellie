@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
@@ -6,9 +6,11 @@ import { firebase } from '../components/Firebase/config';
 
 import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
+import { UserContext } from '../components/UserProvider/UserContext';
 
 const SignInScreen = ({navigation}) => {
-    const [email, setEmail] = useState('')
+    const { accountType } = useContext(UserContext);
+    const [email, setEmail] = useState(''); 
     const [password, setPassword] = useState('')
     
     const onLoginPress = () => {
@@ -27,7 +29,10 @@ const SignInScreen = ({navigation}) => {
                             return;
                         }
                         const user = firestoreDocument.data()
-                        navigation.navigate('HomeScreen')
+                        if (accountType) {
+                            navigation.navigate('HomeScreen');
+
+                        }
                     })
                     .catch(error => {
                         alert(error)

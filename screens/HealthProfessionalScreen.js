@@ -1,7 +1,9 @@
-import React, { useState }from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, Dimensions, StyleSheet, Keyboard, KeyboardAvoidingView } from 'react-native';
+import React, { useState, useContext }from 'react';
+import { View, Text, TextInput, TouchableOpacity, Dimensions, StyleSheet, Keyboard, } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { firebase } from '../components/Firebase/config'
+import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
+import { usersRef } from '../utils/databaseRefs';
+import { UserContext } from '../components/UserProvider/UserContext';
 import Background from '../components/BackgroundHP.js';
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 import MenuIcon from '../assets/images/hp-menu-icon.svg';
@@ -10,34 +12,65 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const HealthProfessionalScreen = ({navigation}) => {
-    const [FieldofPractice, setFieldofPractice] = useState('')
-    const [LicenseNumber, setLicenseNumber] = useState('')
-    const [RegulatoryBody, setRegulatoryBody] = useState('')
-    const usersRef = firebase.firestore().collection('users')
-
-   const onHealthPress = async (res) => {
-        const data = await firebase.auth().currentUser.uid
-        var userDoc = firebase.firestore().collection("users").doc(data).update({
-        'FieldofPractice':'',
-        'LicenseNumber': '',
-        'RegulatoryBody': ''
-        })
-
-        const obj = {
-        FieldofPractice,
-        LicenseNumber,
-        RegulatoryBody,
-        };
-        
-        usersRef.doc(data).update(obj)
-
-    }
+    
+    const { currentUser } = useContext(FirebaseAuthContext);
+    const { verifiedHP } = useContext(UserContext);
+    const [FieldofPractice, setFieldofPractice] = useState('');
+    const [LicenseNumber, setLicenseNumber] = useState('');
+    const [RegulatoryBody, setRegulatoryBody] = useState('');
 
     const HealthProfAlert = () => {
-        alert('Your account will be verified in the next  2-3 business days. Thank you');
-        navigation.navigate('HomeScreen')
-      };
+        alert("Your account will be verified in the next 2-3 business days. Thank you");
+        navigation.navigate('Home');
+    };
 
+    const onHealthPress = async () => {
+
+        if (FieldofPractice.length > 0 &&
+            LicenseNumber.length > 0 &&
+            RegulatoryBody.length > 0) {
+          
+            // clear input fields
+            setFieldofPractice("");
+            setLicenseNumber("");
+            setRegulatoryBody("");
+
+            if (verifiedHP == false) {
+
+                usersRef.doc(currentUser.uid).update({
+                    'FieldofPractice': '',
+                    'LicenseNumber': '',
+                    'RegulatoryBody': ''
+                });
+        
+                const obj = {
+                    FieldofPractice,
+                    LicenseNumber,
+                    RegulatoryBody,
+                };
+        
+                usersRef.doc(currentUser.uid).update(obj).then(() => {
+                    HealthProfAlert();
+                });
+
+            } else {
+                alert("Account has been verified.")
+            }
+            
+        } else {
+
+            if (FieldofPractice.length == 0) {
+                alert(`Please fill in Field of Practice`);
+            } else if (LicenseNumber.length == 0) {
+
+                alert(`Please fill in License Number`);
+            } else if (RegulatoryBody.length == 0) {
+
+                alert(`Please fill in Regulatory Body`);
+            }
+
+        }
+    }
 
     return (
         
@@ -53,14 +86,26 @@ const HealthProfessionalScreen = ({navigation}) => {
                 <Text style={{ fontFamily: 'roboto-regular', fontSize: 25, }}> {`Account Change:\n Health Professional`}</Text>
             </View>
 
-                <TextInput style={styles.textInput} placeholder="Field of Practice" autoCapitalize="none"  onChangeText={(text) => setFieldofPractice(text)}
+                <TextInput style={styles.textInput} placeholder="Field of Practice" autoCapitalize="none"  onChangeText={(text) => setFieldofPractice(text.trim())}
                     value={FieldofPractice} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <TextInput style={styles.textInput}  placeholder="License Number" autoCapitalize="none" onChangeText={(text) => setLicenseNumber(text)} 
+                <TextInput style={styles.textInput}  placeholder="License Number" autoCapitalize="none" onChangeText={(text) => setLicenseNumber(text.trim())} 
                  value={LicenseNumber} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <TextInput style={styles.textInput} placeholder="Regulatory Body" autoCapitalize="none"  onChangeText={(text) => setRegulatoryBody(text)}
+                <TextInput style={styles.textInput} placeholder="Regulatory Body" autoCapitalize="none"  onChangeText={(text) => setRegulatoryBody(text.trim())}
                     value={RegulatoryBody} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-                <Text style={{marginBottom: 15}}>Status: Pending</Text>
-                <TouchableOpacity style={styles.button} onPress={() => { onHealthPress(); HealthProfAlert(); }}>
+
+                <Text style={{ marginVertical: '2%' }}>Status: <Text style={{
+                    color: (verifiedHP) ? 'green' : 'orange',
+                    fontWeight: 'bold'
+                }}>
+                    {verifiedHP ?
+                        'Verified'
+                        : 'Pending'} </Text>
+                </Text>
+              
+           
+                {/* <Text style={styles.descriptionFont}></Text> */}
+
+                <TouchableOpacity style={styles.button} onPress={() => onHealthPress()}>
                     <BlueAddIcon/>
                 </TouchableOpacity>
 
@@ -130,5 +175,3 @@ const styles = StyleSheet.create({
 });
 
 export default HealthProfessionalScreen;
-
-

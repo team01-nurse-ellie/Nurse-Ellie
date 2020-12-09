@@ -7,7 +7,7 @@ const FirebaseAuthProvider = ({ children }) => {
     const [currentUser, setUser] = useState(null);
 
     useEffect(() => {
-        let unsubscribe = firebase.auth().onAuthStateChanged(user => {
+        let unsubscribe = firebase.auth().onAuthStateChanged(async user => {
             if (user) {
                 setUser(user);
             } else {

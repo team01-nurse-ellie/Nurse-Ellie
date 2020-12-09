@@ -1,32 +1,45 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, TextInput, KeyboardAvoidingView, Keyboard, Alert } from 'react-native';
 import * as Animatable from 'react-native-animatable'
+import Modal from 'react-native-modal';
 
+// Background UI
 import Background from '../components/background';
+import BackgroundHP from '../components/BackgroundHP';
 
+// Icons
 import NurseEllieConnectLogo from '../assets/images/ellie-connect-logo.svg';
 import NurseEllieLogo from '../assets/android/drawable-hdpi/entry-logo.png';
+import MenuIcon from '../assets/images/menu-icon.svg';
+import HPMenuIcon from '../assets/images/hp-menu-icon.svg';
+import CloseBtn from '../assets/images/close-button.svg';
 import HP_Btn from '../assets/images/nurse-unselected-icon.svg';
 import HP_BtnSelected from '../assets/images/nurse-selected-icon.svg';
 import FamilyFriendBtn from '../assets/images/familyfriend-unselected-icon.svg';
 import FamilyFriendBtnSelected from '../assets/images/familyfriend-selected-icon.svg';
-import CloseBtn from '../assets/images/close-button.svg';
 
 import PatientStyles from '../styles/PatientStyleSheet';
+import HealthProStyles from '../styles/HealthProfessionalStyleSheet';
 
-import Modal from 'react-native-modal';
 
 import QRCode from 'react-native-qrcode-svg';
+// Firebase
 import { firebase } from "../components/Firebase/config";
-import { generateCode } from '../utils/codeGenerator';
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
-import MenuIcon from '../assets/images/menu-icon.svg';
+
+// User provider
+import { UserContext } from '../components/UserProvider/UserContext';
+
+// Utils
+import { generateCode } from '../utils/codeGenerator';
+
 
 const UserLinkScreen = ({ navigation }) => {
 
     const [userCode, setUserCode] = useState("");
     const [currentUserData, setUserData] = useState(null); 
     const { currentUser } = useContext(FirebaseAuthContext);
+    const { accountType } = useContext(UserContext);
     const [connectType, setConnectType] = useState("");
     const [modalContentRender, setContentRender] = useState({
         showMethodsModal: true,
@@ -77,16 +90,34 @@ const UserLinkScreen = ({ navigation }) => {
         text: styles.selectedConnectButtonText,
     }
 
+    const unselectedP = {
+        PIcon: <FamilyFriendBtn style={styles.FamilyFriendBtn} />,
+        button: styles.connectButton,
+        text: styles.connectButtonText,
+    }
+
+    const selectedP = {
+        PIcon: <FamilyFriendBtnSelected style={styles.FamilyFriendBtn} />,
+        button: styles.selectedHPConnectButton,
+        text: styles.selectedConnectButtonText,
+    }
+
+
     const [connectButtonHP, setConnectButtonHP] = useState(unselectedHP);
 
     const [connectButtonFamilyFriend, setConnectButtonFamilyFriend] = useState(unselectedFF);
+    
+    const [connectButtonPatient, setConnectButtonPatient] = useState(unselectedP);
 
+    
     const buttonSelect = (type) => {
 
         if (type === 'HEALTH_PRO') {
             setConnectButtonHP((state) => (selectedHP));
         } else if (type === 'FRIEND_FAMILY') {
             setConnectButtonFamilyFriend((state) => (selectedFF));
+        } else if (type === 'PATIENT') {
+            setConnectButtonPatient(() => (selectedP));
         }
 
         setConnectType(type);
@@ -100,6 +131,7 @@ const UserLinkScreen = ({ navigation }) => {
     const buttonDeselect = () => {
         setConnectButtonHP(unselectedHP);
         setConnectButtonFamilyFriend(unselectedFF);
+        setConnectButtonPatient(unselectedP);
     };
 
     const closeModal = () => {
@@ -289,7 +321,7 @@ const UserLinkScreen = ({ navigation }) => {
     const [methodsPressed, setMethodsPressed] = useState(false);
 
     const [inputCode, setInputCode] = useState("");
-
+   
     const methodsModal = (
         <View testID={"methodsModal"}>
             <View style={{ marginBottom: 15 }}>
@@ -302,14 +334,14 @@ const UserLinkScreen = ({ navigation }) => {
                     setMethodsPressed(true);
                     handleModalContent("PROVIDE");
                 }
-                } style={styles.methodBtn}>
+                } style={(accountType == 'PATIENT') ? styles.methodBtn: styles.methodHPBtn}>
                     <View style={{}}>
-                        <Text style={styles.methodBtnText}>
+                        <Text style={styles.methodBtnText}> 
                             Provide Code
                 </Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={useQR} style={styles.methodBtn}>
+                <TouchableOpacity onPress={useQR} style={(accountType == 'PATIENT') ? styles.methodBtn: styles.methodHPBtn}>
                     <View style={{}}>
                         <Text style={styles.methodBtnText}>
                             Scan QR Code
@@ -319,7 +351,7 @@ const UserLinkScreen = ({ navigation }) => {
                 <TouchableOpacity testID="inputCodeButton" onPress={() => {
                     setMethodsPressed(true);
                     handleModalContent("INPUT")
-                }} style={styles.methodBtn}>
+                }} style={(accountType == 'PATIENT') ? styles.methodBtn: styles.methodHPBtn}>
                     <View style={{}}>
                         <Text style={styles.methodBtnText}>
                             Input Code
@@ -347,7 +379,7 @@ const UserLinkScreen = ({ navigation }) => {
                 <Text testID="userCode" style={{ fontSize: 25, fontFamily: 'roboto-regular', marginTop: "5%" }}>
                     {userCode}
                 </Text>
-                <TouchableOpacity testID="refreshButton" onPress={promptRefreshCode} style={styles.refreshCodeBtn}>
+                <TouchableOpacity testID="refreshButton" onPress={promptRefreshCode} style={(accountType == 'PATIENT') ? styles.refreshCodeBtn: styles.refreshCodeHPBtn}>
                     <View style={{}}>
                         <Text style={styles.methodBtnText}>
                             Refresh
@@ -368,7 +400,7 @@ const UserLinkScreen = ({ navigation }) => {
             <View>
                 <TextInput
                     textAlign="center"
-                    autoFocus={true}
+                    autoFocus={true}  
                     autoCapitalize="characters"
                     style={[PatientStyles.textInput, {paddingTop: 8}]}
                     returnKeyType="done"
@@ -387,7 +419,7 @@ const UserLinkScreen = ({ navigation }) => {
                         connectUser("INPUT", connectType);
                     }, 250);
                     Keyboard.dismiss();
-                }} style={[styles.methodBtn, { marginTop: "10%" }]}>
+                }} style={[(accountType == 'PATIENT') ? styles.methodBtn: styles.methodHPBtn, { marginTop: "10%" }]}>
                     <View>
                         <Text style={styles.methodBtnText}>
                             Submit
@@ -403,9 +435,9 @@ const UserLinkScreen = ({ navigation }) => {
     return (
         <>
             <KeyboardAvoidingView style={{ flex: 1, }} behavior="padding" enabled>
-                <Background />
-                <TouchableOpacity style={PatientStyles.menuButton} onPress={() => navigation.openDrawer()}>
-                    <MenuIcon />
+                {accountType == "PATIENT" ? <Background /> : <BackgroundHP />}
+                <TouchableOpacity style={(accountType === "PATIENT") ? PatientStyles.menuButton : HealthProStyles.menuButton} onPress={() => navigation.openDrawer()}>
+                    {accountType == "PATIENT" ? <MenuIcon /> : <HPMenuIcon />}
                 </TouchableOpacity>
                 <Animatable.View style={[PatientStyles.drawer, {justifyContent: 'space-between'}]} animation="fadeInUpBig">
                     <View style={styles.screenHeader}>
@@ -415,7 +447,7 @@ const UserLinkScreen = ({ navigation }) => {
                         <NurseEllieConnectLogo height={75} style={styles.headerImage} />
                         {/* <Image style={styles.headerImage} source={NurseEllieConnectLogo} /> */}
                     </View>
-                    <View style={styles.UserLinkScreenDescription}>
+                    {(accountType == "PATIENT") ? <View style={styles.UserLinkScreenDescription}>
                         <Text style={styles.descriptionText}>
                             {`Connecting to a `}
                             <Text style={styles.underline}>
@@ -424,27 +456,62 @@ const UserLinkScreen = ({ navigation }) => {
                             {` will allow them to view your medication logs. And, will allow you to book appointments, report any symptoms, and connect with them.`}
                         </Text>
                     </View>
-                    <View>
-                        <Text style={styles.connectText}>
-                            Connect to:
-                    </Text>
-                        <TouchableOpacity testID={"hp_button"} onPress={() => buttonSelect('HEALTH_PRO')} style={connectButtonHP.button}>
-                            <View style={styles.buttonFormat}>
-                                {connectButtonHP.HPIcon}
-                                <Text style={connectButtonHP.text}>
-                                    Health Professional
+                        :
+                        <View style={styles.UserLinkScreenDescription}>
+                            <Text style={styles.descriptionText}>
+                                {`Connecting to a `}
+                                <Text style={styles.underline}>
+                                    {`Patient`}
+                                </Text>
+                                {` will allow them to connect with you and schedule appointments. And, will allow you to set and monitor their medication intake, and check up with them periodically through symptom checklists.`}
                             </Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => buttonSelect('FRIEND_FAMILY')} style={connectButtonFamilyFriend.button}>
-                            <View style={styles.buttonFormat}>
-                                {connectButtonFamilyFriend.FamilyFriendIcon}
-                                <Text style={connectButtonFamilyFriend.text}>
-                                    Family Member / Friend
-                            </Text>
-                            </View>
-                        </TouchableOpacity>
+                        </View>}
+                        
+                    <View style={{marginBottom: '10%'}}>
+                    {/* <View> */}  
+                        <Text style={styles.connectText}>Connect to:</Text>
+                       {/*  <Text style={styles.connectText}>Connect to:</Text> */}
+
+                        {(accountType == "PATIENT")  
+                            ?
+                            <>
+                                <TouchableOpacity testID={"hp_button"} onPress={() => buttonSelect('HEALTH_PRO')} style={connectButtonHP.button}>
+                                    <View style={styles.buttonFormat}>
+                                        {connectButtonHP.HPIcon}
+                                        <Text style={connectButtonHP.text}>
+                                            Health Professional
+                                </Text>
+                                    </View>
+                                </TouchableOpacity>
+
+
+
+
+
+                                <TouchableOpacity onPress={() => buttonSelect('FRIEND_FAMILY')} style={connectButtonFamilyFriend.button}>
+                                    <View style={styles.buttonFormat}>
+                                        {connectButtonFamilyFriend.FamilyFriendIcon}
+                                        <Text style={connectButtonFamilyFriend.text}>
+                                            Family Member / Friend
+                                </Text>
+                                    </View>
+                                </TouchableOpacity>
+
+                            </>
+                            :
+                            <>
+                                <TouchableOpacity onPress={() => buttonSelect('PATIENT')} style={connectButtonPatient.button}>
+                                    <View style={styles.buttonFormat}>
+                                        {connectButtonPatient.PIcon}
+                                        <Text style={connectButtonPatient.text}>
+                                            Patient
+                                    </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </>
+                        }
                     </View>
+
                     <Modal
                         // needs to be set to 0, otherwise it flickers when modal is closing.
                         backdropTransitionOutTiming={0}
@@ -481,8 +548,21 @@ const styles = StyleSheet.create({
         marginTop: 15,
         width: "90%"
     },
+    refreshCodeHPBtn: {
+        backgroundColor: '#4285C8',
+        elevation: 3,
+        borderRadius: 5,
+        marginTop: 15,
+        width: "90%"
+    },
     methodBtn: {
         backgroundColor: '#42C86A',
+        elevation: 3,
+        borderRadius: 5,
+        marginTop: 15,
+    },
+    methodHPBtn: {
+        backgroundColor: '#4285C8',
         elevation: 3,
         borderRadius: 5,
         marginTop: 15,
@@ -517,6 +597,14 @@ const styles = StyleSheet.create({
     },
     selectedConnectButton: {
         backgroundColor: '#42C86A',
+        borderRadius: 20,
+        elevation: 6,
+        marginTop: 15,
+        height: 70,
+        justifyContent: 'center'
+    },
+    selectedHPConnectButton: {
+        backgroundColor: '#4285C8',
         borderRadius: 20,
         elevation: 6,
         marginTop: 15,

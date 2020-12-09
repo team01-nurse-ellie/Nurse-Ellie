@@ -1,17 +1,22 @@
-import React, { useState, useEffect }from 'react';
+import React, { useState, useEffect, useContext }from 'react';
 import { View, Text, TouchableOpacity, Image, Dimensions, StyleSheet, FlatList} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
 import Background from '../components/background.js';
+import BackgroundHP from '../components/BackgroundHP.js';
 import MenuIcon from '../assets/images/menu-icon.svg';
+import HPMenuIcon from '../assets/images/hp-menu-icon.svg';
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
 import EditIcon from '../assets/images/edit-icon.svg';
 import ImagePicker from '../components/ImagePicker';
 import UserIconIndex from '../components/UserImages';
+import { UserContext } from '../components/UserProvider/UserContext';
 const UserProfileScreen = ({navigation}) => {
     //state declare
+
+    const { accountType } = useContext(UserContext);
 
     const [user, setUser] = useState();
     const [images, setimages] = useState([
@@ -58,9 +63,9 @@ const UserProfileScreen = ({navigation}) => {
 return (
       
     <View style={styles.container}>
-        <Background/>
+        {(accountType === "HEALTH_PROFESSIONAL") ? <BackgroundHP /> : <Background />}
     <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
-        <MenuIcon />
+            {(accountType === "HEALTH_PROFESSIONAL") ? <HPMenuIcon /> : <MenuIcon />}
     </TouchableOpacity>
     <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: screenHeight / 10 }}>

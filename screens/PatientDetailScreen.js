@@ -85,7 +85,7 @@ const PatientDetailScreen = ({route, navigation}) => {
     }
 
     return (
-
+        
         <KeyboardAvoidingView style={styles.background} behaviour="padding" enabled>
             <Text>{console.log(checklist)}</Text>
             <Background/>
@@ -98,9 +98,9 @@ const PatientDetailScreen = ({route, navigation}) => {
                     <Text style={styles.title}>
                         {item.fullName}
                     </Text>
-                    <TouchableOpacity>
+                  {/*   <TouchableOpacity>
                         <EditIcon/>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 <View style={{flexDirection: 'row', justifyContent:'center', paddingBottom: 13}}>
                     <TempAvatar/>
@@ -129,7 +129,7 @@ const PatientDetailScreen = ({route, navigation}) => {
                         <PlusIcon/>
                     </TouchableOpacity>
                 </View>
-                <FlatList horizontal 
+                {(medications.length > 0) ? <FlatList horizontal
                 data={medications} 
                 keyExtractor={(item) => item.medication.rxcui.toString()} 
                 renderItem={({item}) => (
@@ -149,28 +149,31 @@ const PatientDetailScreen = ({route, navigation}) => {
                             </View>
                         </CondensedCard>
                     </TouchableOpacity>
-                )}/>
+                )}/> : <View style={{marginTop: '10%', alignItems: 'center'}}><Text>Has no medications</Text></View>}
+                
                 <View style={{flexDirection: 'row',  paddingTop: 13}}>
                     <Text style={styles.subheadingfont}>
                         Symptom Checklist
                     </Text>
                 </View>
-                <TouchableOpacity onPress={()=>{navigation.navigate('SymptomChecklistDetail', {item: checklist})}}>
-                    <Card>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap'}}>
-                            <Text style={styles.dateFont}> Last Complaint: </Text>
-                            <Text style={styles.dateFont}> {checklist ? checklist.checklist.additionalDetails: 'placeholder'}</Text>
-                        </View>
-                    </Card>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=>Alert.alert("requesting symptom checklist...")}>
+                    {checklist ? <TouchableOpacity onPress={() => { navigation.navigate('SymptomChecklistDetail', { item: checklist }) }}>
+                        <Card>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+                                <Text style={styles.dateFont}> Last Complaint: </Text>
+                                <Text style={styles.dateFont}> {checklist ? checklist.checklist.additionalDetails : 'placeholder'}</Text>
+                            </View>
+                        </Card>
+                    </TouchableOpacity> : 
+                    
+                    <View style={{marginTop: '15%', alignItems: 'center'}}><Text>Has no symptom checklists</Text></View>}
+             {/*    <TouchableOpacity onPress={()=>Alert.alert("requesting symptom checklist...")}>
                     <View style={{flexDirection: 'row'}}>
-                        <Text style={styles.clickableFont}> 
+                        <Text style={styles.clickableFont}>
                             REQUEST SYMPTOM CHECKLIST
                         </Text>
                         <EnterIcon style={{paddingTop: 30}}/>
                     </View>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 </ScrollView>
             </Animatable.View>
         </KeyboardAvoidingView>

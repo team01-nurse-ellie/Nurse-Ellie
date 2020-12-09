@@ -28,6 +28,8 @@ import { alarmsRef } from '../utils/databaseRefs.js';
 
 import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
+import BackgroundHP from '../components/BackgroundHP.js';
+import HPMenuIcon from '../assets/images/hp-menu-icon.svg';
 import DatePicker from '../components/DatePicker';
 import TimePicker from '../components/TimePicker';
 import IconPicker from '../components/IconPicker';
@@ -51,7 +53,7 @@ const AddMedicationScreen = ({route, navigation }) => {
   const [user, setUser] = useState('');
   const autoCompleteRef = useRef();
   const { currentUser } = useContext(FirebaseAuthContext);
-  const { firstName } = useContext(UserContext);
+  const { firstName, accountType } = useContext(UserContext);
   const currentTime = new Date();
   const [medIcon, setMedIcon] = useState('1');
   const [scrollViewRef, setScrollViewRef] = useState();
@@ -348,9 +350,9 @@ const AddMedicationScreen = ({route, navigation }) => {
   
   return (
     <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
-      <Background />
+      {(accountType === "HEALTH_PROFESSIONAL") ? <BackgroundHP /> : <Background />}
       <TouchableOpacity style={PatientStyles.menuButton} onPress={() => navigation.openDrawer()}>
-        <MenuIcon />
+        {(accountType === "HEALTH_PROFESSIONAL") ? <HPMenuIcon /> : <MenuIcon />}
       </TouchableOpacity>
       <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig">
         <View style={styles.header}>
@@ -448,7 +450,7 @@ const AddMedicationScreen = ({route, navigation }) => {
           <View style={{ paddingBottom: 14 }} />
           <Button 
             title="ADD MEDICATION" 
-            color="#42C86A" 
+            color={(accountType === "PATIENT") ? "#42C86A" : "#4285C8"}
             onPress={addMedicationToDB} />
           <Modal
             isVisible={confirmationModal}

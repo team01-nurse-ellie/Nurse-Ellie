@@ -3,6 +3,8 @@ import { YellowBox, LogBox } from 'react-native';
 import { StyleSheet, } from 'react-native';
 // Firebase Authentication
 import { FirebaseAuthProvider } from './components/Firebase/FirebaseAuthProvider';
+// Current user's data (Retrieves the accountType so far.)
+import { UserProvider } from './components/UserProvider/UserProvider';
 // Components
 import AppNavigation from './components/AppNavigation';
 // Expo's splashscreen and font module
@@ -14,7 +16,6 @@ import store from './src/redux/store'
 
 // fix for [Unhandled promise rejection: ReferenceError: Can't find variable: atob]
 import {decode, encode} from 'base-64'
-import { UserProvider } from './components/UserProvider/UserProvider';
 if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
@@ -40,6 +41,7 @@ const App = () => {
     // ScrollPicker in TimePicker warning, and IconPicker warning, respectively.
     // YellowBox.ignoreWarnings(['Expected style', 'Failed prop type']);
     LogBox.ignoreLogs(['Expected style', 'Failed prop type']);
+    LogBox.ignoreLogs(["Can't perform a React state update on an unmounted component.", "This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function"]);
 
   }, []);
 

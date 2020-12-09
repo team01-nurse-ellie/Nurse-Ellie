@@ -36,6 +36,7 @@ import UserProfileScreen from '../screens/UserProfileScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, TransitionSpecs } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { UserContext } from './UserProvider/UserContext';
 const RootStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -43,8 +44,8 @@ const AppNavigation = () => {
 
     const [isSignedIn, setIsSignedIn] = useState(false);
     const { currentUser } = useContext(FirebaseAuthContext);
-    const [accountType, setAccountType] = useState("patient");
-
+    const { accountType } = useContext(UserContext);
+    
     useEffect(() => {
         setIsSignedIn(Boolean(currentUser));
     }, []);
@@ -52,7 +53,11 @@ const AppNavigation = () => {
     const DrawerRoutes = () => {
         return (
             <Drawer.Navigator drawerPosition='right' drawerContent={props => <DrawerContent {...props} />}>
-                <Drawer.Screen name="Home" component={HomeScreen} />
+                {/* (accountType == "PATIENT") ? */
+                <Drawer.Screen name="Home" component={(accountType === "PATIENT") ? HomeScreen : HomeScreenHP} />
+                    /* : */
+                   /*  <Drawer.Screen name="Home" component={} /> */
+                }
                 <Drawer.Screen name="Medications" component={MedicationListScreen} />
                 <Drawer.Screen name="AddMedication" component={AddMedicationScreen} />
                 <Drawer.Screen name="Medication" component={MedicationDetailScreen} />
@@ -66,7 +71,6 @@ const AppNavigation = () => {
                 <Drawer.Screen name="SymptomChecklist" component={SymptomChecklist}/>
                 <Drawer.Screen name="SymptomChecklistDetail" component={SymptomChecklistDetail}/>
                 <Drawer.Screen name="MedicationSummary" component={MedicationSummaryScreen}/>
-                <Drawer.Screen name="HomeScreenHP" component={HomeScreenHP} />
                 <Drawer.Screen name="EditUserProfileScreen" component={EditUserProfileScreen} options={{unmountOnBlur:true}}/>
                 <Drawer.Screen name="UserProfile" component={UserProfileScreen} options={{unmountOnBlur:true}}/>
             </Drawer.Navigator>
@@ -75,14 +79,14 @@ const AppNavigation = () => {
 
     return (
         <>
-            <StatusBar backgroundColor={(accountType == "patient") ? PatientStyles.background.backgroundColor : HealthProStyles.background.backgroundColor} />
+            {/* accountType && <StatusBar backgroundColor={(accountType == "PATIENT") ? PatientStyles.background.backgroundColor : HealthProStyles.background.backgroundColor} /> */}
             <SafeAreaView style={{
                 flex: 1,
                 // marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
             }}>
                 <NavigationContainer>
                     <RootStack.Navigator>
-                        {currentUser ? (
+                        {(currentUser && accountType) ? (
                             <>
                                 <RootStack.Screen name="HomeScreen" component={DrawerRoutes} options={{ headerShown: false }} />
                                 <RootStack.Screen name="NotificationScreen" options={{
@@ -103,7 +107,7 @@ const AppNavigation = () => {
                                         close: TransitionSpecs.TransitionIOSSpec   
                                     },
                                     // Color of header depending on account type.
-                                    headerStyle: { backgroundColor: (accountType == "patient") ? PatientStyles.background.backgroundColor : HealthProStyles.background.backgroundColor}, title: "Scan" }} />
+                                    headerStyle: { backgroundColor: (accountType == "PATIENT") ? PatientStyles.background.backgroundColor : HealthProStyles.background.backgroundColor}, title: "Scan" }} />
                             </>
                         ) : (
                                 <>
