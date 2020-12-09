@@ -569,7 +569,7 @@ const getWeekIntakeStats = async (uid) => {
         }
     }
 
-    let yesterdayStatus = (yesterdayMeds.length == 0) ? `No meds` : (yesterdayMissedMeds > 0) ? `${yesterdayMissedMeds} Medications left` : `Completed`;
+    let yesterdayStatus = (yesterdayMeds.length == 0) ? `No medications taken` : (yesterdayMissedMeds > 0) ? `${yesterdayMissedMeds} Medications left` : `Completed`;
     // ============= TODAY STATUS =============
     // todaysMeds - if a medication with an intake doc with same rxcui it is taken/missed  
     // if in intake doc the rxcui, and timestamp is found in medicationAlarms it means it needs to be DEALT with
@@ -706,7 +706,7 @@ const getWeekIntakeStats = async (uid) => {
         generalStatus
     };
 
-    return null;
+    return allIntakeStats;
 }
 
 export {

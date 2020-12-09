@@ -14,55 +14,24 @@ import EntryTriangle from '../assets/images/entry-triangle-icon.svg';
 const MedicationSummary = ({ navigation, route }) => {
 
     const { currentUser } = useContext(FirebaseAuthContext);
-    const [intakeStats, setIntakeStats] = useState({});
-
-    // state = {
-    //     modalVisible:false,
-    // };
+    const [intakeStats, setIntakeStats] = useState();
+    const [last7DayStats, setlast7DayStats] = useState();
 
     useEffect(()=> {
         // async function wrapper 
+        
         (async () => {
- 
-            
+
+
             await fsFn.getWeekIntakeStats(currentUser.uid).then((intakeStats) => {
-
-                // setIntakeStats(intakeStats);
-            
-            }); 
-           
-          
-        /*
-          // final return object for getWeekIntakeStats():
-              // allIntakeStats: {
-                  last7Days : [
-                      { day: 'Sat', taken: 3, total: 2, label: "3"}
-                      ....
-                      { day: 'Sat', taken: 3, total: 2, label: "3"}
-                  ], 
-                  yesterdayStatus : , // 'Completed / # missed'
-                  todayStatus: ,      // 'Completed / # missed'
-                  tomorrowStatus: ,   // # medications
-                  generalStatus: ,    // >= 90% Excellent, otherwise Needs Improvement
-              }
-        */
-
-
-
+                setlast7DayStats(intakeStats.last7DaysStats);
+                setIntakeStats(intakeStats);
+            });
 
         })();
+
     }, []);
-
-    const data = [
-        { day: 'Sun', taken: 2, total: 2, label: "2"}, 
-        { day: 'Mon', taken: 3, total: 3, label: "3"}, 
-        { day: 'Tue', taken: 1, total: 2, label: "1"}, 
-        { day: 'Wed', taken: 3, total: 3, label: "3"},
-        { day: 'Thu', taken: 3, total: 4, label: "3"}, 
-        { day: 'Fri', taken: 1, total: 2, label: "1"}, 
-        { day: 'Sat', taken: 3, total: 2, label: "3"},
-    ] 
-
+    
     return (
         <KeyboardAvoidingView style={PatientStyles.background} behaviour="padding" enabled>
             <Background/>
@@ -75,42 +44,45 @@ const MedicationSummary = ({ navigation, route }) => {
                         Medication Summary
                     </Text>
                 </View>
-                <VictoryChart
+                {last7DayStats && <VictoryChart         
                     height={230}
                     width={350}>
                 <VictoryBar 
                     barRatio={0.92}
-                    cornerRadius={{ topLeft:10, topRight:10, bottomLeft:10, bottomRight:10 }}
-                    data={data} x="day" y="taken" 
-                    style={{data:{fill:'#42C86A'}}}
-                    labelComponent = { <VictoryLabel/> }
+                    cornerRadius={{ topLeft: 10, topRight: 10, bottomLeft: 10, bottomRight: 10 }}
+                    data={last7DayStats} x="day" y="taken"
+                    style={{ data: { fill: '#42C86A' } }}
+                    labelComponent={<VictoryLabel />}
                     height={230}
                     width={300}
                 />
                 <VictoryLine 
-                    data={data} x="day" y="total"/>
+                    data={last7DayStats} x="day" y="total"/>
                 <VictoryAxis/>
-                </VictoryChart>
+                </VictoryChart>}
+
                 <Card>
                     <View>
                         <Text style={styles.cardTitle}> Medication Intake </Text>
-                        <Text style={styles.descriptionFont}> Yesterday: Completed </Text>
+                        <Text style={styles.descriptionFont}> Yesterday: {intakeStats && intakeStats.yesterdayStatus} </Text>
                         {/* <Text style={styles.descriptionFont}> Yesterday: {intakeStats.yesterdayStatus} </Text> */}
-                        <Text style={styles.descriptionFont}> Today: 3 Medications left</Text>
+                        <Text style={styles.descriptionFont}> Today: {intakeStats && intakeStats.todayStatus}</Text>
                         {/* <Text style={styles.descriptionFont}> Today: {intakeStats.todayStatus}</Text> */}
-                        <Text style={styles.descriptionFont}> Tomorrow: 4 Medications </Text>
+                        <Text style={styles.descriptionFont}> Tomorrow: {intakeStats &&  intakeStats.tomorrowStatus} </Text>
                          {/* <Text style={styles.descriptionFont}> Tomorrow: 4 Medications </Text> */}
                         <View style={{padding: 5}}/>
-                        <TouchableOpacity style={{flexDirection:'row', alignItems: 'center', paddingHorizontal: 5}}>
-                            <Text style={PatientStyles.clickableFont}>DETAILS</Text><EntryTriangle style={{paddingHorizontal:7}}/>
-                        </TouchableOpacity>
+                       {/*  <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 5 }}>
+                            <Text style={PatientStyles.clickableFont}>DETAILS</Text><EntryTriangle style={{ paddingHorizontal: 7 }} />
+                        </TouchableOpacity> */}
                     </View>
                     <View style={styles.timeView}>
-                        <Text style={styles.status}>Excellent</Text>
+                        <Text style={[styles.status, { color: (intakeStats && intakeStats.generalStatus === "Excellent") ? '#42C86A' : 'orange' }]}>
+                            {intakeStats && intakeStats.generalStatus}
+                        </Text>
                     </View>
                 </Card>
-                <View style={{paddingVertical: 4}} />
-                <Card>
+               {/*  <View style={{paddingVertical: 4}} /> */}
+              {/*   <Card>
                     <View>
                         <Text style={styles.cardTitle}> Blood Glucose Level </Text>
                         <Text style={styles.descriptionFont}> Last Recorded: </Text>
@@ -123,12 +95,12 @@ const MedicationSummary = ({ navigation, route }) => {
                     <View style={styles.timeView}>
                         <Text style={styles.measurement}>140mg/dl</Text>
                     </View>
-                </Card>
-                <View style={{paddingVertical: 4}} />
-                <Button
+                </Card> */}
+              {/*   <View style={{paddingVertical: 4}} /> */}
+                {/* <Button
                     title="Share Results"
                     color='#42C86A'
-                    />
+                    /> */}
             </Animatable.View>
         </KeyboardAvoidingView>
     )
@@ -142,8 +114,7 @@ const styles = StyleSheet.create({
     },
     status: {
         fontFamily: 'roboto-regular',
-        fontSize: 18, 
-        color: '#42C86A'
+        fontSize: 16, 
     }, 
     measurement: {
         fontFamily: 'roboto-regular',
