@@ -423,6 +423,7 @@ const AddMedicationScreen = ({route, navigation }) => {
                       onSelect={setSelectDoW}
                       startDate={timestamp.startDate}
                       endDate={timestamp.endDate}
+                      screenType={`Add Medication`}
                     />
               <View style={{ paddingBottom: 8 }}>
                       <DatePicker
