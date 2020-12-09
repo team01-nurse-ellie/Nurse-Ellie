@@ -3,6 +3,7 @@ import { firebase } from '../components/Firebase/config';
 import { usersRef, alarmsRef } from './databaseRefs.js';
 import * as Notifications from 'expo-notifications';
 import { not } from 'react-native-reanimated';
+import { calculateLocalTimezone } from './dateHelpers';
 
 // Adds a medication to user collection
 const addMedication =  async (userId, medObj) => {
@@ -452,43 +453,260 @@ const getWeekIntakeStats = async (uid) => {
     }
     */
 
+   let dow = [
+       {
+           day: "Sun",
+           meds: []
+       },
+       {
+           day: "Mon",
+           meds: []
+       },
+       {
+           day: "Tue",
+           meds: []
+       },
+       {
+           day: "Wed",
+           meds: []
+       },
+       {
+           day: "Thu",
+           meds: []
+       },
+       {
+           day: "Fri",
+           meds: []
+       },
+       {
+           day: "Sat",
+           meds: []
+       },
+   ];
+   // console.log(todayDays);
+    const MS_TO_DAYS = 86400000;
+    let todayMs = (new Date()).getTime();
+    let todayDays = Math.floor(todayMs / MS_TO_DAYS);
+    let tomorrowDays = todayDays + 1;
+    let todayDaysNoTime  = calculateLocalTimezone(todayDays * MS_TO_DAYS);
+    let tomorrowDaysNoTime  = calculateLocalTimezone(tomorrowDays * MS_TO_DAYS);
+    
+    console.log("todayDays", todayDays)
+    console.log("todayDaysNoTime", todayDaysNoTime)
+    console.log("tomorrowDaysNoTime", tomorrowDaysNoTime)
+
+    
+    let last7Days = [];
+    for (let i = 1; i < 8; i++) {
+        // have to -1 b/c todayDays is 1 num higher? 
+        last7Days.push((todayDays - 1) - i);
+        // last7Days.push((todayDays) - i);
+    }
+    let allMeds = [];
+    let yesterdayMeds = [];
+    let todayMeds = [];
+    let tomorrowMeds = [];
+    // ============= LAST 7 DAYS GRAPH =============
+    last7Days.sort((a,b) => a < b); 
+    console.log(last7Days, `last7Days`);
+    await usersRef.doc(uid).collection("medicationIntakes")
+        // last7days - array of last 7 days to fetch medicationIntakes from. 
+        .where("dayStatus", "in", last7Days).get().then(async (querySnapshot) => {
+            querySnapshot.forEach(doc => {
+                allMeds.push(doc.data());
+            });
+        }).catch(error => { throw error });
+
+    (allMeds).sort((a, b) => a.timestampStatus < b.timestampStatus);
+    // (missedMeds).sort((a, b) => a.timestampStatus > b.timestampStatus);
+
+    // console.log(takenMeds)
+    for (let i = 0; i < allMeds.length; i++) {
+        // IF timestamp coming in is 12am UTC and not 12am Local Time
+        let date = new Date((calculateLocalTimezone(allMeds[i].timestampStatus)))
+        // console.log(takenMeds[i].timestampStatus);
+        //   if (date.getDay() == 0) {
+        // push into sunday taken array
+        //   } 
+        // dayStatus == yesterday daystatus
+        if (allMeds[i].dayStatus == last7Days[0]) {
+            yesterdayMeds.push(allMeds[i]);
+        }
+
+        dow[date.getDay()].meds.push(allMeds[i]);
+    }
+
+    // console.log(dow);
+
+    let last7DaysStats = [];
+
+    for (let i = 0; i < dow.length; i++) {
+        let takenCount = 0;
+
+        for (let j = 0; j < dow[i].meds.length; j++) {
+            if (dow[i].meds[j].status === "taken") {
+                takenCount += 1;
+            }
+        }
+
+        last7DaysStats.push({
+            day: dow[i].day,
+            taken: takenCount,
+            total: dow[i].meds.length,
+            label: takenCount.toString()
+        })
+    }
+
+    // console.log(last7DaysStats);         
+
+    // ============= YESTERDAY STATUS =============
+    // yesterday, if all are true say completed, if some arent keep track of count and display 
+    // console.log(yesterdayMeds);
+    let yesterdayMissedMeds = 0;
+    for (let i = 0; i < yesterdayMeds.length; i++) {
+        if (yesterdayMeds[i].status === "missed") {
+            yesterdayMeds += 1;
+        }
+    }
+
+    let yesterdayStatus = (yesterdayMeds.length == 0) ? `No medications taken` : (yesterdayMissedMeds > 0) ? `${yesterdayMissedMeds} Medications left` : `Completed`;
+    // ============= TODAY STATUS =============
+    // todaysMeds - if a medication with an intake doc with same rxcui it is taken/missed  
+    // if in intake doc the rxcui, and timestamp is found in medicationAlarms it means it needs to be DEALT with
+    // grab that med  
+    let takenCount = 0  // # medicationIntake with 'taken' status for today
+    , missedCount = 0   // # medicationIntake with 'missed' status for today
+    , todayPendingNotif = 0; // # notifications for today (does not count rxcuis that already medicationIntake status for today )
+    let rxcuisWithIntakeToday = []; // drugs (rxcuis) which already have a medicationIntake status for today
+
+    await usersRef.doc(uid).collection("medicationIntakes").where("dayStatus", "==", todayDays).get()
+    .then(async querySnapshot => {
+        if (!querySnapshot.empty) {
+            querySnapshot.forEach( async intake => {
+                rxcuisWithIntakeToday.push(intake.data().rxcui);
+                if (intake.data().status == "taken") {
+                    takenCount++;
+                } else if (intake.data().status == "missed") {
+                    missedCount++;
+                }
+            })
+        }}
+    ).catch(error => {console.log(error);});
+
+
+     // get # of pending notifications (where rxcui doesn't already have a medicationIntake status for today)
+     await alarmsRef.doc(uid).collection('medicationAlarms').get().then(async querySnapshot => {
+        querySnapshot.forEach(alarm => {
+            if (!querySnapshot.empty) {
+                // console.log('alarm notifications length = ' + alarm.data().notifications.length);
+                alarm.data().notifications.forEach(notification => {
+                    // 'No Time' = Remove time values (minutes, etc.) from firestore notification timestamp
+                    let triggerNoTime = calculateLocalTimezone((Math.floor(notification.trigger / MS_TO_DAYS)) * MS_TO_DAYS);
+                    // Count todays 'pending' notifications (need status), excluding those with have status 
+                    // Need check if rxcui has status, because user can reschedule a notification for drug that already has an intake 
+                    if (triggerNoTime == todayDaysNoTime && !rxcuisWithIntakeToday.includes(notification.rxcui)) {
+                        todayPendingNotif++;
+                    }
+                })
+            }
+        })
+    }).catch(error => { console.log(error);});
+    
+    let todayStatus = (todayPendingNotif == 0) ? `Completed` : `${todayPendingNotif} Medications left`;
+    // ============= TOMORROW STATUS =============
+    let tomorrowPendingNotif = 0;
+      // get # of pending notifications (where rxcui doesn't already have a medicationIntake status for today)
+      await alarmsRef.doc(uid).collection('medicationAlarms').get().then(async querySnapshot => {
+        querySnapshot.forEach(alarm => {
+            if (!querySnapshot.empty) {
+                // console.log('alarm notifications length = ' + alarm.data().notifications.length);
+                alarm.data().notifications.forEach(notification => {
+                    // 'No Time' = Remove time values (minutes, etc.) from firestore notification timestamp
+                    let triggerNoTime = calculateLocalTimezone((Math.floor(notification.trigger / MS_TO_DAYS)) * MS_TO_DAYS);
+                    // Count todays 'pending' notifications (need status), excluding those with have status 
+                    // Need check if rxcui has status, because user can reschedule a notification for drug that already has an intake 
+                    if (triggerNoTime == tomorrowDaysNoTime && !rxcuisWithIntakeToday.includes(notification.rxcui)) {
+                        tomorrowPendingNotif++;
+                    }
+                })
+            }
+        })
+    }).catch(error => { console.log(error);});
+
+    let tomorrowStatus = (tomorrowPendingNotif == 0) ? `No medications to take` : `${tomorrowPendingNotif} medications`;
+    // ============= GENERAL STATUS =============
+    let allTakenMeds = 0;
+    let allMissedMeds = 0;
+    let totalMeds = 0;
+    let medicationIntakeRate = 0.00;
+    allMeds.forEach(e => {
+        if (e.status === "taken") {
+            allTakenMeds += 1;
+        }
+        
+        if (e.status === "missed") {
+            allMissedMeds += 1;
+        }
+    });
+    
+    totalMeds = allTakenMeds + allMissedMeds;
+    
+    medicationIntakeRate = (allTakenMeds / totalMeds) * 100;
+    
+    let generalStatus = (medicationIntakeRate >= 90) ? `Excellent` : `Needs Improvement`;
+    
+    // console.log(allMeds)
+    // console.log(allTakenMeds, `===`, allMissedMeds); 
+
+    
+
+
 
     /*
     // final return object for getWeekIntakeStats():
-        // allIntakeStats: {
-            last7Days : {
-                { day: 'Sat', taken: 3, total: 2, label: "3"}
-                ....
-                { day: 'Sat', taken: 3, total: 2, label: "3"}
-            },
-            yesterdayStatus : , // 'Completed / # missed'
+    // allIntakeStats: {
+        last7Days : {
+            { day: 'Sat', taken: 3, total: 2, label: "3"}
+            ....
+            { day: 'Sat', taken: 3, total: 2, label: "3"}
+        },
+        yesterdayStatus : , // 'Completed / # missed'
             todayStatus: ,      // 'Completed / # missed'
             tomorrowStatus: ,   // # medications
             generalStatus: ,    // >= 90% Excellent, otherwise Needs Improvement
         }
         */
-
-    // TODO: get medication intake stats for last 7 days, today, tomorrow
-    
-    // Need to retrieve data depending if it is previous days, today, or tomorrow:
-    
+       
+       // TODO: get medication intake stats for last 7 days, today, tomorrow
+       
+       // Need to retrieve data depending if it is previous days, today, or tomorrow:
+       
     // For Previous 7 days need only:
     //   1. (taken/missed). user->medicationIntakes
-    // For Today, need to get both:
+    // For Today, need to get both: - subtract total with taken?? 
     //   1. (taken/missed). user->medicationIntakes
     //   2. (not yet taken/missed). medicationAlarms->notifications 
     // For Tomorrow need only:
     //   1. (not yet taken/missed) medicationAlarms->notifications 
-    const intake = await usersRef.doc(uid).collection("medicationIntakes").get().then()
-    const stats = await alarmsRef.doc(uid).collection("medicationAlarms").get()
-        .then( async querySnapshot => {
-            // for each alarm/medication get medication intake for last 7, today
-            
-        })
+    // const intake = await usersRef.doc(uid).collection("medicationIntakes").get().then()
+    // const stats = await alarmsRef.doc(uid).collection("medicationAlarms").get()
+    //     .then( async querySnapshot => {
+        //         // for each alarm/medication get medication intake for last 7, today
+        
+        //     })
+        
+        //
+        
+        
+    const allIntakeStats = {
+        last7DaysStats,
+        yesterdayStatus,
+        todayStatus,
+        tomorrowStatus,
+        generalStatus
+    };
 
-
-
-    return null;
+    return allIntakeStats;
 }
 
 export {
