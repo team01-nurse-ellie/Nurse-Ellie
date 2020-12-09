@@ -1,69 +1,46 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Dimensions, StyleSheet, Keyboard } from 'react-native';
-
+import React, { useState }from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image, Dimensions, StyleSheet, Keyboard, KeyboardAvoidingView } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { firebase } from '../components/Firebase/config';
-
-import Background from '../components/BackgroundHP';
+import { firebase } from '../components/Firebase/config'
+import Background from '../components/BackgroundHP.js';
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
-
 import MenuIcon from '../assets/images/hp-menu-icon.svg';
 import BlueAddIcon from '../assets/images/blue-add-icon.svg';
-
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
-const HealthProfessionalScreen = ({ navigation }) => {
-    const [fullName, setFullName] = useState('')
-    const [email, setEmail] = useState('')
+const HealthProfessionalScreen = ({navigation}) => {
     const [FieldofPractice, setFieldofPractice] = useState('')
     const [LicenseNumber, setLicenseNumber] = useState('')
     const [RegulatoryBody, setRegulatoryBody] = useState('')
     const usersRef = firebase.firestore().collection('users')
 
-    /*const onHealthPress = async () => {
-        const data = await firebase.auth().currentUser.uid
-        console.log(data);
-
-        var userDoc = firebase.firestore().collection("users").doc(data).update({
-            'FieldofPractice':'',
-            'LicenseNumber': '',
-            'RegulatoryBody': ''
-        })
-     }*/
-
-
-    // const onHealthPress = async (res) => {
-    //     const data = await firebase.auth().currentUser.uid
-    //     var userDoc = firebase.firestore().collection("users").doc(data).update({
-    //         'FieldofPractice': '',
-    //         'LicenseNumber': '',
-    //         'RegulatoryBody': ''
-    //     })
-
-    //     const obj = {
-
-
    const onHealthPress = async (res) => {
-   const data = await firebase.auth().currentUser.uid
+        const data = await firebase.auth().currentUser.uid
         var userDoc = firebase.firestore().collection("users").doc(data).update({
-            'FieldofPractice':'',
-            'LicenseNumber': '',
-            'RegulatoryBody': ''
+        'FieldofPractice':'',
+        'LicenseNumber': '',
+        'RegulatoryBody': ''
         })
+
         const obj = {
-            FieldofPractice,
-            LicenseNumber,
-            RegulatoryBody,
+        FieldofPractice,
+        LicenseNumber,
+        RegulatoryBody,
         };
-        const usersRef = firebase.firestore().collection('users')
-        usersRef
-            .doc(data)
-            .update(obj)
+        
+        usersRef.doc(data).update(obj)
 
     }
 
+    const HealthProfAlert = () => {
+        alert('Your account will be verified in the next  2-3 business days. Thank you');
+        navigation.navigate('HomeScreen')
+      };
+
+
     return (
+        
         <View style={styles.container}>
             <Background/>
             <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
@@ -82,12 +59,8 @@ const HealthProfessionalScreen = ({ navigation }) => {
                  value={LicenseNumber} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
                 <TextInput style={styles.textInput} placeholder="Regulatory Body" autoCapitalize="none"  onChangeText={(text) => setRegulatoryBody(text)}
                     value={RegulatoryBody} returnKeyType='done' onSubmitEditing={Keyboard.dismiss}/>
-
-                <Text style={{marginBottom: 15}}>Status: Will be loaded from firebase db</Text>
-           
-                <Text style={styles.descriptionFont}>Your account will be verified in the next  2-3 business days. Thank you</Text>
-
-                <TouchableOpacity style={styles.button} onPress={()=>onHealthPress()}>
+                <Text style={{marginBottom: 15}}>Status: Pending</Text>
+                <TouchableOpacity style={styles.button} onPress={() => { onHealthPress(); HealthProfAlert(); }}>
                     <BlueAddIcon/>
                 </TouchableOpacity>
 
@@ -96,6 +69,7 @@ const HealthProfessionalScreen = ({ navigation }) => {
         </View>
     )
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -156,3 +130,5 @@ const styles = StyleSheet.create({
 });
 
 export default HealthProfessionalScreen;
+
+

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext} from 'react';
 import { View, StyleSheet } from 'react-native';
 import { firebase } from "./Firebase/config.js";
+import { UserContext } from './UserProvider/UserContext.js';
 
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 
@@ -8,6 +9,9 @@ import { Text, Drawer } from 'react-native-paper';
 
 
 function DrawerContent(props) {
+
+    const { accountType } = useContext(UserContext);
+
     return (
         <View>
             <DrawerContentScrollView {...props}>
@@ -25,31 +29,37 @@ function DrawerContent(props) {
                         label="Medication List"
                         onPress={() => { props.navigation.navigate('Medications') }}
                     />
+                    <DrawerItem
+                    label="User Profile"
+                    onPress={() => { props.navigation.navigate('UserProfile') }}
+                />
                 </Drawer.Section>
                 <DrawerItem
-                    label="Health Professional"
+                    label="Account Change"
                     onPress={() => { props.navigation.navigate('HealthProfessional') }}
                 />
-                <DrawerItem
-                    label="Patient List"
-                    onPress={() => { props.navigation.navigate('Patients') }}
-                />
+                {(accountType === "HEALTH_PROFESSIONAL") &&
+                    <DrawerItem
+                        label="Patient List"
+                        onPress={() => { props.navigation.navigate('Patients') }}
+                />}
+
                 <DrawerItem
                     label="User Connect"
                     onPress={() => { props.navigation.navigate('UserLinkScreen') }}
                 />
-                <DrawerItem
+                {(accountType === "PATIENT") && <DrawerItem
                     label="Symptom Checklist"
-                    onPress={() => { props.navigation.navigate('SymptomChecklistScreen') }}
-                />
+                    onPress={() => { props.navigation.navigate('SymptomChecklist') }}
+                />}
                 <DrawerItem
                     label="Alarm"
                     onPress={() => { props.navigation.navigate('NotificationScreen') }}
                 />
-                <DrawerItem
+                {(accountType === "PATIENT") && <DrawerItem
                     label="Medication Summary"
                     onPress={()=> {props.navigation.navigate('MedicationSummary')}}
-                />
+                />}
                 <DrawerItem
                     label="Home (Health Professional)"
                     onPress={()=> { props.navigation.navigate('HomeScreenHP')}}

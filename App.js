@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { YellowBox } from 'react-native';
+import { YellowBox, LogBox } from 'react-native';
+import { StyleSheet, } from 'react-native';
 // Firebase Authentication
 import { FirebaseAuthProvider } from './components/Firebase/FirebaseAuthProvider';
 // Components
@@ -13,6 +14,7 @@ import store from './src/redux/store'
 
 // fix for [Unhandled promise rejection: ReferenceError: Can't find variable: atob]
 import {decode, encode} from 'base-64'
+import { UserProvider } from './components/UserProvider/UserProvider';
 if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
@@ -30,9 +32,14 @@ const App = () => {
   useEffect(() => {
 
     // QR screen uses a setTimeout() to delay the camera opening. React-Native pops up a warning about long timers so it is supressed now.
-    YellowBox.ignoreWarnings(['Non-serializable values were found in the navigation state', 'Setting a timer',]);
+    //YellowBox.ignoreWarnings(['Non-serializable values were found in the navigation state', 'Setting a timer']);
+    LogBox.ignoreLogs(['Non-serializable values were found in the navigation state', 'Setting a timer']);
+    
+    // YellowBox.ignoreWarnings(['Non-serializable values were found in the navigation state', 'Setting a timer',]);
+    LogBox.ignoreLogs(['Non-serializable values were found in the navigation state', 'Setting a timer',]);
     // ScrollPicker in TimePicker warning, and IconPicker warning, respectively.
-    YellowBox.ignoreWarnings(['Expected style', 'Failed prop type']);
+    // YellowBox.ignoreWarnings(['Expected style', 'Failed prop type']);
+    LogBox.ignoreLogs(['Expected style', 'Failed prop type']);
 
   }, []);
 
@@ -40,7 +47,9 @@ const App = () => {
     return (
       <StateProvider store={store}>
         <FirebaseAuthProvider>
-          <AppNavigation />
+          <UserProvider>
+            <AppNavigation />
+          </UserProvider>
         </FirebaseAuthProvider>
       </StateProvider>
     );

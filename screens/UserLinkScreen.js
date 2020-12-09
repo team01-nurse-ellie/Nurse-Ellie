@@ -200,7 +200,7 @@ const UserLinkScreen = ({ navigation }) => {
         }
 
         await firebase.firestore().collection("users").where("connectCode", "==", (data) ? data : inputCode).get().then(async querySnapshot => {
-           
+            // results for user to be connected to
             let foundUser = false;
             let userID = null;  
             let user = null;

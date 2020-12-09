@@ -23,10 +23,14 @@ import PatientDetailScreen from '../screens/PatientDetailScreen';
 import MedicationListScreen from '../screens/MedicationListScreen';
 import MedicationDetailScreen from '../screens/MedicationDetailScreen';
 import HealthProfessionalScreen from '../screens/HealthProfessionalScreen';
-import SymptomChecklistScreen from '../screens/SymptomChecklistScreen';
+import SymptomChecklist from '../screens/SymptomChecklist';
+import SymptomChecklistDetail from '../screens/SymptomChecklistDetails';
 import NotificationScreen from '../screens/NotificationScreen';
 import MedicationSummaryScreen from '../screens/MedicationSummaryScreen';
 import HomeScreenHP from '../screens/HomeScreenHP';
+import EditUserProfileScreen from '../screens/EditUserProfileScreen';
+import UserProfileScreen from '../screens/UserProfileScreen';
+
 
 // Navigation modules
 import { NavigationContainer } from '@react-navigation/native';
@@ -56,11 +60,15 @@ const AppNavigation = () => {
                 <Drawer.Screen name="Patient" component={PatientDetailScreen} />
                 <Drawer.Screen name="UserLinkScreen" component={UserLinkScreen} />
                 <Drawer.Screen name="HealthProfessional" component={HealthProfessionalScreen} />
-                <Drawer.Screen name="SymptomChecklistScreen" component={SymptomChecklistScreen} />
-                <Drawer.Screen name="NotificationScreen" component={NotificationScreen}/>
-                <Drawer.Screen name="EditMedication" component={EditMedicationScreen}/>
+                <Drawer.Screen name="EditMedication" options={{
+                    unmountOnBlur: false
+                }} component={EditMedicationScreen}/>
+                <Drawer.Screen name="SymptomChecklist" component={SymptomChecklist}/>
+                <Drawer.Screen name="SymptomChecklistDetail" component={SymptomChecklistDetail}/>
                 <Drawer.Screen name="MedicationSummary" component={MedicationSummaryScreen}/>
                 <Drawer.Screen name="HomeScreenHP" component={HomeScreenHP} />
+                <Drawer.Screen name="EditUserProfileScreen" component={EditUserProfileScreen} options={{unmountOnBlur:true}}/>
+                <Drawer.Screen name="UserProfile" component={UserProfileScreen} options={{unmountOnBlur:true}}/>
             </Drawer.Navigator>
         );
     }
@@ -77,6 +85,11 @@ const AppNavigation = () => {
                         {currentUser ? (
                             <>
                                 <RootStack.Screen name="HomeScreen" component={DrawerRoutes} options={{ headerShown: false }} />
+                                <RootStack.Screen name="NotificationScreen" options={{
+                                    swipeEnabled: false,
+                                    unmountOnBlur: true,
+                                    headerShown: false
+                                }} component={NotificationScreen}/>
                                 <RootStack.Screen name="QRScreen" component={QRScreen} options={{ 
                                     transitionSpec: {
                                         // Disables the animation when pushing the screen. 
