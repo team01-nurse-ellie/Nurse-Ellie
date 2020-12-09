@@ -1,121 +1,62 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Dimensions, StyleSheet, Keyboard } from 'react-native';
-
+import React, { useState, useContext }from 'react';
+import { View, Text, TextInput, TouchableOpacity, Dimensions, StyleSheet, Keyboard, } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-// import { firebase } from '../components/Firebase/config';
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
-import { usersRef, accrediationsRef, healthprofsRef } from '../utils/databaseRefs';
+import { usersRef } from '../utils/databaseRefs';
 import { UserContext } from '../components/UserProvider/UserContext';
-
-import Background from '../components/BackgroundHP';
+import Background from '../components/BackgroundHP.js';
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
-
 import MenuIcon from '../assets/images/hp-menu-icon.svg';
-import BlueAddIcon from '../assets/images/blue-add-icon';
-
+import BlueAddIcon from '../assets/images/blue-add-icon.svg';
 var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
-const HealthProfessionalScreen = ({ navigation }) => {
-
+const HealthProfessionalScreen = ({navigation}) => {
+    
     const { currentUser } = useContext(FirebaseAuthContext);
     const { verifiedHP } = useContext(UserContext);
     const [FieldofPractice, setFieldofPractice] = useState('');
     const [LicenseNumber, setLicenseNumber] = useState('');
     const [RegulatoryBody, setRegulatoryBody] = useState('');
-    const [requestedChange, setRequestedChange] = useState(false);
-    // const [fieldsFilled, setFilled] = useState(false);
- 
-    useEffect(()=> {
-        
-        (async () => {
 
-            await healthprofsRef.where("userRef", "==", currentUser.uid)
-                .get()
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        // console.log(doc.exists);
-                        setRequestedChange(true);
-                        // console.log(doc.id, " => ", (doc.data()));
-                    });
-                })
-                .catch((error) => {
-                    console.log("Error getting documents: ", error);
-                });
+    const HealthProfAlert = () => {
+        alert("Your account will be verified in the next 2-3 business days. Thank you");
+        navigation.navigate('Home');
+    };
 
-
-        })();
-
-        console.log(requestedChange);  
-
-    }, [requestedChange]);
-    // const [fullName, setFullName] = useState('')
-    // const [email, setEmail] = useState('')
-    
-    const onHealthPress = async (res) => {
+    const onHealthPress = async () => {
 
         if (FieldofPractice.length > 0 &&
             LicenseNumber.length > 0 &&
             RegulatoryBody.length > 0) {
-            // setFilled(true);
           
             // clear input fields
             setFieldofPractice("");
             setLicenseNumber("");
             setRegulatoryBody("");
 
-            // setFilled(false);
-            if (verifiedHP == false && requestedChange == false) {
-                console.log("register")
-                setRequestedChange(true);
-                alert("Your account will be verified in the next 2-3 business days. Thank you");
+            if (verifiedHP == false) {
 
-                // Add new accreditation to DB.
-                // await accrediationsRef.add({
-                //     fieldOfPractice: FieldofPractice,
-                //     licenseNumber: LicenseNumber, 
-                //     regulatoryBody: RegulatoryBody,
-                //     specialization: "",
-                //     userRef: currentUser.uid
-                // }).then(async docRef => {
-                //     console.log(`added new accreditation for user: ${currentUser.uid}`)
-                //     // Once an accreditation is made, create a new HP account and add that new accreditation to that HP account.   
-                //     await healthprofsRef.add({
-                //         accreditations: [docRef.id],
-                //         patients: [],
-                //         permissions: {},
-                //         userRef: currentUser.uid  
-                //     }).then(docRef => {
-                //         console.log(`added new HP for user: ${currentUser.uid}`)
-                //     }).catch(error => {
-                //         console.log(error)
-                //     })
+                usersRef.doc(currentUser.uid).update({
+                    'FieldofPractice': '',
+                    'LicenseNumber': '',
+                    'RegulatoryBody': ''
+                });
+        
+                const obj = {
+                    FieldofPractice,
+                    LicenseNumber,
+                    RegulatoryBody,
+                };
+        
+                usersRef.doc(currentUser.uid).update(obj).then(() => {
+                    HealthProfAlert();
+                });
 
-                // }).catch(error => {
-                //     console.log(error);
-                // });
-            } else if (verifiedHP == false && requestedChange == true) {
-                console.log("pending");
-                alert("Your account still needs to be verified.");
-            } else if (verifiedHP == true) {
+            } else {
                 alert("Account has been verified.")
             }
-
-
-            // usersRef.doc(currentUser.uid).update({
-            //     'FieldofPractice': '',
-            //     'LicenseNumber': '', 
-            //     'RegulatoryBody': ''
-            // })
-
-            // // accreditation 
-            // const obj = {
-            //     FieldofPractice,
-            //     LicenseNumber,
-            //     RegulatoryBody,
-            // };
-
-            // usersRef.doc(currentUser.uid).update(obj)
+            
         } else {
 
             if (FieldofPractice.length == 0) {
@@ -132,6 +73,7 @@ const HealthProfessionalScreen = ({ navigation }) => {
     }
 
     return (
+        
         <View style={styles.container}>
             <Background/>
             <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
@@ -163,7 +105,7 @@ const HealthProfessionalScreen = ({ navigation }) => {
            
                 {/* <Text style={styles.descriptionFont}></Text> */}
 
-                <TouchableOpacity style={styles.button} onPress={()=>onHealthPress()}>
+                <TouchableOpacity style={styles.button} onPress={() => onHealthPress()}>
                     <BlueAddIcon/>
                 </TouchableOpacity>
 
@@ -172,6 +114,7 @@ const HealthProfessionalScreen = ({ navigation }) => {
         </View>
     )
 }
+
 
 const styles = StyleSheet.create({
     container: {

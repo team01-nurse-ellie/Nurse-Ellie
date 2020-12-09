@@ -1,8 +1,4 @@
 // medication.js
-import {firebase} from '../components/Firebase/config';
-
-const rxCollection = firebase.firestore().collection('rxnormTerms');
-
 /* Drug (rxcui) With Info
    Example: Monopril 10mg
         Object {
@@ -21,6 +17,47 @@ const rxCollection = firebase.firestore().collection('rxnormTerms');
         "tty": "SBD",
         }
 */
+/* Drug setting fields. See AddMedicationScreen.js addMedicationToDB()
+        'medIcon': medIcon,
+        'intakeTime' : selectTime,
+        'startDate' : startDate,
+        'endDate' : endDate,
+        'daysOfWeek' : selectDoW,
+        'alarm': alarm,
+        'function': drugFunction,
+        'directions': directions,
+*/
+
+    export const medObject = {
+        "adverseEvents":  [],
+        "doseForm": "",
+        "doseFormRxn": "",
+        "information": "",
+        "nameBrand": "",
+        "nameDisplay": "",
+        "nameFullGeneric": "",
+        "namePrescribe": "",
+        "route": "",
+        "rxcui": 0,
+        "rxcuiGeneric": 0,
+        "strength": "",
+        "tty": "",
+        'medIcon': 1,
+        'intakeTime' : '',
+        'startDate' : '',
+        'endDate' : '',
+        'daysOfWeek' : [],
+        'alarm': false,
+        'function': '',
+        'directions': '',
+    }
+
+
+import {firebase} from '../components/Firebase/config';
+
+const rxCollection = firebase.firestore().collection('rxnormTerms');
+
+
 /*********************RxNorm Prescribable/Terms API calls**********************/
 /*********************20 requests per second per IP address*******************/
 
@@ -98,13 +135,6 @@ async function getRxcuisTermInfo(rxcuis) {
     if(rxcuis != undefined) {
         var rxcui;
         for (const element of rxcuis) {
-/*             rxcui = rxterms[element];
-            if (rxcui != undefined) rxcuisTermInfo.push(parseRxcuiTermInfo(rxcui)); */
-/*             const rxcui = await rxCollection.where('RXCUI', '==', element).get().then(querySnapshot => {
-                querySnapshot.forEach(e => {
-                    console.log(e.data());
-                });
-            }); */
             await rxCollection.doc(element).get().then(doc => rxcuisTermInfo.push(parseRxcuiTermInfo(doc.data())));
         }
     }
@@ -247,7 +277,6 @@ export async function getIndUseByRxcui(rxcui){
                 //console.log(rxcui + ' sentence end check 2 ' + sentenceEnd);
                 //console.log(rxcui + ' 250 length: ' + indUsage.length);
                 var firstIndUsageSentence = indUsage.slice(sentenceStart, sentenceEnd);
-                //console.log(rxcui + ' final: ' + firstIndUsageSentence);
                 return firstIndUsageSentence
             } else {
                 await Promise.reject(new Error('label for given rxcui did not contain indications_and_usage information'));

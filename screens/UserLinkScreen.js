@@ -18,6 +18,11 @@ import HP_BtnSelected from '../assets/images/nurse-selected-icon.svg';
 import FamilyFriendBtn from '../assets/images/familyfriend-unselected-icon.svg';
 import FamilyFriendBtnSelected from '../assets/images/familyfriend-selected-icon.svg';
 
+import PatientStyles from '../styles/PatientStyleSheet';
+import HealthProStyles from '../styles/HealthProfessionalStyleSheet';
+
+
+import QRCode from 'react-native-qrcode-svg';
 // Firebase
 import { firebase } from "../components/Firebase/config";
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
@@ -27,7 +32,6 @@ import { UserContext } from '../components/UserProvider/UserContext';
 
 // Utils
 import { generateCode } from '../utils/codeGenerator';
-import QRCode from 'react-native-qrcode-svg';
 
 
 const UserLinkScreen = ({ navigation }) => {
@@ -219,8 +223,8 @@ const UserLinkScreen = ({ navigation }) => {
         }
     };
 
-    const connectUser = async (connectMethod, connectType, data = null) => {
-  
+    const connectUser = async (connectMethod, connectType, data = null) => { 
+        try {
         let isFF = false;
 
         if (connectType == "FRIEND_FAMILY") {
@@ -228,7 +232,7 @@ const UserLinkScreen = ({ navigation }) => {
         }
 
         await firebase.firestore().collection("users").where("connectCode", "==", (data) ? data : inputCode).get().then(async querySnapshot => {
-           
+            // results for user to be connected to
             let foundUser = false;
             let userID = null;  
             let user = null;
@@ -309,7 +313,9 @@ const UserLinkScreen = ({ navigation }) => {
         }).catch((error) => {
             console.log(error);
         })
-
+    } catch (error) {
+        throw error;
+    }
         // return "done";
     };
     const [methodsPressed, setMethodsPressed] = useState(false);
@@ -317,14 +323,14 @@ const UserLinkScreen = ({ navigation }) => {
     const [inputCode, setInputCode] = useState("");
    
     const methodsModal = (
-        <View>
+        <View testID={"methodsModal"}>
             <View style={{ marginBottom: 15 }}>
                 {/* select meth txxt */}
                 <Text style={{ fontSize: 25, fontFamily: 'roboto-regular' }}>Select Method:</Text>
             </View>
             <View>
                 {/* buttons */}
-                <TouchableOpacity onPress={() => {
+                <TouchableOpacity testID="provideCodeButton" onPress={() => {
                     setMethodsPressed(true);
                     handleModalContent("PROVIDE");
                 }
@@ -342,7 +348,7 @@ const UserLinkScreen = ({ navigation }) => {
                 </Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => {
+                <TouchableOpacity testID="inputCodeButton" onPress={() => {
                     setMethodsPressed(true);
                     handleModalContent("INPUT")
                 }} style={(accountType == 'PATIENT') ? styles.methodBtn: styles.methodHPBtn}>
@@ -357,7 +363,7 @@ const UserLinkScreen = ({ navigation }) => {
     );
 
     const provideCodeModal = (
-        <View>
+        <View testID={"provideCodeModal"}>
             <View style={{ alignItems: 'center' }}>
                 <Text style={{ fontSize: 25, fontFamily: 'roboto-regular', marginBottom: "5%" }}>
                     Connect Code
@@ -368,11 +374,12 @@ const UserLinkScreen = ({ navigation }) => {
                     logoBackgroundColor='transparent'
                     size={250}
                     value={userCode}
+                    testID={"qrcode"}
                 />
-                <Text style={{ fontSize: 25, fontFamily: 'roboto-regular', marginTop: "5%" }}>
+                <Text testID="userCode" style={{ fontSize: 25, fontFamily: 'roboto-regular', marginTop: "5%" }}>
                     {userCode}
                 </Text>
-                <TouchableOpacity onPress={promptRefreshCode} style={(accountType == 'PATIENT') ? styles.refreshCodeBtn: styles.refreshCodeHPBtn}>
+                <TouchableOpacity testID="refreshButton" onPress={promptRefreshCode} style={(accountType == 'PATIENT') ? styles.refreshCodeBtn: styles.refreshCodeHPBtn}>
                     <View style={{}}>
                         <Text style={styles.methodBtnText}>
                             Refresh
@@ -384,7 +391,7 @@ const UserLinkScreen = ({ navigation }) => {
     );
 
     const inputCodeModal = (
-        <View>
+        <View testID={"inputCodeModal"}>
             <View style={{ alignItems: 'center', marginBottom: '10%' }}>
                 <Text style={{ fontSize: 25, fontFamily: 'roboto-regular' }}>
                     Enter Connect Code:
@@ -395,7 +402,7 @@ const UserLinkScreen = ({ navigation }) => {
                     textAlign="center"
                     autoFocus={true}  
                     autoCapitalize="characters"
-                    style={styles.textInput}
+                    style={[PatientStyles.textInput, {paddingTop: 8}]}
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss} 
                     onChange={(event) => {
@@ -429,12 +436,12 @@ const UserLinkScreen = ({ navigation }) => {
         <>
             <KeyboardAvoidingView style={{ flex: 1, }} behavior="padding" enabled>
                 {accountType == "PATIENT" ? <Background /> : <BackgroundHP />}
-                <TouchableOpacity style={styles.button} onPress={() => navigation.openDrawer()}>
+                <TouchableOpacity style={(accountType === "PATIENT") ? PatientStyles.menuButton : HealthProStyles.menuButton} onPress={() => navigation.openDrawer()}>
                     {accountType == "PATIENT" ? <MenuIcon /> : <HPMenuIcon />}
                 </TouchableOpacity>
-                <Animatable.View style={styles.drawer} animation="fadeInUpBig">
+                <Animatable.View style={[PatientStyles.drawer, {justifyContent: 'space-between'}]} animation="fadeInUpBig">
                     <View style={styles.screenHeader}>
-                        <Text style={styles.headerFont}>
+                        <Text style={PatientStyles.headerFont}>
                             {`Stay\nConnected`}
                         </Text>
                         <NurseEllieConnectLogo height={75} style={styles.headerImage} />
@@ -460,13 +467,15 @@ const UserLinkScreen = ({ navigation }) => {
                             </Text>
                         </View>}
                         
-                    <View style={{marginBottom: '10%'}}>  
+                    <View style={{marginBottom: '10%'}}>
+                    {/* <View> */}  
                         <Text style={styles.connectText}>Connect to:</Text>
+                       {/*  <Text style={styles.connectText}>Connect to:</Text> */}
 
                         {(accountType == "PATIENT")  
                             ?
                             <>
-                                <TouchableOpacity onPressIn={() => buttonSelect('HEALTH_PRO')} style={connectButtonHP.button}>
+                                <TouchableOpacity testID={"hp_button"} onPress={() => buttonSelect('HEALTH_PRO')} style={connectButtonHP.button}>
                                     <View style={styles.buttonFormat}>
                                         {connectButtonHP.HPIcon}
                                         <Text style={connectButtonHP.text}>
@@ -474,7 +483,12 @@ const UserLinkScreen = ({ navigation }) => {
                                 </Text>
                                     </View>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPressIn={() => buttonSelect('FRIEND_FAMILY')} style={connectButtonFamilyFriend.button}>
+
+
+
+
+
+                                <TouchableOpacity onPress={() => buttonSelect('FRIEND_FAMILY')} style={connectButtonFamilyFriend.button}>
                                     <View style={styles.buttonFormat}>
                                         {connectButtonFamilyFriend.FamilyFriendIcon}
                                         <Text style={connectButtonFamilyFriend.text}>
@@ -482,17 +496,18 @@ const UserLinkScreen = ({ navigation }) => {
                                 </Text>
                                     </View>
                                 </TouchableOpacity>
+
                             </>
                             :
                             <>
-                            <TouchableOpacity onPressIn={() => buttonSelect('PATIENT')} style={connectButtonPatient.button}>
-                                <View style={styles.buttonFormat}>
-                                    {connectButtonPatient.PIcon}
-                                    <Text style={connectButtonPatient.text}>
-                                        Patient
+                                <TouchableOpacity onPress={() => buttonSelect('PATIENT')} style={connectButtonPatient.button}>
+                                    <View style={styles.buttonFormat}>
+                                        {connectButtonPatient.PIcon}
+                                        <Text style={connectButtonPatient.text}>
+                                            Patient
                                     </Text>
-                                </View>
-                            </TouchableOpacity>
+                                    </View>
+                                </TouchableOpacity>
                             </>
                         }
                     </View>
@@ -504,11 +519,12 @@ const UserLinkScreen = ({ navigation }) => {
                         // onBackButtonPress={closeModal} 
                         onBackdropPress={closeModal}
                         onBackButtonPress={modalGoBack}
+                        testID={"modal"}
                     >
-                        <View style={{ backgroundColor: 'white', padding: 25, paddingBottom: 55, borderRadius: 25 }}>
+                        <View testID={"modalContent"} style={{ backgroundColor: 'white', padding: 25, paddingBottom: 55, borderRadius: 25 }}>
                             <View style={{ alignItems: 'flex-end' }}>
                                 {/* exit btn */}
-                                <TouchableOpacity onPressIn={() => { closeModal() }} pressRetentionOffset={{ bottom: 70, right: 70 }}>
+                                <TouchableOpacity testID="closeButton" onPress={() => { closeModal() }} pressRetentionOffset={{ bottom: 70, right: 70 }}>
                                     <CloseBtn />
                                 </TouchableOpacity>
                             </View>
@@ -524,17 +540,7 @@ const UserLinkScreen = ({ navigation }) => {
     );
 }
 
-var screenHeight = Dimensions.get("window").height;
-var screenWidth = Dimensions.get("window").width;
-
 const styles = StyleSheet.create({
-    textInput: {
-        borderBottomColor: 'rgba(112, 112, 112, 0.7)',
-        borderBottomWidth: 1.5,
-        fontSize: 16,
-        paddingTop: 8,
-        // backgroundColor: 'cyan'
-    },
     refreshCodeBtn: {
         backgroundColor: '#42C86A',
         elevation: 3,
@@ -627,13 +633,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginLeft: 0
     },
-    background: {
-        flex: 1,
-        backgroundColor: '#42C86A',
-    },
     UserLinkScreenDescription: {
         marginBottom: 85,
-
     },
     descriptionText: {
         fontFamily: 'roboto-medium',
@@ -647,59 +648,14 @@ const styles = StyleSheet.create({
     screenHeader: {
         flexDirection: 'row',
     },
-    // whitePadding: {
-    //     height: screenHeight / 8
-    // },
-    // textInput: {
-    //     borderBottomColor: 'black',
-    //     borderBottomWidth: 1
-    // },
-    // heading: {
-    //     flex: 1,
-    //     justifyContent: 'flex-end',
-    //     position: 'absolute',
-    //     paddingHorizontal: 20,
-    //     paddingBottom: 5
-    // },
-    headerFont: {
-        fontFamily: 'roboto-regular',
-        fontSize: 32,
-        fontWeight: "100",
-    },
     headerImage: {
         flex: 1,
         right: 10,
-        // height: 100,
-        // resizeMode: 'contain',
     },
     UserLinkScreenDescriptionFont: {
         fontFamily: 'roboto-regular',
         fontSize: 12
     },
-    // clickableFont: {
-    //     fontFamily: 'roboto-medium',
-    //     fontSize: 14,
-    // },
-    button: {
-        position: 'absolute',
-        right: 30,
-        top: 40
-    },
-    drawer: {
-        flex: 4,
-        // backgroundColor: 'gray',
-        backgroundColor: '#fff',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        paddingVertical: 50,
-        paddingHorizontal: 30,
-        position: 'absolute',
-        width: screenWidth,
-        height: screenHeight * 0.85,
-        // bottom: 0,
-        top: screenHeight * 0.15,   
-        justifyContent: 'space-between'
-    }
 });
 
 export default UserLinkScreen;

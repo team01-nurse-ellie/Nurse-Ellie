@@ -11,7 +11,12 @@
       "backgroundColor": "#42C86A"
     },
     "androidStatusBar": {
-      "translucent": true
+      "translucent": false
+    },
+    "notification": {
+      "icon": "./assets/android/drawable-mdpi/test.png",  
+      "color": "#42C86A",
+      "iosDisplayInForeground": true
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -19,6 +24,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "useNextNotificationsApi": true
+    },
     "ios": {
       "supportsTablet": true
     },

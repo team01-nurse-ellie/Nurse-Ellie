@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { View, Text, FlatList, KeyboardAvoidingView, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
-
+import moment from 'moment';
 import * as Animatable from 'react-native-animatable';
 import ProgressCircle from 'react-native-progress-circle';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -10,14 +10,24 @@ import MedicationCard from '../components/MedicationCard';
 import MenuIcon from '../assets/images/hp-menu-icon.svg';
 import TempAvatar from '../assets/images/sm-temp-avatar';
 
+import { firebase } from '../components/Firebase/config'
+import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
+import * as fsFn  from '../utils/firestore';
+import { dateFromToday } from '../utils/utils';
+import { UserContext } from '../components/UserProvider/UserContext';
+
 const HomeScreenHP = ({ navigation }) => {
+    const {currentUser} = useContext(FirebaseAuthContext);
+    const { } = useContext(UserContext);
+    const [fsPatients, setFsPatients] = useState ([]);
+    const [fullName, setfullName] = useState('');
     const [greeting, setGreeting] = useState('');
-    const [patients, setPatients] = useState ([
-        {patientName: 'Julie Ng', lastSeen: 'Tuesday, October 13th 2020', key: '1'}, 
-        {patientName: 'Patrick Henderson', lastSeen: 'Wednesday, October 14th 2020', key: '2'}, 
-        {patientName: 'Lee Follis', lastSeen: 'Monday, October 12th 2020', key: '3'},
-        {patientName: 'Mary Burns', lastSeen: 'Wednesday, October 14th 2020', key: '4'}
-    ]);
+    // const [patients, setPatients] = useState ([
+    //     {patientName: 'Julie Ng', lastSeen: 'Tuesday, October 13th 2020', key: '1'}, 
+    //     {patientName: 'Patrick Henderson', lastSeen: 'Wednesday, October 14th 2020', key: '2'}, 
+    //     {patientName: 'Lee Follis', lastSeen: 'Monday, October 12th 2020', key: '3'},
+    //     {patientName: 'Mary Burns', lastSeen: 'Wednesday, October 14th 2020', key: '4'}
+    // ]);
     const [patientsChecked, setPatientsChecked] = useState(20);
     useEffect(()=> {
         var hours = new Date().getHours();
@@ -28,7 +38,44 @@ const HomeScreenHP = ({ navigation }) => {
         } else {
             setGreeting('Good evening');
         }
+        
+        const unsubscribe = navigation.addListener('blur', () => {
+            
+            userSubscriber(); 
+            patientSubscriber();
+            
+        });
+
+        // Causes react state warning update
+        // loadUsername();
+        // loadPatients();
+        
+        // listener for any changes to user account information
+        const userSubscriber = firebase.firestore().collection("users").doc(currentUser.uid
+            ).onSnapshot(function(querySnapshot) {
+                loadUsername();
+            }
+        );
+        // listener for any changes to userLinks (linked patients)
+        const patientSubscriber = firebase.firestore().collection("users").doc(currentUser.uid
+            ).collection("userLinks"
+            ).onSnapshot(function(querySnapshot) {
+                loadPatients();
+            }
+        );
+        // Unsubscribe from listener when no longer in use
+        return () => { userSubscriber(); patientSubscriber(); unsubscribe(); }
     }, []);
+
+
+    async function loadUsername() {
+        const user = await firebase.firestore().collection("users").doc(currentUser.uid).get();
+        await setfullName(user.data().fullName);
+    }
+    async function loadPatients() {
+        let patients = await fsFn.getallPatients(currentUser.uid);
+        await setFsPatients(patients);
+    }
 
     /*Swipeable when User takes medication*/
     const attendedAction = () => {
@@ -58,7 +105,7 @@ const HomeScreenHP = ({ navigation }) => {
                 <MenuIcon/>
             </TouchableOpacity>
             <Text style={styles.time}> {greeting} </Text>
-            <Text style={styles.user}> Dr. Lee Fern </Text>
+            <Text style={styles.user}> Dr. {fullName} </Text>
             <View style={styles.progressCircle}>
                 <ProgressCircle
                     percent={patientsChecked}
@@ -72,19 +119,28 @@ const HomeScreenHP = ({ navigation }) => {
             </View>
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
             <Text style={styles.title}> Patients </Text>
-            <FlatList data={patients} renderItem={({item}) => (
+            {fsPatients.length > 0? (
+            <FlatList data={fsPatients} renderItem={({item}) => (
                     <Swipeable renderLeftActions={attendedAction} renderRightActions={truantAction}>
                         <MedicationCard>
                             <View>
                                 <TempAvatar />
                             </View>
                             <View style={styles.patientInfoView}>
-                                <Text style={styles.patientFont}>{item.patientName}</Text>
-                                <Text style={styles.lastSeenFont}>Last Seen: {item.lastSeen}</Text>
+                                <Text style={styles.patientFont}>{item.fullName? item.fullName: ''}</Text>
+                                <Text style={styles.lastSeenFont}>
+                                    Last Seen:{'\n'} 
+                                    {item.fullName ? moment(dateFromToday(item.fullName.charCodeAt(0))).format('dddd MMMM Do YYYY'):''}
+                                </Text>
                             </View>
                         </MedicationCard>
                     </Swipeable>
                 )}/>
+            ) : (
+                <>
+                <View></View>
+                </>
+            )}
             </Animatable.View>
         </KeyboardAvoidingView>
     )

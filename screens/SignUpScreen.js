@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Button, Dimensions, StyleSheet, Keyboard } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 import { firebase } from '../components/Firebase/config'
 import { usersRef, patientsRef, } from '../utils/databaseRefs';
 
+import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import { generateCode } from '../utils/codeGenerator';
-
-var screenHeight = Dimensions.get("window").height;
-var screenWidth = Dimensions.get("window").width;
+import { UserContext } from '../components/UserProvider/UserContext';
 
 const SignUpScreen = ({ navigation }) => {
+
+    const { accountType } = useContext(UserContext);
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -54,7 +55,7 @@ const SignUpScreen = ({ navigation }) => {
                 })
 
                 // patient's data
-                const patientData = {
+              /*   const patientData = {
                     healthProfessionals: [],
                     medicationRegimes: [],
                     symptomChecklists: [],
@@ -64,38 +65,42 @@ const SignUpScreen = ({ navigation }) => {
                     },
                     userRef: uid                      
                 };
+ */
 
                 // create patient document and then create user document.
-                await patientsRef
+             /*    await patientsRef
                     .add(patientData)
-                    .then(async (docRef) => { 
+                    .then(async (docRef) => { }).catch(error => { alert(error); }); */
 
-                        // user data.
-                        const userData = {
-                            id: uid,
-                            // PATIENT account type by default, can change to HEALTH_PROFESSIONAL if user registers themselves.
-                            accountType: "PATIENT",
-                            // reference to the patient data in the user document
-                            account: docRef.id,
-                            // verify status of HP account change             
-                            verifiedHP: false,  
-                            email,   
-                            fullName,
-                            connectCode: code,
-                            // Holds the reference ids to userlink table  
-                            userLinks: [], 
-                        };
+                    // user data.
+                    const userData = {
+                        id: uid,
+                        gender: 'Other',
+                        date: new Date(),
+                        image: '1',
+                        // PATIENT account type by default, can change to HEALTH_PROFESSIONAL if user registers themselves.
+                        accountType: "PATIENT",
+                        // reference to the patient data in the user document
+                        // account: docRef.id,
+                        // verify status of HP account change             
+                        verifiedHP: false,
+                        email,
+                        fullName,
+                        connectCode: code,
+                        // Holds the reference ids to userlink table  
+                        userLinks: [],
+                    };
 
-                        // create user document and navigate to homescreen
-                        await usersRef
-                            .doc(uid)
-                            .set(userData)
-                            .then(() => {
+                    // create user document and navigate to homescreen
+                    await usersRef
+                        .doc(uid)
+                        .set(userData)
+                        .then(() => {
+                            setTimeout(()=> {
                                 navigation.navigate('HomeScreen');
-                            })
-                            .catch((error) => { alert(error) });
-
-                    }).catch(error => { alert(error); });
+                            });
+                        })
+                        .catch((error) => { alert(error) });
 
             }).catch((error) => { alert(error) });
     }
@@ -103,32 +108,33 @@ const SignUpScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Background />
-            <Animatable.View style={styles.drawer} animation="fadeInUpBig">
+            <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig">
                 <Image style={styles.headerImage} source={require('../assets/android/drawable-mdpi/login-logo.png')} />
-                <Text style={styles.headerFont}> Sign-Up </Text>
+                <Text style={[PatientStyles.headerFont, {left: screenWidth/3.5, top: screenHeight * 0.07, paddingBottom: 30}]}> Sign-Up </Text>
                 <View style={styles.whitePadding} />
-                <TextInput style={styles.textInput} placeholder="Full Name" autoCapitalize="none" onChangeText={(text) => setFullName(text)}
+                <TextInput style={[PatientStyles.textInput, {marginBottom: 8}]} placeholder="Full Name" autoCapitalize="none" onChangeText={(text) => setFullName(text)}
                     value={fullName} returnKeyType='done' onSubmitEditing={Keyboard.dismiss} />
-                <TextInput style={styles.textInput} placeholder="Email Address" autoCapitalize="none" onChangeText={(text) => setEmail(text)}
+                <TextInput style={[PatientStyles.textInput, {marginBottom: 8}]} placeholder="Email Address" autoCapitalize="none" onChangeText={(text) => setEmail(text)}
                     value={email} returnKeyType='done' onSubmitEditing={Keyboard.dismiss} />
-                <TextInput style={styles.textInput} secureTextEntry placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)}
+                <TextInput style={[PatientStyles.textInput, {marginBottom: 8}]} secureTextEntry placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)}
                     value={password} returnKeyType='done' onSubmitEditing={Keyboard.dismiss} />
-                <TextInput style={styles.textInput} secureTextEntry placeholder="Confirm Password" autoCapitalize="none" placeholder='Confirm Password'
+                <TextInput style={[PatientStyles.textInput, {marginBottom: 8}]} secureTextEntry placeholder="Confirm Password" autoCapitalize="none" placeholder='Confirm Password'
                     onChangeText={(text) => setConfirmPassword(text)} returnKeyType='done' onSubmitEditing={Keyboard.dismiss} />
-
                 <TouchableOpacity style={styles.button} onPress={() => onRegisterPress()}>
                     <Image source={require('../assets/android/drawable-mdpi/g-login-arrow.png')} />
                 </TouchableOpacity>
                 <View style={styles.whitePadding} />
-                <Text style={styles.descriptionFont}> Already have an account? </Text>
+                <Text style={PatientStyles.descriptionFont}> Already have an account? </Text>
                 <TouchableOpacity onPress={() => navigation.push('SignInScreen')}>
-                    <Text style={styles.clickableFont}> SIGN IN </Text>
+                    <Text style={PatientStyles.clickableFont}> SIGN IN </Text>
                 </TouchableOpacity>
             </Animatable.View>
         </View>
     )
 }
 
+var screenHeight = Dimensions.get("window").height;
+var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
     container: {
@@ -141,14 +147,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingBottom: 5
     },
-    headerFont: {
-        fontFamily: 'roboto-regular',
-        fontSize: 32,
-        fontWeight: "100",
-        left: screenWidth / 3.5,
-        top: screenHeight * 0.07,
-        paddingBottom: 30
-    },
     headerImage: {
         position: 'absolute',
         left: screenWidth / 20,
@@ -157,37 +155,11 @@ const styles = StyleSheet.create({
     whitePadding: {
         height: screenHeight / 8
     },
-    textInput: {
-        borderBottomColor: 'rgba(112, 112, 112, 0.7)',
-        borderBottomWidth: 1.5,
-        fontSize: 16,
-        paddingTop: 8
-    },
-    descriptionFont: {
-        fontFamily: 'roboto-regular',
-        fontSize: 12,
-        color: 'rgba(0, 0, 0, 0.38)'
-    },
-    clickableFont: {
-        fontFamily: 'roboto-medium',
-        fontSize: 14,
-    },
     button: {
         paddingRight: 30,
         marginTop: 30
     },
-    drawer: {
-        flex: 4,
-        backgroundColor: '#fff',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        paddingVertical: 50,
-        paddingHorizontal: 30,
-        position: 'absolute',
-        width: screenWidth,
-        height: screenHeight * 0.85,
-        top: screenHeight * 0.15
-    }
+
 });
 
 export default SignUpScreen;

@@ -1,8 +1,9 @@
 import React, {useEffect, useContext, useState} from 'react';
 import { View, Image, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
-
+import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import NurseEllieLogo from '../assets/images/nurse-ellie-logo.svg';
+import { firebase } from '../components/Firebase/config.js'
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
 
 const SplashScreen = ({ navigation }) => {
@@ -10,7 +11,13 @@ const SplashScreen = ({ navigation }) => {
     const { currentUser } = useContext(FirebaseAuthContext);
     const [signedIn, setSignIn] = useState(true);
 
+    // Get user on mount
     useEffect(() => {
+
+        logout();
+    }, []);
+
+  /*   useEffect(() => {
 
         if (currentUser == null) {
             // displays the icon to sign in page on splashscreen if user is not signed in. 
@@ -18,18 +25,37 @@ const SplashScreen = ({ navigation }) => {
             setTimeout(() => {
                 setSignIn(false);
             }, 1000);
-           
+
         }
 
-    }, [currentUser])
+    }, [currentUser]) */
+ 
+    const logout = async () => {
 
+        try {
+          await firebase.auth().signOut();
+        } catch (error) {
+          console.log(error);
+        }
+    
+    };
+    
+    /*var user = firebase.auth().currentUser;
+
+       if (user) {
+          //  firebase.auth().signOut();
+            console.log("User session is still within 1 hour, user is still signed in")
+        } else {
+            firebase.auth().signOut();
+           console.log("User is not sign in")
+        }*/
     return (
-        <View style={styles.container}>
+        <View style={[PatientStyles.background, {justifyContent: 'center'}]}>
             <Background />
             <View style={styles.logoCircle}>
                 <NurseEllieLogo style={styles.logo} />
             </View>
-            {(signedIn == false) &&
+            {/* (signedIn == false) && */
                 
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignInScreen')}>
                     <Image style={{ height: screenHeight * 0.09 }} source={require('../assets/android/drawable-mdpi/g-entry-arrow.png')} />
@@ -43,11 +69,6 @@ var screenHeight = Dimensions.get("window").height;
 var screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        backgroundColor: '#42C86A',
-    },
     logoCircle: {
         height: 300,
         width: 300,

@@ -8,6 +8,7 @@ const rxCollection = firebase.firestore().collection('rxnormTerms');
 const symtomChecklists = firebase.firestore().collection('symptom');
 const userlinksRef = firebase.firestore().collection('userlinks');
 const usersRef = firebase.firestore().collection('users');
+const alarmsRef = firebase.firestore().collection('alarms');
 
 // import any when needed   
 export {  
@@ -17,5 +18,6 @@ export {
     rxCollection,
     symtomChecklists,
     userlinksRef,
-    usersRef
+    usersRef,
+    alarmsRef
 }

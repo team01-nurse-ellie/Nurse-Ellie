@@ -8,6 +8,9 @@ const UserProvider = ({ children }) => {
     const { currentUser } = useContext(FirebaseAuthContext);
     const [accountType, setAccountType] = useState(null);
     const [verifiedHP, setVerification] = useState(null);
+    const [fullName, setFullName] = useState(null);
+    const [firstName, setFirstName] = useState(null);
+    const [lastName, setLastName] = useState(null);
   
     useEffect(() => {
        
@@ -17,6 +20,10 @@ const UserProvider = ({ children }) => {
                     console.log("succ")
                     setAccountType(doc.data().accountType);
                     setVerification(doc.data().verifiedHP);
+                    setFullName(doc.data().fullName);
+                    let fullName = doc.data().fullName.trim().split(" ");
+                    setFirstName(fullName[0]);
+                    setLastName(fullName[1]);
                 }
             }).catch(error => console.log(error));
 
@@ -34,7 +41,7 @@ const UserProvider = ({ children }) => {
 
     return (
 
-        <UserContext.Provider value={{ accountType, verifiedHP }}>
+        <UserContext.Provider value={{ accountType, verifiedHP, firstName, lastName, fullName }}>
             {children}
         </UserContext.Provider>
 
