@@ -191,8 +191,8 @@ const UserLinkScreen = ({ navigation }) => {
         }
     };
 
-    const connectUser = async (connectMethod, connectType, data = null) => {
-  
+    const connectUser = async (connectMethod, connectType, data = null) => { 
+        try {
         let isFF = false;
 
         if (connectType == "FRIEND_FAMILY") {
@@ -281,7 +281,9 @@ const UserLinkScreen = ({ navigation }) => {
         }).catch((error) => {
             console.log(error);
         })
-
+    } catch (error) {
+        throw error;
+    }
         // return "done";
     };
     const [methodsPressed, setMethodsPressed] = useState(false);
@@ -289,14 +291,14 @@ const UserLinkScreen = ({ navigation }) => {
     const [inputCode, setInputCode] = useState("");
 
     const methodsModal = (
-        <View>
+        <View testID={"methodsModal"}>
             <View style={{ marginBottom: 15 }}>
                 {/* select meth txxt */}
                 <Text style={{ fontSize: 25, fontFamily: 'roboto-regular' }}>Select Method:</Text>
             </View>
             <View>
                 {/* buttons */}
-                <TouchableOpacity onPress={() => {
+                <TouchableOpacity testID="provideCodeButton" onPress={() => {
                     setMethodsPressed(true);
                     handleModalContent("PROVIDE");
                 }
@@ -314,7 +316,7 @@ const UserLinkScreen = ({ navigation }) => {
                 </Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => {
+                <TouchableOpacity testID="inputCodeButton" onPress={() => {
                     setMethodsPressed(true);
                     handleModalContent("INPUT")
                 }} style={styles.methodBtn}>
@@ -329,7 +331,7 @@ const UserLinkScreen = ({ navigation }) => {
     );
 
     const provideCodeModal = (
-        <View>
+        <View testID={"provideCodeModal"}>
             <View style={{ alignItems: 'center' }}>
                 <Text style={{ fontSize: 25, fontFamily: 'roboto-regular', marginBottom: "5%" }}>
                     Connect Code
@@ -340,11 +342,12 @@ const UserLinkScreen = ({ navigation }) => {
                     logoBackgroundColor='transparent'
                     size={250}
                     value={userCode}
+                    testID={"qrcode"}
                 />
-                <Text style={{ fontSize: 25, fontFamily: 'roboto-regular', marginTop: "5%" }}>
+                <Text testID="userCode" style={{ fontSize: 25, fontFamily: 'roboto-regular', marginTop: "5%" }}>
                     {userCode}
                 </Text>
-                <TouchableOpacity onPress={promptRefreshCode} style={styles.refreshCodeBtn}>
+                <TouchableOpacity testID="refreshButton" onPress={promptRefreshCode} style={styles.refreshCodeBtn}>
                     <View style={{}}>
                         <Text style={styles.methodBtnText}>
                             Refresh
@@ -356,7 +359,7 @@ const UserLinkScreen = ({ navigation }) => {
     );
 
     const inputCodeModal = (
-        <View>
+        <View testID={"inputCodeModal"}>
             <View style={{ alignItems: 'center', marginBottom: '10%' }}>
                 <Text style={{ fontSize: 25, fontFamily: 'roboto-regular' }}>
                     Enter Connect Code:
@@ -425,7 +428,7 @@ const UserLinkScreen = ({ navigation }) => {
                         <Text style={styles.connectText}>
                             Connect to:
                     </Text>
-                        <TouchableOpacity onPressIn={() => buttonSelect('HEALTH_PRO')} style={connectButtonHP.button}>
+                        <TouchableOpacity testID={"hp_button"} onPress={() => buttonSelect('HEALTH_PRO')} style={connectButtonHP.button}>
                             <View style={styles.buttonFormat}>
                                 {connectButtonHP.HPIcon}
                                 <Text style={connectButtonHP.text}>
@@ -433,7 +436,7 @@ const UserLinkScreen = ({ navigation }) => {
                             </Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPressIn={() => buttonSelect('FRIEND_FAMILY')} style={connectButtonFamilyFriend.button}>
+                        <TouchableOpacity onPress={() => buttonSelect('FRIEND_FAMILY')} style={connectButtonFamilyFriend.button}>
                             <View style={styles.buttonFormat}>
                                 {connectButtonFamilyFriend.FamilyFriendIcon}
                                 <Text style={connectButtonFamilyFriend.text}>
@@ -449,11 +452,12 @@ const UserLinkScreen = ({ navigation }) => {
                         // onBackButtonPress={closeModal} 
                         onBackdropPress={closeModal}
                         onBackButtonPress={modalGoBack}
+                        testID={"modal"}
                     >
-                        <View style={{ backgroundColor: 'white', padding: 25, paddingBottom: 55, borderRadius: 25 }}>
+                        <View testID={"modalContent"} style={{ backgroundColor: 'white', padding: 25, paddingBottom: 55, borderRadius: 25 }}>
                             <View style={{ alignItems: 'flex-end' }}>
                                 {/* exit btn */}
-                                <TouchableOpacity onPressIn={() => { closeModal() }} pressRetentionOffset={{ bottom: 70, right: 70 }}>
+                                <TouchableOpacity testID="closeButton" onPress={() => { closeModal() }} pressRetentionOffset={{ bottom: 70, right: 70 }}>
                                     <CloseBtn />
                                 </TouchableOpacity>
                             </View>
