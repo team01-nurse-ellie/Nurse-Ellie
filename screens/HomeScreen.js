@@ -1,54 +1,41 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import { View, Text, KeyboardAvoidingView, TouchableOpacity, Button, Dimensions, StyleSheet, Platform, FlatList, ActivityIndicator } from 'react-native';
+
+import { View, Text, KeyboardAvoidingView, TouchableOpacity, Dimensions, StyleSheet, Platform, FlatList, ActivityIndicator } from 'react-native';
+import { firebase } from '../components/Firebase/config';
+import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
+import { getValueFormatted } from '../utils/utils';
+
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
-import Constants from 'expo-constants';
+import * as Animatable from 'react-native-animatable';
+import * as fsFn  from '../utils/firestore';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import ProgressCircle from 'react-native-progress-circle';
 
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
-import { calculateLocalTimezone } from '../utils/dateHelpers';
 import {alarmsRef, usersRef} from '../utils/databaseRefs.js'
-
-import * as Animatable from 'react-native-animatable';
 
 import PatientStyles from '../styles/PatientStyleSheet';
 import Background from '../components/background';
 import MedicationCard from '../components/MedicationCard';
 import MenuIcon from '../assets/images/menu-icon.svg';
 import MedicationsIcon from '../assets/images/medications-icon';
-import { firebase } from '../components/Firebase/config';
-import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
-import * as fsFn  from '../utils/firestore';
-import { getValueFormatted } from '../utils/utils';
 
 
 Notifications.setNotificationHandler({
-    handleNotification: async (notification) => {
-        console.log(notification, "gggggggggg") 
-        return ({
-            shouldShowAlert: true,
-            shouldPlaySound: true,
-            shouldSetBadge: false,
-        })
-
-    },
-    handleSuccess: (id) => {
-        console.log(`${id} handled succ`)
-    },
-    handleError: (err) => {
-        console.log(`${err} FAILED!`)
-    }
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+    }),
+    handleSuccess: async (id) => console.log(`notification ${id} HandledSuccess`),
+    handleError: async (error) => console.log(`${error} FAILED!`)
 });
 
 const HomeScreen = ({ navigation }) => {
 
-    const notificationListener = useRef();
+    // const notificationListener = useRef();
     const responseListener = useRef();
     
-    const [pushToken, setToken] = useState('');
-    const [count, setCount] = useState(0);
 
     const { currentUser } = useContext(FirebaseAuthContext);
     const [greeting, setGreeting] = useState('');
@@ -64,33 +51,30 @@ const HomeScreen = ({ navigation }) => {
             // Simply uncomment -> save -> run -> re-comment below line
             // fsFn.generateIntakeDummyData(currentUser.uid);
             // ***********************************************************************************************************//
-
             
-            let time = calculateLocalTimezone(1606435200000);
-            console.log(time, "time");
-            await registerForPushNotificationsAsync()
-            notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-                console.log(`====ReceivedListener====`);
-                console.log(notification);
-                console.log(`========================`);
-            });
+            
+            // await registerForPushNotificationsAsync()
+            // notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            //     console.log(`====ReceivedListener====`);
+            //     console.log(notification);
+            //     console.log(`========================`);
+            // });
+            
 
             responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
                 console.log(`====ResponseReceivedListener====`);
                 console.log(response);
-                console.log(`========================`); 
+                // .navigate if on same screen it might not send new params???
+                // send 2 params for id of the notification being clicked on, and data needed to populate NotificationScreen
+                navigation.push("NotificationScreen", {
+                    notifID: response.notification.request.identifier,
+                    notifData: response.notification.request.content.data,
+                });
+                console.log(`========================`);
             });
             
-            // await Notifications.getAllScheduledNotificationsAsync().then(t => {
-    
-                // console.log("SHOWING ALL NOTIFS")
-                // console.log(t);
-                
-            // })
-
-
         })();
-        // sendPushNotif();
+        
         var hours = new Date().getHours();
         if (hours < 12) {
             setGreeting('Good morning');
@@ -119,157 +103,11 @@ const HomeScreen = ({ navigation }) => {
             // medSubscriber(); 
             alarmNotifSubscriber();
             nameSubscriber();
-            Notifications.removeNotificationSubscription(notificationListener);
+            // Notifications.removeNotificationSubscription(notificationListener);
             Notifications.removeNotificationSubscription(responseListener);
-            // let alarmDate = new Date(Date.UTC(2020, 10, 18, 20, 41));
-            // console.log(alarmDate.getTimezoneOffset());
-            // console.log(new Date(Date.UTC(2020, 10, 18, 20, 41)))
-            // console.log(Date.now() + 60 * 60 * 1000)
+            console.log("PATIENT HOME SCREEN UN-MOUNTED")
         }
     }, []);
-
-    const scheduleAlarms = async () => {
-     try {
-         await Notifications.cancelAllScheduledNotificationsAsync().then(async () => {
-
-             console.log(`***SCHEDULING ALARMS***`);
-             let trigger = calculateLocalTimezone(2020, 11, 21, 10, 32, "PM");
-             // let trig = calculateLocalTimezone(2020, 11, 19, 11, 0, "AM");
-             // let trig2 = calculateLocalTimezone(2020, 11, 19, 12, 0, "AM")
-
-            //  console.log(calculateLocalTimezone(2020, 11, 19, 11, 0, "AM"))
-             await Notifications.scheduleNotificationAsync({
-                content: {
-                  title: "Time's up!",
-                  body: 'Change sides!',
-                },
-                trigger
-              });
-
-           
-            //  await Notifications.scheduleNotificationAsync({
-            //      content: {
-            //          title: "ALARM TITLE #1",
-            //          body: "ALARM BODY #1"
-            //      },
-            //      // trigger: new Date('2020-11-18T17:24:00'),
-            //      trigger: {
-            //          seconds: 2,
-            //          repeats: true
-            //         }
-            //  }).then(async str => {
-            //      console.log("added notif #1", str)
-            //  });
- 
-
-
-             
-            //  await Notifications.scheduleNotificationAsync({
-            //      content: {
-            //          title: "ALARM TITLE @2",
-            //          body: "ALARM BODY @2"
-            //      },
-            //      trigger: calculateLocalTimezone(2020, 11, 19, 12, 0, "AM")
-            //  }).then(async str => {
-            //      console.log("added notif #2", str)
-            //  });
-
-
-
-
-
-
-
-
-             // await Notifications.getAllScheduledNotificationsAsync().then(t => {
-     
-             //     console.log("SHOWING ALL NOTIFS")
-             //     console.log(t)
-             // })
-         });
-
-     } catch (error) {
-         throw error;
-     }
-        
-      
-    }
-
-    const showNotifs = async () => {
-        await Notifications.getAllScheduledNotificationsAsync().then(t => {
-    
-            console.log("=========================SHOWING ALL NOTIFS=========================")
-            console.log(t);
-            console.log(`====================================================================`);
-        })
-    }
-
-    const sendPushNotif = async () => {
-        console.log("sendPushNotif();");
-
-        const pushNotif = [{
-            to: "ExponentPushToken[bWx33iCW7hAkBeWX3u6SkR]",
-            title: "MyTitle",
-            body: "This is the body",
-        }, {
-            to: "ExponentPushToken[bWx33iCW7hAkBeWX3u6SkR]",
-            title: "MyTitle2",
-            body: "This is the body2",
-        }];
-
-        await fetch("https://exp.host/--/api/v2/push/send", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(pushNotif)
-        }).then(res => res.json()).then(data=> {
-            console.log(data);
-        })
-
-        
-    };
-
-    const registerForPushNotificationsAsync = async () => {
-        if (Constants.isDevice) {
-            const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-            let finalStatus = existingStatus;
-            if (existingStatus !== 'granted') {
-                console.log("ASK")
-                const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-                finalStatus = status;
-            }
-            if (finalStatus !== 'granted') {
-                alert('Failed to get push token for push notification!');
-                return;
-            }
-            console.log(`Final status: ${finalStatus}`)
-            // console.log(`status: ${status}`)
-            console.log(`existingStatus: ${existingStatus}`)
-
-            const token = await Notifications.getExpoPushTokenAsync();
-            // console.log(token);
-            // this.setState({ expoPushToken: token });
-            setToken(token);
-            // console.log("Got token.")
-        } else {
-            console.log('Must use physical device for Push Notifications');
-        }
-
-        if (Platform.OS === 'android') {
-            // console.log("setting channel")
-            Notifications.setNotificationChannelAsync('default', {
-                name: 'default',
-                importance: Notifications.AndroidImportance.MAX,
-                vibrationPattern: [0, 250, 250, 250],
-                lightColor: '#FF231F7C',
-            });
-        }
-
-        Notifications.getNotificationChannelsAsync().then(arr => {
-            // console.log(arr); 
-        })
-    };
 
     /*Swipeable when User takes medication*/
     const takenAction = () => {
@@ -339,7 +177,7 @@ const HomeScreen = ({ navigation }) => {
             <Animatable.View style={styles.drawer} animation="fadeInUpBig"> 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 10 }}>
                     <Text style={PatientStyles.title}> Medications </Text>
-                    <MedicationsIcon onPress={showNotifs}/>
+                    <MedicationsIcon />
                 </View>
             {medications ? (
                 <FlatList 

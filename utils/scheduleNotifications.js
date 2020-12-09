@@ -17,9 +17,19 @@ const scheduleNotifications = async (medicationToAdd, medicationDocID, timestamp
         }
       }
 
+      const data = {  
+        medicationDocID: medicationDocID,
+        rxcui: medicationToAdd.rxcui,
+        scheduledTime: medicationToAdd.scheduledTime,
+        medIcon: medicationToAdd.medIcon,
+        nameDisplay: medicationToAdd.nameDisplay,
+        medFunction: medicationToAdd.function
+      };
+
       const content = {
         title: `${firstName}, it's time to take your ${medicationToAdd.nameDisplay}.`,
         body: `Please check-in if you have taken this medication.`,
+        data: data
       };
       
       for (let i = 0; i < daysToSchedule.length; i++) {

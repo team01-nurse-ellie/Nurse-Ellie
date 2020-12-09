@@ -38,7 +38,7 @@ class Component extends React.Component {
         const { isModalOpen, selected } = this.state;
         return (
             <React.Fragment>
-                <TouchableWithoutFeedback onPress={this.onModalOpen} >
+                <TouchableWithoutFeedback disabled={this.props.hasOwnProperty("disabled") ? true : false} onPress={this.onModalOpen} >
                     {selected ? MedIconIndex.index[this.props.selected] : MedIconIndex.index[1]}
                 </TouchableWithoutFeedback>
                 <Modal

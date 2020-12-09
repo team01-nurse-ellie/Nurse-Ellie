@@ -25,7 +25,7 @@ const MedicationDetailScreen = ({route, navigation}) => {
             <Animatable.View style={PatientStyles.drawer} animation="fadeInUpBig"> 
             <ScrollView>
             <View style={styles.rowContainer}>
-                <TouchableOpacity styes={styles.headerGoBack} onPress={()=> navigation.goBack()}>
+                <TouchableOpacity styes={styles.headerGoBack} onPress={()=> navigation.navigate("Medications")}>
                     <ReturnIcon/>
                 </TouchableOpacity>
                 <Text style={styles.headerFont}>

@@ -16,14 +16,15 @@ import TimePicker from '../components/TimePicker';
 import MenuIcon from '../assets/images/menu-icon.svg';
 import ReturnIcon from '../assets/images/return-arrow-icon.svg';
 
-import { firebase } from '../components/Firebase/config';
 import { FirebaseAuthContext } from '../components/Firebase/FirebaseAuthContext';
+import { UserContext } from '../components/UserProvider/UserContext';
 import { scheduleNotifications } from '../utils/scheduleNotifications';
 import { alarmsRef, usersRef } from '../utils/databaseRefs';
 
 const EditMedicationScreen = ({route, navigation }) => {
     const { item } = route.params ?? {'item':{'isPatient':false}};
     const { currentUser } = useContext(FirebaseAuthContext);
+    const { firstName } = useContext(UserContext);
     const [user, setUser] = useState('');
     // --------------------------------------------------
     const [scheduledTime, setScheduledTime] = useState(item.medication.scheduledTime);
@@ -42,6 +43,7 @@ const EditMedicationScreen = ({route, navigation }) => {
     const [directions, setDirections] = useState('');
     const currentTime = new Date();
     const [loading, setLoading] = useState();
+    const [editLoading, setEditLoading] = useState(false);
     const [medication, setMedication] = useState();
     const [deleteWarning, setDeleteWarning] = useState(false);
     const [editWarning, setEditWarning] = useState(false);
@@ -87,6 +89,7 @@ const EditMedicationScreen = ({route, navigation }) => {
 
         // Unsubscribe from document when no longer in use
         return () => {
+            console.log(`EDIT MEDICATION SCREEN UN-MOUNT`);
             subscriber(); 
             unsubscribe();
         }
@@ -173,7 +176,7 @@ const EditMedicationScreen = ({route, navigation }) => {
     Object.assign(item.medication, medSettings);
 
     const { alarmRef } = item.medication;
-
+    setEditLoading(true);
     if (alarm == true) {
 
         // update medication 
@@ -199,7 +202,7 @@ const EditMedicationScreen = ({route, navigation }) => {
 
                 })().then(async () => {
                     // once expo notifs are deleted, schedule new alarm notifications. 
-                    await scheduleNotifications(item.medication, item.docId, timestamp, selectDoW)
+                    await scheduleNotifications(item.medication, item.docId, timestamp, selectDoW, firstName)
                     .then(async alarm => {
                         
                         if (!alarm) {
@@ -214,6 +217,7 @@ const EditMedicationScreen = ({route, navigation }) => {
                         await alarmsRef.doc(user).collection("medicationAlarms").doc(alarmRef).update({
                             notifications: notifications
                         }).then(() => {
+                            setEditLoading(false);
                             Alert.alert('', '\nMedication Updated!');
                             navigation.navigate('Medication', { item: item });
                         }).catch(error => { throw error; });
@@ -256,6 +260,7 @@ const EditMedicationScreen = ({route, navigation }) => {
                       await alarmsRef.doc(user).collection('medicationAlarms').doc(alarmRef).update({
                           notifications: []
                       }).then(() => { 
+                          setEditLoading(false);
                           Alert.alert('','\nMedication Updated!');
                           navigation.navigate('Medication', { item: item });
                       }).catch(error => { throw error; });
@@ -425,13 +430,19 @@ const EditMedicationScreen = ({route, navigation }) => {
                             <Text> You are about to make changes to a medication that was prescribed by your health professional. They will receive notice that you have made these changes. Would you like to continue? </Text>
                             <View style={{paddingVertical: 5}}/>
                             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                                <TouchableOpacity onPress={updateMedication}>
+                            {editLoading ? <ActivityIndicator color={'green'} /> :
+                                <>
+                                <TouchableOpacity onPress={async () => {
+                                    await updateMedication();
+                                } }>
                                     <Text style={styles.confirmationTouchable}>CONTINUE</Text>
                                 </TouchableOpacity>
                                 <View style={{paddingHorizontal:10}}/>
                                 <TouchableOpacity onPress={()=> setEditWarning(false)}>
                                     <Text style={styles.confirmationTouchable}>RETURN</Text>
                                 </TouchableOpacity>
+                                </>
+                            }
                             </View>
                         </View>
                     </View>
